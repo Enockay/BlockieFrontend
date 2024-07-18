@@ -10,6 +10,69 @@
   align-items: center;
   justify-content: center;
 }
+/* Additional Styles */
+.nav-link {
+  display: block;
+  margin-bottom: 0.5rem;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.nav-link:hover {
+  background-color: #2563eb; /* Darker shade of blue */
+  color: #fff;
+}
+
+.phone:focus {
+  border-color: #2563eb; /* Focus border color */
+}
+
+.view {
+  transition: transform 0.3s;
+}
+
+.view:hover {
+  transform: scale(1.05);
+}
+
+@media (min-width: 768px) {
+  .nav-link {
+      display: inline-block;
+      margin-right: 1rem;
+  }
+
+  .view {
+      display: inline-block;
+      margin-right: 1rem;
+  }
+}
+
+/* Gradient Background for Section */
+.bg-gradient-to-r {
+  background: linear-gradient(to right, var(--tw-gradient-stops));
+}
+.from-teal-400 {
+  --tw-gradient-from: #38b2ac;
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(56, 178, 172, 0));
+}
+.to-blue-500 {
+  --tw-gradient-to: #4299e1;
+}
+
+/* Enhanced Button Styles */
+.view {
+  background-color: #1c3d5a; /* Initial background color */
+  transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transition for background color and transform */
+}
+
+.view:hover {
+  background-color: #2563eb; /* Darker shade of blue */
+  transform: scale(1.05); /* Slightly enlarge the button */
+}
+
+.view:focus {
+  outline: none; /* Remove default focus outline */
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.5); /* Add custom focus outline with a shadow effect */
+}
 
 .modal-content {
   position: relative;

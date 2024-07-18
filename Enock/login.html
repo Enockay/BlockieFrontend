@@ -73,71 +73,76 @@
 
 <body class="bg-gray-100 font-sans leading-normal tracking-normal">
 
-    <header class="bg-blue-900 text-white p-4 flex items-center justify-between shadow-lg">
+    <header class="bg-blue-900 text-white p-2 flex items-center justify-between shadow-lg">
         <div class="flex items-center">
             <img src="./images/blogo.png" alt="Blackie Networks Logo" class="h-12 w-auto rounded-full">
             <h6 class="ml-4 font-extrabold">Blackie Networks</h6>
         </div>
-        <nav class="md:block hidden" >
-            <a href="#hourly-packages" class="nav-link">Hourly Packages</a>
-            <a href="#weekly-packages" class="nav-link hidden">Weekly Packages</a>
-            <a href="#monthly-packages" class="nav-link hidden">Monthly Packages</a>
-            <a href="#gen-z-packages" class="nav-link">Gen-Z Packages</a>
-            <a href="#niokolee-packages" class="nav-link hidden">Niokolee Packages</a>
+        <nav class="md:flex hidden">
+            <a href="#hourly-packages" class="nav-link bg-blue-400 p-2 rounded-lg shadow-lg">Hourly Packages</a>
+            <a href="#gen-z-packages" class="nav-link bg-blue-400 p-2 rounded-lg shadow-lg">Gen-Z Packages</a>
+            <a href="#niokolee-packages" class="nav-link nav-link text-gray-800 bg-blue-400 p-2 rounded-lg shadow-lg text-black ">Niokolee Packages</a>
         </nav>
-        <div class="text-right">
-            <p>tell1: 0796869402</p>
-            <p>tell2: 0796869402</p>
+        <div class="text-right bg-teal-600 p-1 rounded-lg shadow-md inline-block">
+            <p class="text-white font-semibold mb-1">Contact Us:</p>
+            <p class="text-gray-100">Tel 1: <a href="tel:0796869402" class="text-blue-300 hover:text-blue-500 transition">0796869402</a></p>
+            <p class="text-gray-100">Tel 2: <a href="tel:0796869402" class="text-blue-300 hover:text-blue-500 transition">0796869402</a></p>
         </div>
+        
     </header>
 
-    <main class="container mx-auto p-6">
-        <section class="bg-teal-400 p-6 rounded-lg shadow-2xl mb-8 text-center">
-            <h4 class="text-gray-100 text-xl font-bold m-0">Enjoy Unlimited Network</h4>
-            <p class="mb-4 text-blue-200">Strong & Fast 20+Mbps network</p>
-            <nav class="md:hidden" >
-                <a href="#hourly-packages" class="nav-link">Hourly Packages</a>
-                <a href="#gen-z-packages" class="nav-link">Gen-Z Packages</a>
-                <a href="#niokolee-packages" class="nav-link hidden">Niokolee Packages</a>
+    <main class="container mx-auto md:p-6 p-2">
+        <section class="bg-gradient-to-r from-teal-400 to-blue-500 md:p-4 p-2 rounded-lg shadow-2xl mb-4 text-center">
+            <h4 class="text-white text-xl font-bold mb-2">Enjoy Unlimited Network</h4>
+            
+            <!-- Navigation for Packages -->
+            <nav class="md:hidden mb-3 flex justify-between mt-4">
+                <a href="#hourly-packages" class="nav-link bg-blue-800 p-2 rounded-lg shadow-lg text-white hover:bg-blue-700 mb-3">Hourly Packages</a>
+                <a href="#gen-z-packages" class="nav-link bg-blue-800 p-2 rounded-lg shadow-lg text-white hover:bg-blue-700 mb-3">Gen-Z Packages</a>
             </nav>
-            <div class="md:flex block justify-center justify-evenly">
-                <div class="mb-6">
-                    <div class="w-full max-w-xs mx-auto">
-                        <div class="form">
-                            <label class="block text-blue">Do you have an active package?</label>
-                            <input type="number" maxlength="10" placeholder="Enter phone number" class="phone w-full p-2 border border-gray-300 rounded mt-1" id="phoneNumber">
-                        </div>
+            
+            <div class="md:flex block items-center gap-5">
+                <!-- Form Section -->
+                <div class="md:w-1/2 max-w-xs mx-auto w-full">
+                    <div class="form bg-teal-400 p-2 rounded-lg shadow-md md:p-6">
+                        <label class="block text-teal-700 font-semibold mb-2">Do you have an active package?</label>
+                        <input type="number" maxlength="5" placeholder="Enter phone number" class="phone w-full p-2 border border-gray-300 rounded mb-2 focus:outline-none focus:border-teal-500" id="phoneNumber">
                     </div>
                 </div>
-                <div class="mt-5">
-                    <button class="view bg-blue-900 text-white py-2 px-6 rounded-full mb-6 hover:bg-blue-800 transition" onclick="toggleInstructions()">How to Purchase</button>
+                
+                <!-- Call to Action Section -->
+                <div class="mt-5 md:mt-0 md:w-1/2 rounded-lg shadow-md w-full">
+                    <h3 class="text-white mb-4">Want to know how to get access to our high-speed internet? Click the button below!</h3>
+                    <button class="view bg-blue-900 text-white py-3 px-8 rounded-full hover:bg-blue-700 transition mb-5" onclick="toggleInstructions()">Get More Info</button>
                 </div>
             </div>
+            
+            <!-- FAQ Section and Key Benefits -->
+            <section class="md:flex block items-center gap-5">
+               
+                <!-- Key Benefits -->
+                <div class="text-center mt-5 md:mt-0 rounded-lg shadow-md w-full p-2 bg-blue300">
+                    <h5 class="text-teal-700 text-xl font-semibold mb-2">Why Choose Us?</h5>
+                    <ul class="list-disc list-inside text-teal-700">
+                        <li>Reliable connection with 99.9% uptime</li>
+                        <li class="text-white bg-blue-600 w-fit">System works by allocating you Unlimited internet access based on the package you purchased  validity</li>
+                        <li>24/7 customer support</li>
+                        <li>Strong & Fast 20+Mbps Network</li>
+                    </ul>
+                </div>
+            </section>
         </section>
-        <div id="instructions" class="hidden bg-blue-400 mb-3 p-6 rounded-lg shadow-md text-left text-center">
-            <h5 class="text-lg font-bold mb-4">How to Purchase a Package</h5>
-            <p class="mb-4">**If you have an active package just login above</p>
-            <ul class="list-decimal pl-6 mb-4">
+        <div id="instructions" class="hidden bg-gradient-to-r from-blue-400 to-blue-500 mb-3 p-6 rounded-lg shadow-2xl text-center">
+            <h5 class="text-white text-lg font-bold mb-4">How to Purchase a Package</h5>
+            <p class="text-white mb-4"><strong>If you have an active package, just login above</strong></p>
+            <ul class="list-decimal pl-6 mb-4 text-white text-left">
                 <li class="mb-2">Choose your package</li>
                 <li class="mb-2">Click Buy</li>
                 <li class="mb-2">Click on the Green connect button & wait for the internet connection</li>
             </ul>
-            <p>Thank you for choosing Blackie Networks</p>
+            <p class="text-white">Thank you for choosing Blackie Networks</p>
         </div>
-        <section class="bg-teal-200 p-6 rounded-lg shadow-2xl mb-8">
-            <h4 class="text-gray-900 text-xl font-bold mb-4 text-center">Blackie Networks Updates</h4>
-            <p class="text-center">No available updates</p>
-            <div class="md:flex block justify-center space-x-8">
-                <div class="mb-6">
-                    <img src="./images/advert.png" alt="Advertisement 1" class="rounded-lg shadow-md md:w-72  max-w-96 mx-auto">
-                </div>
-                <div class="mb-6">
-                    <img src="./images/ad2.png" alt="Advertisement 2" class="rounded-lg shadow-md w-64 mx-auto">
-                    <p class="text-center mt-2">Reach your audience</p>
-                </div>
-            </div>
-        </section>
-
+        
         <section id="hourly-packages">
             <h3 class="text-2xl font-bold text-white mb-4">Comrade Packages</h3>
             <div class="flex flex-wrap -mx-2">
@@ -147,20 +152,24 @@
                         <h4 class="text-xl font-bold mb-2">Weekly Packages</h4>
                         <div class=" space-y-4 text-gray-900 p-3 rounded">
                             <div class="flex justify-between items-center bg-blue-400 p-3 rounded ">
-                                <p>1-day package Ksh 45</p>
-                                <button class="bg-blue-900 text-white py-1 px-3 rounded hover:bg-blue-800 transition" onclick="purchaseItem('1-day package ksh=45')">Buy</button>
+                                <p>1-day package Ksh 35</p>
+                                <button class="bg-blue-900 text-white py-1 px-3 rounded hover:bg-blue-800 transition"
+                                    onclick="purchaseItem('1-day package ksh=35')">Buy</button>
                             </div>
                             <div class="flex justify-between items-center bg-blue-400 p-3 rounded">
-                                <p>2-days package Ksh 80</p>
-                                <button class="bg-blue-900 text-white py-1 px-3 rounded hover:bg-blue-800 transition" onclick="purchaseItem('2-days package ksh=80')">Buy</button>
+                                <p>2-days package Ksh 60</p>
+                                <button class="bg-blue-900 text-white py-1 px-3 rounded hover:bg-blue-800 transition"
+                                    onclick="purchaseItem('2-days package ksh=60')">Buy</button>
                             </div>
                             <div class="flex justify-between items-center bg-blue-400 p-3 rounded">
-                                <p>5-days package Ksh 200</p>
-                                <button class="bg-blue-900 text-white py-1 px-3 rounded hover:bg-blue-800 transition" onclick="purchaseItem('5-days package ksh=200')">Buy</button>
+                                <p>5-days package Ksh 180</p>
+                                <button class="bg-blue-900 text-white py-1 px-3 rounded hover:bg-blue-800 transition"
+                                    onclick="purchaseItem('5-days package ksh=180')">Buy</button>
                             </div>
                             <div class="flex justify-between items-center bg-blue-400 p-3 rounded">
-                                <p>7-days package Ksh 300</p>
-                                <button class="bg-blue-900 text-white py-1 px-3 rounded hover:bg-blue-800 transition" onclick="purchaseItem('7-days package ksh=300')">Buy</button>
+                                <p>7-days package Ksh 250</p>
+                                <button class="bg-blue-900 text-white py-1 px-3 rounded hover:bg-blue-800 transition"
+                                    onclick="purchaseItem('7-days package ksh=250')">Buy</button>
                             </div>
                         </div>
                     </div>
@@ -172,20 +181,24 @@
                         <h4 class="text-xl font-bold mb-2">Monthly Packages</h4>
                         <div class=" space-y-4 text-gray-900 p-3 rounded">
                             <div class="flex justify-between items-center bg-blue-400 p-3 rounded">
-                                <p>1-month package Ksh 600</p>
-                                <button class="bg-blue-900 text-white py-1 px-3 rounded hover:bg-blue-800 transition" onclick="purchaseItem('1-month package ksh=600')">Buy</button>
+                                <p>31-month package Ksh 600</p>
+                                <button class="bg-blue-900 text-white py-1 px-3 rounded hover:bg-blue-800 transition"
+                                    onclick="purchaseItem('1-month package ksh=600')">Buy</button>
                             </div>
                             <div class="flex justify-between items-center bg-blue-400 p-3 rounded">
-                                <p>2-months package Ksh 1000</p>
-                                <button class="bg-blue-900 text-white py-1 px-3 rounded hover:bg-blue-800 transition" onclick="purchaseItem('2-months package ksh=1000')">Buy</button>
+                                <p>14-days package Ksh 350</p>
+                                <button class="bg-blue-900 text-white py-1 px-3 rounded hover:bg-blue-800 transition"
+                                    onclick="purchaseItem('14-days package ksh=350')">Buy</button>
                             </div>
                             <div class="flex justify-between items-center bg-blue-400 p-3 rounded">
-                                <p>5-months package Ksh 2500</p>
-                                <button class="bg-blue-900 text-white py-1 px-3 rounded hover:bg-blue-800 transition" onclick="purchaseItem('5-months package ksh=2500')">Buy</button>
+                                <p>21-days package Ksh 430</p>
+                                <button class="bg-blue-900 text-white py-1 px-3 rounded hover:bg-blue-800 transition"
+                                    onclick="purchaseItem('21-days package ksh=430')">Buy</button>
                             </div>
                             <div class="flex justify-between items-center bg-blue-400 p-3 rounded">
-                                <p>1-year package Ksh 3500</p>
-                                <button class="bg-blue-900 text-white py-1 px-3 rounded hover:bg-blue-800 transition" onclick="purchaseItem('1-year package ksh=3500')">Buy</button>
+                                <p>28-days package Ksh 550</p>
+                                <button class="bg-blue-900 text-white py-1 px-3 rounded hover:bg-blue-800 transition"
+                                    onclick="purchaseItem('28-days package ksh=550')">Buy</button>
                             </div>
                         </div>
                     </div>
@@ -203,42 +216,113 @@
                         <div class=" space-y-4 text-gray-900 p-3 rounded">
                             <div class="flex justify-between items-center bg-blue-400 p-3 rounded">
                                 <p>30-mins package Ksh 5</p>
-                                <button class="bg-blue-900 text-white py-1 px-3 rounded hover:bg-blue-800 transition" onclick="purchaseItem('30-mins package ksh=5')">Buy</button>
+                                <button class="bg-blue-900 text-white py-1 px-3 rounded hover:bg-blue-800 transition"
+                                    onclick="purchaseItem('30-mins package ksh=5')">Buy</button>
                             </div>
                             <div class="flex justify-between items-center bg-blue-400 p-3 rounded">
                                 <p>1-hour package Ksh 10</p>
-                                <button class="bg-blue-900 text-white py-1 px-3 rounded hover:bg-blue-800 transition" onclick="purchaseItem('1-hour package ksh=10')">Buy</button>
+                                <button class="bg-blue-900 text-white py-1 px-3 rounded hover:bg-blue-800 transition"
+                                    onclick="purchaseItem('1-hour package ksh=10')">Buy</button>
                             </div>
                             <div class="flex justify-between items-center bg-blue-400 p-3 rounded">
                                 <p>4-hours package Ksh 15</p>
-                                <button class="bg-blue-900 text-white py-1 px-3 rounded hover:bg-blue-800 transition" onclick="purchaseItem('4-hours package ksh=15')">Buy</button>
+                                <button class="bg-blue-900 text-white py-1 px-3 rounded hover:bg-blue-800 transition"
+                                    onclick="purchaseItem('4-hours package ksh=15')">Buy</button>
                             </div>
                             <div class="flex justify-between items-center bg-blue-400 p-3 rounded">
                                 <p>12-hours package Ksh 30</p>
-                                <button class="bg-blue-900 text-white py-1 px-3 rounded hover:bg-blue-800 transition" onclick="purchaseItem('12-hours package ksh=30')">Buy</button>
+                                <button class="bg-blue-900 text-white py-1 px-3 rounded hover:bg-blue-800 transition"
+                                    onclick="purchaseItem('12-hours package ksh=30')">Buy</button>
                             </div>
                         </div>
                     </div>
                 </div>
+                <!-- FAQ Section -->
+<div class="text-left mt-5 md:mt-0 md:w-1/2 rounded-lg shadow-md w-full p-6 bg-white">
+    <h5 class="text-teal-700 text-xl font-semibold mb-4">Frequently Asked Questions</h5>
+    <ul class="space-y-4">
+        <li>
+            <button class="w-full text-left flex justify-between items-center text-teal-700 font-semibold focus:outline-none" onclick="toggleAnswer('faq1')">
+                <span>How do I set up my network?</span>
+                <svg class="w-5 h-5 text-teal-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+            </button>
+            <div id="faq1" class="hidden mt-2 text-teal-600">
+                <p>To set up your network, follow the instructions provided in the user manual or visit our <a href="#" class="text-teal-800 underline">setup guide</a> page.</p>
             </div>
-            <section class="bg-gray-200 p-6 rounded-lg shadow-2xl mb-8">
-                <h4 class="text-gray-900 text-xl font-bold mb-4 text-center">Check Your Location</h4>
-                <p class="text-center mb-4">Ensure we can provide service to your area</p>
-                <div class="flex justify-center">
-                    <input type="text" placeholder="Enter your location" class="w-full md:w-1/3 p-2 border border-gray-300 rounded mr-2">
-                    <button class="bg-blue-900 text-white py-2 px-4 rounded hover:bg-blue-800 transition">Check</button>
-                </div>
-            </section> 
+        </li>
+        <li>
+            <button class="w-full text-left flex justify-between items-center text-teal-700 font-semibold focus:outline-none" onclick="toggleAnswer('faq2')">
+                <span>What packages do you offer?</span>
+                <svg class="w-5 h-5 text-teal-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+            </button>
+            <div id="faq2" class="hidden mt-2 text-teal-600">
+                <p>We offer a variety of packages to suit different needs. Visit our <a href="#" class="text-teal-800 underline">packages</a> page for more details.</p>
+            </div>
+        </li>
+        <li>
+            <button class="w-full text-left flex justify-between items-center text-teal-700 font-semibold focus:outline-none" onclick="toggleAnswer('faq3')">
+                <span>How can I contact customer support?</span>
+                <svg class="w-5 h-5 text-teal-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+            </button>
+            <div id="faq3" class="hidden mt-2 text-teal-600">
+                <p>You can contact our customer support by calling <a href="tel:+1234567890" class="text-teal-800 underline">+1 234 567 890</a> or emailing us at <a href="mailto:support@networkservice.com" class="text-teal-800 underline">support@networkservice.com</a>.</p>
+            </div>
+        </li>
+    </ul>
+</div>
+
+<script>
+function toggleAnswer(id) {
+    const answer = document.getElementById(id);
+    if (answer.classList.contains('hidden')) {
+        answer.classList.remove('hidden');
+    } else {
+        answer.classList.add('hidden');
+    }
+}
+</script>
+
+            </div>
+
+
         </section>
-        <div class="modal-content animate__animated animate__fadeInDown p-2 w-auto text-gray-100 bg-blue-800 hidden" id="prompt">
-        <h4 class="text-white font-bold mb-4">BlackieNetwork purchase Modal</h4>
+        <section class="bg-teal-200 p-6 rounded-lg shadow-2xl mb-8">
+            <h4 class="text-gray-800 text-2xl font-bold mb-6 text-center">Blackie Networks Updates</h4>
+            <div class="md:flex block md:space-x-8 space-y-6 md:space-y-0">
+                <div class="md:w-1/2 w-full shadow-xl p-5 rounded-lg bg-white">
+                    <h4 class="text-xl font-bold mb-4 text-gray-700 text-center">Our Products</h4>
+                    <img src="./images/advert.png" alt="Advertisement" class="rounded-lg shadow-md mx-auto w-full max-w-sm">
+                </div>
+                <div class="md:w-1/2 w-full text-center md:text-left shadow-xl p-5 rounded-lg bg-white">
+                    <h4 class="text-xl font-bold mb-4 text-gray-700 text-center">Who Are Blackie Networks</h4>
+                    <p class="mb-4 text-gray-600">Blackie Networks is a newly established company that specializes in software products. We provide affordable internet services to students and enhanced service offerings.</p>
+                    <p class="mb-4 text-gray-600">Our range of products includes online service booking for a variety of offerings, catering to both users and providers.</p>
+                    <p class="text-gray-600">To learn more, visit our website at <a href="https://blackienetwork.com" class="text-teal-700 font-semibold hover:underline">Blackie Networks</a>.</p>
+                </div>
+            </div>
+        </section>
+        
+        <section class="bg-gray-100 p-6 rounded-lg shadow-lg mb-8">
+            <h4 class="text-gray-900 text-2xl font-bold mb-4 text-center">Check Your Coverage</h4>
+            <p class="text-center text-gray-700 mb-4">Verify if our services are available in your area</p>
+            <div class="flex justify-center items-center gap-2">
+                <input type="text" placeholder="Enter your location"
+                    class="w-full md:w-1/2 lg:w-1/3 xl:w-1/4 p-2 gap-3 border border-gray-300 rounded-l-lg focus:outline-none focus:border-blue-500">
+                <button class="bg-blue-600 text-white py-2 px-4 rounded-r-lg hover:bg-blue-700 transition focus:outline-none">Check</button>
+            </div>
+        </section>
+        
+        <div class="modal-content animate__animated animate__fadeInDown p-2 w-auto text-gray-100 bg-blue-800 hidden"
+            id="prompt">
+            <h4 class="text-white font-bold mb-4">BlackieNetwork purchase Modal</h4>
         </div>
         <div class="loading hidden">please wait..</div>
-        <div class="loading flex justify-center items-center h-20 w-full mb-3" id="loadingSpinner" style="display:none;">
+        <div class="loading flex justify-center items-center h-20 w-full mb-3" id="loadingSpinner"
+            style="display:none;">
             <div class="loading-spinner h-10 w-10 border-4 border-blue-600 rounded-full"></div>
         </div>
-        
-       
+
+
     </main>
 
     <footer class="bg-blue-900 text-white p-4 text-center">
