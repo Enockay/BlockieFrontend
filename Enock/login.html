@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blackie Networks - Purchase Package</title>
+    <link rel="stylesheet" href="tailwind.min.css">
+    <link rel="stylesheet" href="./styles/pkg.css">
+    <style>
+        body {
+            background: linear-gradient(to right, #667eea, #764ba2);
+        }
+
+        .card-header {
+            background: linear-gradient(to right, #4e54c8, #8f94fb);
+            color: white;
+        }
+
+        .card-content {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .loading-spinner {
+            border-top-color: transparent;
+            -webkit-animation: spin 1s linear infinite;
+            animation: spin 1s linear infinite;
+        }
+
+        @-webkit-keyframes spin {
+            0% {
+                -webkit-transform: rotate(0deg);
+            }
+
+            100% {
+                -webkit-transform: rotate(360deg);
+            }
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .nav-link {
+            margin: 0 10px;
+            text-decoration: none;
+            color: white;
+            transition: color 0.3s;
+        }
+
+        .nav-link:hover {
+            color: #4e54c8;
+        }
+
+        .footer-link {
+            color: #d1d5db;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-link:hover {
+            color: white;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+
+    <header class="bg-blue-900 text-white p-4 flex items-center justify-between shadow-lg">
+        <div class="flex items-center">
+            <img src="./images/blogo.png" alt="Blackie Networks Logo" class="h-12 w-auto rounded-full">
+            <h6 class="ml-4 font-extrabold">Blackie Networks</h6>
+        </div>
+        <nav class="md:block hidden" >
+            <a href="#hourly-packages" class="nav-link">Hourly Packages</a>
+            <a href="#weekly-packages" class="nav-link hidden">Weekly Packages</a>
+            <a href="#monthly-packages" class="nav-link hidden">Monthly Packages</a>
+            <a href="#gen-z-packages" class="nav-link">Gen-Z Packages</a>
+            <a href="#niokolee-packages" class="nav-link hidden">Niokolee Packages</a>
+        </nav>
+        <div class="text-right">
+            <p>tell1: 0796869402</p>
+            <p>tell2: 0796869402</p>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-6">
+        <section class="bg-teal-400 p-6 rounded-lg shadow-2xl mb-8 text-center">
+            <h4 class="text-gray-100 text-xl font-bold m-0">Enjoy Unlimited Network</h4>
+            <p class="mb-4 text-blue-200">Strong & Fast 20+Mbps network</p>
+            <nav class="md:hidden" >
+                <a href="#hourly-packages" class="nav-link">Hourly Packages</a>
+                <a href="#gen-z-packages" class="nav-link">Gen-Z Packages</a>
+                <a href="#niokolee-packages" class="nav-link hidden">Niokolee Packages</a>
+            </nav>
+            <div class="md:flex block justify-center justify-evenly">
+                <div class="mb-6">
+                    <div class="w-full max-w-xs mx-auto">
+                        <div class="form">
+                            <label class="block text-blue">Do you have an active package?</label>
+                            <input type="number" maxlength="10" placeholder="Enter phone number" class="phone w-full p-2 border border-gray-300 rounded mt-1" id="phoneNumber">
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-5">
+                    <button class="view bg-blue-900 text-white py-2 px-6 rounded-full mb-6 hover:bg-blue-800 transition" onclick="toggleInstructions()">How to Purchase</button>
+                </div>
+            </div>
+        </section>
+        <div id="instructions" class="hidden bg-blue-400 mb-3 p-6 rounded-lg shadow-md text-left text-center">
+            <h5 class="text-lg font-bold mb-4">How to Purchase a Package</h5>
+            <p class="mb-4">**If you have an active package just login above</p>
+            <ul class="list-decimal pl-6 mb-4">
+                <li class="mb-2">Choose your package</li>
+                <li class="mb-2">Click Buy</li>
+                <li class="mb-2">Click on the Green connect button & wait for the internet connection</li>
+            </ul>
+            <p>Thank you for choosing Blackie Networks</p>
+        </div>
+        <section class="bg-teal-200 p-6 rounded-lg shadow-2xl mb-8">
+            <h4 class="text-gray-900 text-xl font-bold mb-4 text-center">Blackie Networks Updates</h4>
+            <p class="text-center">No available updates</p>
+            <div class="md:flex block justify-center space-x-8">
+                <div class="mb-6">
+                    <img src="./images/advert.png" alt="Advertisement 1" class="rounded-lg shadow-md md:w-72  max-w-96 mx-auto">
+                </div>
+                <div class="mb-6">
+                    <img src="./images/ad2.png" alt="Advertisement 2" class="rounded-lg shadow-md w-64 mx-auto">
+                    <p class="text-center mt-2">Reach your audience</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="hourly-packages">
+            <h3 class="text-2xl font-bold text-white mb-4">Comrade Packages</h3>
+            <div class="flex flex-wrap -mx-2">
+                <!-- Weekly Packages -->
+                <div class="w-full md:w-1/2 px-2 mb-4">
+                    <div class="card-header p-6 rounded-lg shadow-lg">
+                        <h4 class="text-xl font-bold mb-2">Weekly Packages</h4>
+                        <div class=" space-y-4 text-gray-900 p-3 rounded">
+                            <div class="flex justify-between items-center bg-blue-400 p-3 rounded ">
+                                <p>1-day package Ksh 45</p>
+                                <button class="bg-blue-900 text-white py-1 px-3 rounded hover:bg-blue-800 transition" onclick="purchaseItem('1-day package ksh=45')">Buy</button>
+                            </div>
+                            <div class="flex justify-between items-center bg-blue-400 p-3 rounded">
+                                <p>2-days package Ksh 80</p>
+                                <button class="bg-blue-900 text-white py-1 px-3 rounded hover:bg-blue-800 transition" onclick="purchaseItem('2-days package ksh=80')">Buy</button>
+                            </div>
+                            <div class="flex justify-between items-center bg-blue-400 p-3 rounded">
+                                <p>5-days package Ksh 200</p>
+                                <button class="bg-blue-900 text-white py-1 px-3 rounded hover:bg-blue-800 transition" onclick="purchaseItem('5-days package ksh=200')">Buy</button>
+                            </div>
+                            <div class="flex justify-between items-center bg-blue-400 p-3 rounded">
+                                <p>7-days package Ksh 300</p>
+                                <button class="bg-blue-900 text-white py-1 px-3 rounded hover:bg-blue-800 transition" onclick="purchaseItem('7-days package ksh=300')">Buy</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Monthly Packages -->
+                <div class="w-full md:w-1/2 px-2 mb-4">
+                    <div class="card-header p-6 rounded-lg shadow-lg">
+                        <h4 class="text-xl font-bold mb-2">Monthly Packages</h4>
+                        <div class=" space-y-4 text-gray-900 p-3 rounded">
+                            <div class="flex justify-between items-center bg-blue-400 p-3 rounded">
+                                <p>1-month package Ksh 600</p>
+                                <button class="bg-blue-900 text-white py-1 px-3 rounded hover:bg-blue-800 transition" onclick="purchaseItem('1-month package ksh=600')">Buy</button>
+                            </div>
+                            <div class="flex justify-between items-center bg-blue-400 p-3 rounded">
+                                <p>2-months package Ksh 1000</p>
+                                <button class="bg-blue-900 text-white py-1 px-3 rounded hover:bg-blue-800 transition" onclick="purchaseItem('2-months package ksh=1000')">Buy</button>
+                            </div>
+                            <div class="flex justify-between items-center bg-blue-400 p-3 rounded">
+                                <p>5-months package Ksh 2500</p>
+                                <button class="bg-blue-900 text-white py-1 px-3 rounded hover:bg-blue-800 transition" onclick="purchaseItem('5-months package ksh=2500')">Buy</button>
+                            </div>
+                            <div class="flex justify-between items-center bg-blue-400 p-3 rounded">
+                                <p>1-year package Ksh 3500</p>
+                                <button class="bg-blue-900 text-white py-1 px-3 rounded hover:bg-blue-800 transition" onclick="purchaseItem('1-year package ksh=3500')">Buy</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="gen-z-packages" class="mt-8">
+            <h3 class="text-2xl font-bold text-white mb-4">Gen-Z Packages</h3>
+            <div class="flex flex-wrap -mx-2">
+                <!-- Niokolee Packages -->
+                <div class="w-full md:w-1/2 px-2 mb-4">
+                    <div class="card-header p-6 rounded-lg shadow-lg">
+                        <h4 class="text-xl font-bold mb-2">Niokolee Packages</h4>
+                        <div class=" space-y-4 text-gray-900 p-3 rounded">
+                            <div class="flex justify-between items-center bg-blue-400 p-3 rounded">
+                                <p>30-mins package Ksh 5</p>
+                                <button class="bg-blue-900 text-white py-1 px-3 rounded hover:bg-blue-800 transition" onclick="purchaseItem('30-mins package ksh=5')">Buy</button>
+                            </div>
+                            <div class="flex justify-between items-center bg-blue-400 p-3 rounded">
+                                <p>1-hour package Ksh 10</p>
+                                <button class="bg-blue-900 text-white py-1 px-3 rounded hover:bg-blue-800 transition" onclick="purchaseItem('1-hour package ksh=10')">Buy</button>
+                            </div>
+                            <div class="flex justify-between items-center bg-blue-400 p-3 rounded">
+                                <p>4-hours package Ksh 15</p>
+                                <button class="bg-blue-900 text-white py-1 px-3 rounded hover:bg-blue-800 transition" onclick="purchaseItem('4-hours package ksh=15')">Buy</button>
+                            </div>
+                            <div class="flex justify-between items-center bg-blue-400 p-3 rounded">
+                                <p>12-hours package Ksh 30</p>
+                                <button class="bg-blue-900 text-white py-1 px-3 rounded hover:bg-blue-800 transition" onclick="purchaseItem('12-hours package ksh=30')">Buy</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <section class="bg-gray-200 p-6 rounded-lg shadow-2xl mb-8">
+                <h4 class="text-gray-900 text-xl font-bold mb-4 text-center">Check Your Location</h4>
+                <p class="text-center mb-4">Ensure we can provide service to your area</p>
+                <div class="flex justify-center">
+                    <input type="text" placeholder="Enter your location" class="w-full md:w-1/3 p-2 border border-gray-300 rounded mr-2">
+                    <button class="bg-blue-900 text-white py-2 px-4 rounded hover:bg-blue-800 transition">Check</button>
+                </div>
+            </section> 
+        </section>
+        <div class="modal-content animate__animated animate__fadeInDown p-2 w-auto text-gray-100 bg-blue-800 hidden" id="prompt">
+        <h4 class="text-white font-bold mb-4">BlackieNetwork purchase Modal</h4>
+        </div>
+        <div class="loading hidden">please wait..</div>
+        <div class="loading flex justify-center items-center h-20 w-full mb-3" id="loadingSpinner" style="display:none;">
+            <div class="loading-spinner h-10 w-10 border-4 border-blue-600 rounded-full"></div>
+        </div>
+        
+       
+    </main>
+
+    <footer class="bg-blue-900 text-white p-4 text-center">
+        <p class="text-sm">© 2024 Blackie Networks. All rights reserved.</p>
+        <nav class="md:flex block justify-center mt-2">
+            <a href="#" class="footer-link mx-2">Privacy Policy</a>
+            <a href="#" class="footer-link mx-2">Terms of Service</a>
+        </nav>
+    </footer>
+
+    <script>
+        function toggleInstructions() {
+            const instructions = document.getElementById('instructions');
+            instructions.classList.toggle('hidden');
+        }
+    </script>
+    <script src="./pkg.js"></script>
+</body>
+
+</html>
