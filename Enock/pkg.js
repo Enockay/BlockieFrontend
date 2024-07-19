@@ -1,15 +1,9 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const button = document.querySelector('.view');
-    const instructionDiv = document.querySelector('.instruction');
-    button.addEventListener('click', () => {
-        const isHidden = instructionDiv.style.display === 'none';
-        instructionDiv.style.display = isHidden ? 'block' : 'none';
-        button.textContent = isHidden ? 'Close Instructions' : 'View Instructions';
-    });
-});
+
 
 const input1 = document.querySelector(".phone-input");
-const prompt = document.getElementById("prompt");
+const feedback = document.getElementById("prompt");
+const feedbackPara = document.createElement('p')
+feedback.appendChild(feedbackPara)
 const form = document.querySelector(".form");
 const loading = document.querySelector(".loading");
 const phoneInput = document.querySelector(".phone");
@@ -31,12 +25,12 @@ form.append(connectBack, alertInfo);
 
 const showPrompt = () => {
     checkPromptContent();
-    prompt.style.display = "block";
+    feedback.style.display = "block";
 };
 
 const closePrompt = () => {
-    prompt.textContent = "";
-    prompt.style.display = "none";
+    feedbackPara.textContent = "";
+    feedback.style.display = "none";
     checkPromptContent();
 };
 
@@ -128,11 +122,42 @@ const submitConnectForm = (amount, phone) => {
     connectForm.submit();
 };
 
-const purchaseItem = (value) => {
-    const confirmButton = document.createElement("button");
-    confirmButton.className = "connect bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded";
-    confirmButton.textContent = "Connect";
+//confirm button 
+const confirmButton = document.createElement("button");
+confirmButton.className = "connect bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded";
+confirmButton.textContent = "Connect";
+confirmButton.style.display = "none"; // Hide the confirm button initially
 
+confirmButton.addEventListener('click', async () => {
+    feedbackPara.textContent = '';
+    feedback.appendChild(spinner);
+    try {
+        const callbackResponse = await fetch("https://php-system-b4ed19ff8838.herokuapp.com/activeUser.php", {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ phoneNumber: phone, timeUnit: time1 })
+        });
+
+        if (!callbackResponse.ok) throw new Error('Network response was not ok');
+
+        const callbackData = await callbackResponse.json();
+
+        if (callbackData && callbackData.ResultCode === 0) {
+            submitConnectForm(Amount, phone2);
+        } else {
+            feedbackPara.textContent = "Transaction was unsuccessful";
+            feedbackPara.className = 'text-red-500';
+            feedback.appendChild(close);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        feedbackPara.textContent = "Error: in direct login try connecting with connectBack";
+        feedbackPara.className = 'text-red-500';
+        feedback.appendChild(close);
+    }
+});
+
+const purchaseItem = (value) => {
     const alertInfo = document.createElement("p");
     alertInfo.className = 'text-red-500';
 
@@ -149,10 +174,13 @@ const purchaseItem = (value) => {
             formData.append('Amount', Amount);
             formData.append('timeUnit', time1);
 
-            prompt.textContent = '';
-            prompt.appendChild(spinner);
+            feedbackPara.textContent = '';
+            
 
             try {
+                feedback.removeChild(form)
+                feedback.appendChild(spinner);
+
                 const response = await fetch('https://node-blackie-networks.fly.dev/api/makePayment', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -160,47 +188,69 @@ const purchaseItem = (value) => {
                 });
 
                 const data = await response.json();
-                if(data.success){
-                    setTimeout(() => {
-                        prompt.textContent = "";
-                        prompt.appendChild(confirmButton);
-                    }, 15000);
+                if (data.success && data.message.CheckoutRequestID) {
+                    const checkoutRequestID = data.message.CheckoutRequestID;
+                    const socket = new WebSocket(`ws://node-blackie-networks.fly.dev/${checkoutRequestID}`);
+                    
+                    socket.addEventListener('open', (event) => {
+                        console.log('WebSocket is open now.');
+                    });
 
-                    confirmButton.addEventListener('click', async () => {
-                        prompt.textContent = '';
-                        prompt.appendChild(spinner);
-                        try {
-                            const callbackResponse = await fetch("https://php-system-b4ed19ff8838.herokuapp.com/activeUser.php", {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({ phoneNumber: phone, timeUnit: time1 })
-                            });
+                    // Set a timeout as a fallback mechanism
+                    const fallbackTimeout = setTimeout(() => {
+                        feedback.removeChild(spinner)
+                        feedback.appendChild(confirmButton);
+                        feedbackPara.textContent = "Waiting for Mpesa transaction verification. Do not close or refresh this page. If it takes too long, try with the connect button.";
+                    }, 30000); // 30 seconds timeout
 
-                            if (!callbackResponse.ok) throw new Error('Network response was not ok');
-
-                            const callbackData = await callbackResponse.json();
-
-                            if (callbackData && callbackData.ResultCode === 0) {
+                    // WebSocket message handler
+                    socket.addEventListener('message', (event) => {
+                        clearTimeout(fallbackTimeout); // Clear the fallback timeout
+                        const message = JSON.parse(event.data);
+                        //console.log('Message from backend:', message);
+                        if (message.checkoutRequestID === checkoutRequestID) {
+                            if (message.status === 'Payment Successful') {
                                 submitConnectForm(Amount, phone2);
+                                feedback.appendChild(spinner)
                             } else {
-                                prompt.textContent = "Transaction was unsuccessful";
-                                prompt.className = 'text-red-500';
-                                prompt.appendChild(close);
+                                //console.log('Message from backend:', message);
+                                console.log("trying to append text");
+                                feedbackPara.textContent = `${message.status}`;
+                                feedbackPara.className = 'text-red-500';
+                                feedback.removeChild(spinner);
+                                feedback.appendChild(close);
+                                console.log('button appended or failed')
                             }
-                        } catch (error) {
-                            console.error('Error:', error);
-                            prompt.textContent = "Error: in direct login try connecting with connectBack";
-                            prompt.className = 'text-red-500';
-                            prompt.appendChild(close);
                         }
                     });
+
+                    // WebSocket error handler
+                    socket.addEventListener('error', (error) => {
+                        console.error('WebSocket error:', error);
+                        feedbackPara.textContent = "Error: WebSocket connection failed, please try again";
+                        feedbackPara.className = 'text-red-500';
+                        feedback.removeChild(spinner)
+                        feedback.appendChild(confirmButton);
+                        feedback.appendChild(close);
+                        
+                    });
+
+                    // WebSocket close handler
+                    socket.addEventListener('close', () => {
+                        console.log('WebSocket connection closed');
+                        feedback.removeChild(spinner)
+                        feedback.appendChild(confirmButton);
+                    });
+
                 } else {
-                    prompt.textContent = "Your request failed try again";
-                    prompt.appendChild(close);
+                    feedback.removeChild(spinner);
+                    feedbackPara.textContent = "Your request failed, try again";
+                    feedback.appendChild(close);
                 }
             } catch (error) {
-                prompt.textContent = "Error in processing transaction";
-                prompt.appendChild(close);
+                feedbackPara.textContent = "Error in processing transaction";
+                feedback.removeChild(spinner)
+                feedback.appendChild(close);
                 console.error("Error submitting form: " + error.message);
             }
         }
@@ -208,44 +258,48 @@ const purchaseItem = (value) => {
 
     const form = document.createElement("form");
     form.className = "prompt1";
-    form.method = "post";
-    form.action = "mpesa2Proccess.php";
-
+    form.method = "";
+    form.action = "";
+    
     const inputPhoneNumber = document.createElement("input");
     inputPhoneNumber.className = "phone-input border p-2 rounded-md text-black";
     inputPhoneNumber.type = "number";
     inputPhoneNumber.name = "phoneNumber";
     inputPhoneNumber.placeholder = "Phone...";
-
+    
     const inputAmount = document.createElement("input");
     inputAmount.type = "hidden";
     inputAmount.name = "amount";
     inputAmount.value = extractAmount(value);
-
+    
     const inputTimeUnit = document.createElement("input");
     inputTimeUnit.type = "hidden";
     inputTimeUnit.name = "timeUnit";
     inputTimeUnit.value = extractTime(value);
-
+    
     const para = document.createElement("p");
     para.className = "para";
     para.textContent = "Thanks for choosing us. Input your Mpesa Number below, then wait for the Mpesa prompt.";
-
+    
     const para1 = document.createElement("p");
     para1.textContent = `Confirm purchase of ${value}`;
-
+    
     const button = document.createElement("button");
     button.type = "submit";
     button.className = "pay bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded";
     button.textContent = "Pay";
-
+    
     const close = document.createElement("button");
     close.className = "close bg-gray-300 hover:bg-gray-400 text-black font-bold py-1 px-2 rounded";
     close.textContent = "Close";
-    close.addEventListener('click', closePrompt);
-
-    form.append(para1, para, inputPhoneNumber, inputAmount, inputTimeUnit, button, close, alertInfo);
-    prompt.appendChild(form);
+    close.addEventListener('click', (event) => {
+        event.preventDefault(); // Prevent form submission
+        closePrompt();
+        feedback.removeChild(form);
+    });
+    
+    form.append(para1, para, inputPhoneNumber, inputAmount, inputTimeUnit, button, close);
+    feedback.appendChild(form);    
 
     button.addEventListener("click", (event) => {
         event.preventDefault();
