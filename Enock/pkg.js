@@ -153,17 +153,14 @@ const purchaseItem = (value) => {
             prompt.appendChild(spinner);
 
             try {
-                const response = await fetch('https://blackie-net-01633004af9c.herokuapp.com/api/makePayment', {
+                const response = await fetch('https://node-blackie-networks.fly.dev/api/makePayment', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ phoneNumber: phone, Amount, timeUnit: time1 })
                 });
 
-                if (!response.ok) throw new Error("Network error");
-
                 const data = await response.json();
-
-                if (data && data.transactionId) {
+                if(data.success){
                     setTimeout(() => {
                         prompt.textContent = "";
                         prompt.appendChild(confirmButton);
@@ -198,7 +195,7 @@ const purchaseItem = (value) => {
                         }
                     });
                 } else {
-                    prompt.textContent = "Transaction cancelled";
+                    prompt.textContent = "Your request failed try again";
                     prompt.appendChild(close);
                 }
             } catch (error) {
@@ -215,7 +212,7 @@ const purchaseItem = (value) => {
     form.action = "mpesa2Proccess.php";
 
     const inputPhoneNumber = document.createElement("input");
-    inputPhoneNumber.className = "phone-input border p-2 rounded-md";
+    inputPhoneNumber.className = "phone-input border p-2 rounded-md text-black";
     inputPhoneNumber.type = "number";
     inputPhoneNumber.name = "phoneNumber";
     inputPhoneNumber.placeholder = "Phone...";
