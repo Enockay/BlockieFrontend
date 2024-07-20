@@ -187,7 +187,7 @@
                         <h4 class="text-xl font-bold mb-2">Monthly Packages</h4>
                         <div class=" space-y-4 text-gray-900 p-3 rounded">
                             <div class="flex justify-between items-center bg-blue-400 p-3 rounded">
-                                <p>31-month package Ksh 600</p>
+                                <p>31-days package Ksh 600</p>
                                 <button class="bg-blue-900 text-white py-1 px-3 rounded hover:bg-blue-800 transition"
                                     onclick="purchaseItem('1-month package ksh=600')">Buy</button>
                             </div>
@@ -231,9 +231,9 @@
                                     onclick="purchaseItem('1-hour package ksh=10')">Buy</button>
                             </div>
                             <div class="flex justify-between items-center bg-blue-400 p-3 rounded">
-                                <p>4-hours package Ksh 15</p>
+                                <p>5-hours package Ksh 20</p>
                                 <button class="bg-blue-900 text-white py-1 px-3 rounded hover:bg-blue-800 transition"
-                                    onclick="purchaseItem('4-hours package ksh=15')">Buy</button>
+                                    onclick="purchaseItem('5-hours package ksh=20')">Buy</button>
                             </div>
                             <div class="flex justify-between items-center bg-blue-400 p-3 rounded">
                                 <p>12-hours package Ksh 30</p>
@@ -244,7 +244,7 @@
                     </div>
                 </div>
                 <!-- FAQ Section -->
-                <div class="text-left mt-5 md:mt-0 md:w-1/2 rounded-lg shadow-md w-full p-6 bg-white">
+                <div class="text-left mt-5 md:mt-0 md:w-1/2 rounded-lg shadow-md w-full p-6 bg-blue-600">
                     <h5 class="text-teal-700 text-xl font-semibold mb-4">Frequently Asked Questions</h5>
                     <ul class="space-y-4">
                         <li>
@@ -252,15 +252,16 @@
                                 class="w-full text-left flex justify-between items-center text-teal-700 font-semibold focus:outline-none"
                                 onclick="toggleAnswer('faq1')">
                                 <span>How do I set up my network?</span>
-                                <svg class="w-5 h-5 text-teal-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 4v16m8-8H4"></path>
+                                <svg class="w-5 h-5 text-teal-700 transition-transform transform rotate-0" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                                 </svg>
                             </button>
-                            <div id="faq1" class="hidden mt-2 text-teal-600">
-                                <p>To set up your network, follow the instructions provided in the user manual or visit
-                                    our <a href="#" class="text-teal-800 underline">setup guide</a> page.</p>
+                            <div id="faq1" class="hidden mt-2 text-teal-600 bg-white p-2 rounded">
+                                <p>To get started just click the buy button of your preferred package then insert your mpesa mobile and
+                                    await for stk push. Once the transaction is successful, the system will automatically detect you and
+                                    connect you to the network. Visit our <a href="#" class="text-teal-800 underline">setup guide</a> page
+                                    for more details.</p>
                             </div>
                         </li>
                         <li>
@@ -268,15 +269,13 @@
                                 class="w-full text-left flex justify-between items-center text-teal-700 font-semibold focus:outline-none"
                                 onclick="toggleAnswer('faq2')">
                                 <span>What packages do you offer?</span>
-                                <svg class="w-5 h-5 text-teal-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 4v16m8-8H4"></path>
+                                <svg class="w-5 h-5 text-teal-700 transition-transform transform rotate-0" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                                 </svg>
                             </button>
-                            <div id="faq2" class="hidden mt-2 text-teal-600">
-                                <p>We offer a variety of packages to suit different needs. Visit our <a href="#"
-                                        class="text-teal-800 underline">packages</a> page for more details.</p>
+                            <div id="faq2" class="hidden mt-2 text-teal-600 bg-white p-2 rounded">
+                                <p>We offer a variety of packages to suit different needs. Check out our <a href="#" class="text-teal-800 underline">packages</a> page for more details on Comrade packages and Gen-Z packages.</p>
                             </div>
                         </li>
                         <li>
@@ -284,17 +283,27 @@
                                 class="w-full text-left flex justify-between items-center text-teal-700 font-semibold focus:outline-none"
                                 onclick="toggleAnswer('faq3')">
                                 <span>How can I contact customer support?</span>
-                                <svg class="w-5 h-5 text-teal-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 4v16m8-8H4"></path>
+                                <svg class="w-5 h-5 text-teal-700 transition-transform transform rotate-0" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                                 </svg>
                             </button>
-                            <div id="faq3" class="hidden mt-2 text-teal-600">
-                                <p>You can contact our customer support by calling <a href="tel:+1234567890"
-                                        class="text-teal-800 underline">+1 234 567 890</a> or emailing us at <a
-                                        href="mailto:support@networkservice.com"
-                                        class="text-teal-800 underline">support@networkservice.com</a>.</p>
+                            <div id="faq3" class="hidden mt-2 text-teal-600 bg-white p-2 rounded">
+                                <p>You can contact our customer support by calling <a href="tel:0796869402" class="text-teal-800 underline">0796869402</a> or emailing us at <a href="mailto:support@networkservice.com" class="text-teal-800 underline">support@networkservice.com</a>.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <button
+                                class="w-full text-left flex justify-between items-center text-teal-700 font-semibold focus:outline-none"
+                                onclick="toggleAnswer('faq4')">
+                                <span>Terms and Conditions</span>
+                                <svg class="w-5 h-5 text-teal-700 transition-transform transform rotate-0" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                </svg>
+                            </button>
+                            <div id="faq4" class="hidden mt-2 text-teal-600 bg-white p-2 rounded">
+                                <p>By agreeing to use Blackie Networks, the company does not refund instances caused by unavoidable circumstances such as power blackouts or even packages that you purchased but did not use. What we refund is only packages that faced technical issues during purchases, such as failed system transactions while your side was successful. We thank you for the great choice and hope you enjoy our products. Visit our <a href="#" class="text-teal-800 underline">packages</a> page for more details.</p>
                             </div>
                         </li>
                     </ul>
@@ -335,18 +344,60 @@
                 </div>
             </div>
         </section>
-
+        <section class="bg-gradient-to-r from-teal-400 to-blue-500 p-8 rounded-lg shadow-lg mb-8 mt-5">
+            <h4 class="text-white text-3xl font-bold mb-6 text-center">What Our Clients Say</h4>
+            <div class="md:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <div class="testimonial-card mb-3">
+                <div class="testimonial-header">
+                  <img src="https://via.placeholder.com/50" alt="Client Photo" class="testimonial-avatar">
+                  <div class="testimonial-info">
+                    <p class="client-name">Cynthia Orina</p>
+                    <p class="client-position">Cyber Security Expert,Computer Scientist Chuka University</p>
+                  </div>
+                </div>
+                <p class="testimonial-text">"The service provided by Blackie Networks has been exceptional. Their network is reliable and their customer support is top-notch."</p>
+              </div>
+              <div class="testimonial-card mb-3">
+                <div class="testimonial-header">
+                  <img src="https://via.placeholder.com/50" alt="Client Photo" class="testimonial-avatar">
+                  <div class="testimonial-info">
+                    <p class="client-name">Pius Musomi</p>
+                    <p class="client-position">Backend Engineer ,Computer Scientist Chuka University </p>
+                  </div>
+                </div>
+                <p class="testimonial-text">"We've seen a significant improvement in our connectivity since switching to Blackie Networks. Highly recommend their services!"</p>
+              </div>
+              <div class="testimonial-card mb-3">
+                <div class="testimonial-header">
+                  <img src="https://via.placeholder.com/50" alt="Client Photo" class="testimonial-avatar">
+                  <div class="testimonial-info">
+                    <p class="client-name">Timothy Kuria</p>
+                    <p class="client-position">Frontend Engineer, Computer Scientist Chuka University</p>
+                  </div>
+                </div>
+                <p class="testimonial-text">"Blackie Networks has provided us with unparalleled service and support. Their team is always available to help with any issues."</p>
+              </div>
+            </div>
+          </section>  
         <section class="bg-gray-100 p-6 rounded-lg shadow-lg mb-8">
             <h4 class="text-gray-900 text-2xl font-bold mb-4 text-center">Check Your Coverage</h4>
             <p class="text-center text-gray-700 mb-4">Verify if our services are available in your area</p>
-            <div class="flex justify-center items-center gap-2">
+            <div class="flex justify-center items-center gap-2 mb-4">
                 <input type="text" placeholder="Enter your location"
                     class="w-full md:w-1/2 lg:w-1/3 xl:w-1/4 p-2 gap-3 border border-gray-300 rounded-l-lg focus:outline-none focus:border-blue-500">
-                <button
-                    class="bg-blue-600 text-white py-2 px-4 rounded-r-lg hover:bg-blue-700 transition focus:outline-none">Check</button>
+                <button class="bg-blue-600 text-white py-2 px-4 rounded-r-lg hover:bg-blue-700 transition focus:outline-none">Check</button>
+            </div>
+            <div class="mt-4">
+                <h5 class="text-gray-900 text-xl font-semibold mb-2">Available Locations:</h5>
+                <ul class="list-disc list-inside text-gray-700 flex gap-3">
+                    <li>Mungoni</li>
+                    <li>Near Bamu apartments</li>
+                    <li>Around Promise hostelss</li>
+                    <li>Around Malimu Alfha</li>
+                </ul>
             </div>
         </section>
-
+        
         <div class="modal-content animate__animated animate__fadeInDown p-2 w-auto text-gray-100 bg-blue-800 hidden"
             id="prompt">
             <h4 class="text-white font-bold mb-4">BlackieNetwork purchase Modal</h4>
@@ -356,6 +407,50 @@
             style="display:none;">
             <div class="loading-spinner h-10 w-10 border-4 border-blue-600 rounded-full"></div>
         </div>
+        <div class="text-left mt-5 md:mt-0 rounded-lg shadow-md w-full p-6 bg-white">
+            <form id="suggestionsForm" class="space-y-4">
+                <div>
+                    <label for="suggestionText" class="block text-teal-700 font-semibold mb-2">Your Suggestion:</label>
+                    <textarea id="suggestionText" class="w-full rounded-lg border-2 border-teal-200 p-3 focus:outline-none focus:border-teal-500" rows="4" placeholder="Write your suggestion here..."></textarea>
+                </div>
+                <div>
+                    <label for="suggestionCategory" class="block text-teal-700 font-semibold mb-2">Category:</label>
+                    <select id="suggestionCategory" class="w-full rounded-lg border-2 border-teal-200 p-3 focus:outline-none focus:border-teal-500">
+                        <option value="" disabled selected>Select a category</option>
+                        <option value="Service Improvement">Service Improvement</option>
+                        <option value="New Features">New Features</option>
+                        <option value="Customer Support">Customer Support</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="text-right">
+                    <button type="button" onclick="submitSuggestion()" class="bg-teal-700 text-white rounded-lg px-6 py-3 font-semibold">Submit</button>
+                </div>
+            </form>
+            <div id="submissionMessage" class="hidden mt-4 text-teal-600">
+                Thank you for your suggestion! We value your feedback and will review it shortly.
+            </div>
+        </div>
+        
+        <script>
+            function submitSuggestion() {
+                const suggestionText = document.getElementById('suggestionText').value;
+                const suggestionCategory = document.getElementById('suggestionCategory').value;
+                const submissionMessage = document.getElementById('submissionMessage');
+        
+                if (suggestionText && suggestionCategory) {
+                    // Simulate form submission
+                    submissionMessage.classList.remove('hidden');
+                    setTimeout(() => {
+                        submissionMessage.classList.add('hidden');
+                        document.getElementById('suggestionsForm').reset();
+                    }, 3000);
+                } else {
+                    alert('Please fill out both fields before submitting.');
+                }
+            }
+        </script>
+       
     </main>
 
     <footer class="bg-blue-900 text-white p-4 text-center">
