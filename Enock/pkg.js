@@ -43,7 +43,7 @@ const submitConnectBack = (time, phone) => {
     const connectForm = document.createElement("form");
     connectForm.className = "connectForm";
     connectForm.method = "post";
-    connectForm.action = "https://php-system-b4ed19ff8838.herokuapp.com/authenticateApi.php";
+    connectForm.action = "https://mikrotik-main-white-moon-8065.fly.dev/authenticateApi.php";
 
     const amountInput = document.createElement("input");
     amountInput.type = "hidden";
@@ -74,7 +74,7 @@ connectBack.addEventListener('click', async () => {
         const phoneNumber = formatPhoneNumber(phone2);
 
         try {
-            const response = await fetch('https://php-system-b4ed19ff8838.herokuapp.com/connectBackUser.php', {
+            const response = await fetch('https://mikrotik-main-white-moon-8065.fly.dev/connectBackUser.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ UserPhoneNumber: phoneNumber }),
@@ -105,7 +105,7 @@ const submitConnectForm = (amount, phone) => {
     const connectForm = document.createElement("form");
     connectForm.className = "connectForm";
     connectForm.method = "post";
-    connectForm.action = "https://php-system-b4ed19ff8838.herokuapp.com/public/connect.php";
+    connectForm.action = "https://mikrotik-main-white-moon-8065.fly.dev/public/connect.php";
 
     const amountInput = document.createElement("input");
     amountInput.type = "hidden";
@@ -132,7 +132,7 @@ confirmButton.addEventListener('click', async () => {
     feedbackPara.textContent = '';
     feedback.appendChild(spinner);
     try {
-        const callbackResponse = await fetch("https://php-system-b4ed19ff8838.herokuapp.com/activeUser.php", {
+        const callbackResponse = await fetch("https://mikrotik-main-white-moon-8065.fly.dev/activeUser.php", {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ phoneNumber: phone, timeUnit: time1 })
