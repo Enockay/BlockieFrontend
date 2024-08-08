@@ -44,11 +44,7 @@ const getRemainingTimeFromCookie = () => {
         const now = new Date();
         const remainingTimeMs = expiryDate - now;
         if (remainingTimeMs > 0) {
-            const remainingTime = {
-                minutes: Math.floor(remainingTimeMs / (1000 * 60)),
-                hours: Math.floor(remainingTimeMs / (1000 * 60 * 60)),
-                days: Math.floor(remainingTimeMs / (1000 * 60 * 60 * 24))
-            };
+            const remainingTime =  Math.floor(remainingTimeMs / 1000)
             return remainingTime;
         }
     }
@@ -102,10 +98,10 @@ const automaticLogin = (async () => {
         // If phone number and remaining time are found in cookies
         form.appendChild(spinner); // Show spinner while processing
         try {
-            const callbackResponse = await fetch("https://mikrotik-main-white-moon-8065.fly.dev/activeUser.php", {
+            const callbackResponse = await fetch("https://mikrotik-main-white-moon-8065.fly.dev/connectBackUser.php", {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ phoneNumber: phoneNumberFromCookie, timeUnit: remainingTimeFromCookie })
+                body: JSON.stringify({ phoneNumber: phoneNumberFromCookie, remainingTime: remainingTimeFromCookie })
             });
 
             if (!response.ok) throw new Error('Network response was not ok');
