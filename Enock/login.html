@@ -79,11 +79,10 @@
             <h6 class="ml-4 font-extrabold">Blackie Networks</h6>
         </div>
         <nav class="md:flex hidden">
-            <a href="#hourly-packages" class="nav-link bg-blue-400 p-2 rounded-lg shadow-lg">Hourly Packages</a>
+            <a href="#hourly-packages" class=" hidden  bg-blue-400 p-2 rounded-lg shadow-lg">Hourly Packages</a>
             <a href="#gen-z-packages" class="nav-link bg-blue-400 p-2 rounded-lg shadow-lg">Gen-Z Packages</a>
-            <a href="#niokolee-packages"
-                class="nav-link nav-link text-gray-800 bg-blue-400 p-2 rounded-lg shadow-lg text-black ">Niokolee
-                Packages</a>
+            <a href="#niokolee-packages"class="nav-link nav-link text-gray-800 bg-blue-400 p-2 rounded-lg shadow-lg text-black ">NiokoleePackages</a>
+            <a href="offers.html" class="nav-link bg-purple-600 p-2 rounded-lg shadow-lg">Adverts & Offers</a>
         </nav>
         <div class="text-right bg-teal-600 p-4 rounded-lg shadow-md inline-block">
             <p class="text-white font-semibold mb-2">Contact Us:</p>
@@ -110,40 +109,25 @@
             <div class="md:flex block items-center gap-5">
                 <!-- Form Section -->
                 <div class="md:w-1/2 max-w-xs mx-auto w-full">
-                    <div class="form bg-teal-400 p-2 rounded-lg shadow-md md:p-6">
+                    <div class="form bg-teal-400 p-2 rounded-lg  md:p-2">
                         <label class="block text-teal-700 font-semibold mb-2">Do you have an active package?</label>
-                        <input type="number" maxlength="5" placeholder="Enter phone number"
-                            class="phone w-full p-2 border border-gray-300 rounded mb-2 focus:outline-none focus:border-teal-500 text-black"
+                        <input type="number" maxlength="10" placeholder="Enter phone number"
+                            class="phone w-64 p-1 border border-gray-300 rounded mb-2 focus:outline-none focus:border-teal-500 text-black"
                             id="phoneNumber">
                     </div>
                 </div>
                 <!-- Navigation for Packages -->
-                <nav class="md:hidden mb-3 flex justify-between mt-4">
+                <nav class="md:hidden mb-3 flex justify-evenly mt-4">
                     <a href="#hourly-packages"
-                        class="nav-link underline rounded-lg shadow-lg text-white  mb-3">Comrade
-                        Packages</a>
+                        class="nav-link underline rounded-lg shadow-lg text-white p-1 mb-3">Comrade Pkgs</a>
                     <a href="#gen-z-packages"
-                        class="nav-link  underline rounded-lg shadow-lg text-white mb-3">Gen-Z
-                        Packages</a>
+                        class="nav-link  underline rounded-lg shadow-lg text-white mb-3 p-1">Gen-Z Pkgs</a>
+                    <a href="offers.html" class="nav-link  p-1 rounded-lg shadow-lg">Adverts</a>
                 </nav>
 
             </div>
 
             <!-- FAQ Section and Key Benefits -->
-            <section class="md:flex block items-center gap-5">
-
-                <!-- Key Benefits -->
-                <div class="text-center mt-5 md:mt-0 rounded-lg shadow-md w-full p-2 bg-blue300 border-2">
-                    <h5 class="text-teal-700 text-xl font-semibold mb-2">Why Choose Us?</h5>
-                    <ul class="list-disc list-inside text-teal-700">
-                        <li>Reliable connection with 99.9% uptime</li>
-                        <li class="text-white bg-blue-600 w-fit">System works by allocating you Unlimited internet
-                            access based on the package you purchased validity</li>
-                        <li>24/7 customer support</li>
-                        <li>Strong & Fast 20+Mbps Network</li>
-                    </ul>
-                </div>
-            </section>
         </section>
         <div id="instructions"
             class="hidden bg-gradient-to-r from-blue-400 to-blue-500 mb-3 p-6 rounded-lg shadow-2xl text-center">
@@ -424,6 +408,20 @@
             <div class="loading-spinner h-10 w-10 border-4 border-blue-600 rounded-full"></div>
         </div>
         <div class="text-left mt-5 md:mt-0 rounded-lg shadow-md w-full p-6 bg-white">
+            <section class="md:flex block items-center gap-5">
+
+                <!-- Key Benefits -->
+                <div class="text-center mt-5 md:mt-0 rounded-lg shadow-md w-full p-2 bg-blue300 border-2">
+                    <h5 class="text-teal-700 text-xl font-semibold mb-2">Why Choose Us?</h5>
+                    <ul class="list-disc list-inside text-teal-700">
+                        <li>Reliable connection with 99.9% uptime</li>
+                        <li class="text-white bg-blue-600 w-fit">System works by allocating you Unlimited internet
+                            access based on the package you purchased validity</li>
+                        <li>24/7 customer support</li>
+                        <li>Strong & Fast 20+Mbps Network</li>
+                    </ul>
+                </div>
+            </section>
             <form id="suggestionsForm" class="space-y-4">
                 <div>
                     <label for="suggestionText" class="block text-teal-700 font-semibold mb-2">Your Suggestion:</label>
