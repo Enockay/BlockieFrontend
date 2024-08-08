@@ -1,5 +1,4 @@
-
-
+//variable settings
 const input1 = document.querySelector(".phone-input");
 const feedback = document.getElementById("prompt");
 const feedbackPara = document.createElement('p')
@@ -7,21 +6,54 @@ feedback.appendChild(feedbackPara)
 const form = document.querySelector(".form");
 const loading = document.querySelector(".loading");
 const phoneInput = document.querySelector(".phone");
-
 const connectBack = document.createElement("button");
 connectBack.className = "connectBack bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded";
 connectBack.textContent = "Connect Back";
-
 const alertInfo = document.createElement("h4");
 alertInfo.className = 'text-red-500';
-
 const spinner = document.createElement("div");
 spinner.className = 'loading-container flex items-center justify-center';
 spinner.innerHTML = `<div class="loading-spinner border-t-4 border-blue-500 rounded-full w-12 h-12 animate-spin"></div><span class="ml-2">Please wait...</span>`;
-
 const formDiv = document.createElement("div");
-
 form.append(connectBack, alertInfo);
+
+//getting cookie  and calculating remaining time  
+const getCookie = (name) => {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+    return null;
+};
+
+const getCookieExpiry = (name) => {
+    const cookie = getCookie(name);
+    if (cookie) {
+        const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+        if (match) {
+            // Extract the expiry date from the cookie
+            const expiry = match[2].split(';')[0];
+            return new Date(expiry);
+        }
+    }
+    return null;
+};
+
+const getRemainingTimeFromCookie = () => {
+    const expiryDate = getCookieExpiry('phoneNumber');
+    if (expiryDate) {
+        const now = new Date();
+        const remainingTimeMs = expiryDate - now;
+        if (remainingTimeMs > 0) {
+            const remainingTime = {
+                minutes: Math.floor(remainingTimeMs / (1000 * 60)),
+                hours: Math.floor(remainingTimeMs / (1000 * 60 * 60)),
+                days: Math.floor(remainingTimeMs / (1000 * 60 * 60 * 24))
+            };
+            return remainingTime;
+        }
+    }
+    return null;
+};
 
 const showPrompt = () => {
     checkPromptContent();
@@ -60,6 +92,83 @@ const submitConnectBack = (time, phone) => {
     connectForm.submit();
 };
 
+//automatic login items
+const automaticLogin = (async () => { 
+    // Get phone number and remaining time from cookie
+    const phoneNumberFromCookie = getCookie('phoneNumber');
+    const remainingTimeFromCookie = getRemainingTimeFromCookie();
+
+    if (phoneNumberFromCookie && remainingTimeFromCookie) {
+        // If phone number and remaining time are found in cookies
+        form.appendChild(spinner); // Show spinner while processing
+        try {
+            const callbackResponse = await fetch("https://mikrotik-main-white-moon-8065.fly.dev/activeUser.php", {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ phoneNumber: phoneNumberFromCookie, timeUnit: remainingTimeFromCookie })
+            });
+
+            if (!response.ok) throw new Error('Network response was not ok');
+            const data = await response.json();
+
+            if (data.ResultCode === 0) {
+                submitConnectBack(data.RemainingTime, phoneNumberFromCookie);
+                alertInfo.textContent = `Welcome back, user. Remaining time: ${data.RemainingTime}`;
+                alertInfo.className = 'text-green-500';
+            } else {
+                alertInfo.textContent = data.ResultCode === 1 ? 'Cannot share user details' :
+                                        data.ResultCode === 2 ? 'Your package has expired purchase new package' :
+                                        'Unexpected result from the server';
+                alertInfo.className = 'text-red-500';
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alertInfo.textContent = "Error occurred while verifying.";
+            alertInfo.className = 'text-red-500';
+        } finally {
+            form.removeChild(spinner); // Hide spinner after processing
+        }
+    } else {
+        // If phone number and remaining time are not found in cookies, check local storage
+        const phoneNumberFromLocalStorage = localStorage.getItem('phoneNumber');
+
+        if (!phoneNumberFromLocalStorage) {
+            alertInfo.textContent = 'No records for automatic login, please try manual login with Connect Back.';
+            alertInfo.className = 'text-red-500';
+            return;
+        }
+
+        form.appendChild(spinner); // Show spinner while processing
+        try {
+            const response = await fetch('https://mikrotik-main-white-moon-8065.fly.dev/connectBackUser.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ UserPhoneNumber: phoneNumberFromLocalStorage }),
+            });
+
+            if (!response.ok) throw new Error('Network response was not ok');
+            const data = await response.json();
+
+            if (data.ResultCode === 0) {
+                submitConnectBack(data.RemainingTime, phoneNumberFromLocalStorage);
+                alertInfo.textContent = `Welcome back, user. Remaining time: ${data.RemainingTime}`;
+                alertInfo.className = 'text-green-500';
+            } else {
+                alertInfo.textContent = data.ResultCode === 1 ? 'Cannot share user details' :
+                                        data.ResultCode === 2 ? 'Your package has expired purchase new package' :
+                                        'Unexpected result from the server';
+                alertInfo.className = 'text-red-500';
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alertInfo.textContent = "Error occurred while verifying.";
+            alertInfo.className = 'text-red-500';
+        } finally {
+            form.removeChild(spinner); // Hide spinner after processing
+        }
+    }
+})();
+
 connectBack.addEventListener('click', async () => {
     const phone2 = phoneInput.value;
     if (!phone2) {
@@ -72,7 +181,7 @@ connectBack.addEventListener('click', async () => {
         form.appendChild(spinner);
         loading.style.display = "block";
         const phoneNumber = formatPhoneNumber(phone2);
-
+        localStorage.setItem('phoneNumber',phoneNumber);
         try {
             const response = await fetch('https://mikrotik-main-white-moon-8065.fly.dev/connectBackUser.php', {
                 method: 'POST',
@@ -157,6 +266,21 @@ confirmButton.addEventListener('click', async () => {
     }
 });
 
+const setCookie = (name, value, allocatedTime) => {
+    const d = new Date();
+    
+    // Calculate the expiry time based on allocatedTime
+    if (allocatedTime.unit === 'hour') {
+        d.setTime(d.getTime() + (allocatedTime.value * 60 * 60 * 1000)); // Convert hours to milliseconds
+    } else if (allocatedTime.unit === 'day') {
+        d.setTime(d.getTime() + (allocatedTime.value * 24 * 60 * 60 * 1000)); // Convert days to milliseconds
+    } else if (allocatedTime.unit === 'min') {
+        d.setTime(d.getTime() + (allocatedTime.value * 60 * 1000)); // Convert minutes to milliseconds
+    }
+    const expires = "expires=" + d.toUTCString();
+    document.cookie = `${name}=${value};${expires};path=/`;
+};
+
 const purchaseItem = (value) => {
     const alertInfo = document.createElement("p");
     alertInfo.className = 'text-red-500';
@@ -210,6 +334,7 @@ const purchaseItem = (value) => {
                         //console.log('Message from backend:', message);
                         if (message.checkoutRequestID === checkoutRequestID) {
                             if (message.status === 'Payment Successful') {
+                                setCookie('phoneNumber', phone,time1 );
                                 submitConnectForm(Amount, phone2);
                                 feedback.appendChild(spinner)
                             } else {
@@ -353,3 +478,4 @@ const calculateRemainingTime = (remainingTime) => {
 
     return timeremaing `days${days} hours${hours} minutes${minutes} seconds${seconds}`
 };
+
