@@ -1,3 +1,14 @@
+//disable page view functionslity
+document.addEventListener('keydown', function(event) {
+    // Check if 'Ctrl' key is pressed along with 'U'
+    if (event.ctrlKey && event.key === 'u') {
+        event.preventDefault();
+    }
+});
+// Disable right-click
+document.addEventListener('contextmenu', function(event) {
+    event.preventDefault();
+});
 //variable settings
 const input1 = document.querySelector(".phone-input");
 const feedback = document.getElementById("prompt");
@@ -17,35 +28,72 @@ spinner.innerHTML = `<div class="loading-spinner border-t-4 border-blue-500 roun
 const formDiv = document.createElement("div");
 form.append(connectBack, alertInfo);
 
-//getting cookie  and calculating remaining time  
+const setCookie = (name, value, allocatedTime) => {
+    const d = new Date();
+    const { unit, value: timeValue } = allocatedTime;
+
+    switch (unit) {
+        case 'hour':
+            d.setTime(d.getTime() + timeValue * 60 * 60 * 1000);
+            break;
+        case 'day':
+            d.setTime(d.getTime() + timeValue * 24 * 60 * 60 * 1000);
+            break;
+        case 'min':
+            d.setTime(d.getTime() + timeValue * 60 * 1000);
+            break;
+        default:
+            console.error('Invalid time unit');
+            return;
+    }
+
+    const expires = d.toUTCString();
+    const cookieValue = `${value}|${expires}`;
+    document.cookie = `${name}=${encodeURIComponent(cookieValue)}; expires=${expires}; path=/; SameSite=Lax`;
+    //console.log('Cookie set:', document.cookie);
+};
+
 const getCookie = (name) => {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
+    //console.log(parts)
+    if (parts.length === 2) return decodeURIComponent(parts.pop().split(';').shift());
+    return null;
+};
+
+const parseCookieValue = (cookieValue) => {
+    const [phoneNumber, expiryDate] = cookieValue.split('|');
+    return { phoneNumber, expiryDate: new Date(expiryDate) };
+};
+
+const getPhoneNumber = (name) => {
+    const cookieValue = getCookie(name);
+    if (cookieValue) {
+        const { phoneNumber } = parseCookieValue(cookieValue);
+        return phoneNumber;
+    }
     return null;
 };
 
 const getCookieExpiry = (name) => {
     const cookie = getCookie(name);
     if (cookie) {
-        const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-        if (match) {
-            // Extract the expiry date from the cookie
-            const expiry = match[2].split(';')[0];
-            return new Date(expiry);
+        const [value, expiryDate] = cookie.split('|');
+        if (expiryDate) {
+            console.log(expiryDate)
+            return new Date(expiryDate);
         }
     }
     return null;
 };
 
-const getRemainingTimeFromCookie = () => {
-    const expiryDate = getCookieExpiry('phoneNumber');
+const getRemainingTimeFromCookie = (name) => {
+    const expiryDate = getCookieExpiry(name);
     if (expiryDate) {
         const now = new Date();
         const remainingTimeMs = expiryDate - now;
         if (remainingTimeMs > 0) {
-            const remainingTime =  Math.floor(remainingTimeMs / 1000)
-            return remainingTime;
+            return Math.floor(remainingTimeMs / 1000); // Return remaining time in seconds
         }
     }
     return null;
@@ -91,14 +139,14 @@ const submitConnectBack = (time, phone) => {
 //automatic login items
 const automaticLogin = (async () => { 
     // Get phone number and remaining time from cookie
-    const phoneNumberFromCookie = getCookie('phoneNumber');
-    const remainingTimeFromCookie = getRemainingTimeFromCookie();
-
+    const phoneNumberFromCookie = getPhoneNumber('phoneNumber');
+    const remainingTimeFromCookie = getRemainingTimeFromCookie('phoneNumber');
+   // console.log("phoneNumber",phoneNumberFromCookie ,"remainingtime",remainingTimeFromCookie)
     if (phoneNumberFromCookie && remainingTimeFromCookie) {
         // If phone number and remaining time are found in cookies
         form.appendChild(spinner); // Show spinner while processing
         try {
-            const callbackResponse = await fetch("https://mikrotik-main-white-moon-8065.fly.dev/connectBackUser.php", {
+            const response = await fetch("https://mikrotik-main-white-moon-8065.fly.dev/connectBackUser.php", {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ phoneNumber: phoneNumberFromCookie, remainingTime: remainingTimeFromCookie })
@@ -106,7 +154,7 @@ const automaticLogin = (async () => {
 
             if (!response.ok) throw new Error('Network response was not ok');
             const data = await response.json();
-
+            alert(data)
             if (data.ResultCode === 0) {
                 submitConnectBack(data.RemainingTime, phoneNumberFromCookie);
                 alertInfo.textContent = `Welcome back, user. Remaining time: ${data.RemainingTime}`;
@@ -118,8 +166,7 @@ const automaticLogin = (async () => {
                 alertInfo.className = 'text-red-500';
             }
         } catch (error) {
-            console.error('Error:', error);
-            alertInfo.textContent = "Error occurred while verifying.";
+            alertInfo.textContent = `Error occurred while verifying`;
             alertInfo.className = 'text-red-500';
         } finally {
             form.removeChild(spinner); // Hide spinner after processing
@@ -136,7 +183,7 @@ const automaticLogin = (async () => {
 
         form.appendChild(spinner); // Show spinner while processing
         try {
-            const response = await fetch('https://mikrotik-main-white-moon-8065.fly.dev/connectBackUser.php', {
+            const response = await fetch('https://mikrotik-main-white-moon-8065.fly.dev/activeUser.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ UserPhoneNumber: phoneNumberFromLocalStorage }),
@@ -165,6 +212,16 @@ const automaticLogin = (async () => {
     }
 })();
 
+//update localstorage
+const updateLocalstorage = (phoneNumber2)=>{
+    const phoneNumber = localStorage.getItem("phoneNumber");
+    if(!phoneNumber || phoneNumber !== phoneNumber2){
+        localStorage.removeItem("phoneNumber");
+    }
+    return localStorage.setItem("phoneNumber",phoneNumber2)
+    
+}
+
 connectBack.addEventListener('click', async () => {
     const phone2 = phoneInput.value;
     if (!phone2) {
@@ -177,9 +234,10 @@ connectBack.addEventListener('click', async () => {
         form.appendChild(spinner);
         loading.style.display = "block";
         const phoneNumber = formatPhoneNumber(phone2);
-        localStorage.setItem('phoneNumber',phoneNumber);
+        updateLocalstorage(phone2);
+        //setCookie('phoneNumber',phone2,{ unit: 'day', value: 1 });
         try {
-            const response = await fetch('https://mikrotik-main-white-moon-8065.fly.dev/connectBackUser.php', {
+            const response = await fetch('https://mikrotik-main-white-moon-8065.fly.dev/activeUser.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ UserPhoneNumber: phoneNumber }),
@@ -262,20 +320,6 @@ confirmButton.addEventListener('click', async () => {
     }
 });
 
-const setCookie = (name, value, allocatedTime) => {
-    const d = new Date();
-    
-    // Calculate the expiry time based on allocatedTime
-    if (allocatedTime.unit === 'hour') {
-        d.setTime(d.getTime() + (allocatedTime.value * 60 * 60 * 1000)); // Convert hours to milliseconds
-    } else if (allocatedTime.unit === 'day') {
-        d.setTime(d.getTime() + (allocatedTime.value * 24 * 60 * 60 * 1000)); // Convert days to milliseconds
-    } else if (allocatedTime.unit === 'min') {
-        d.setTime(d.getTime() + (allocatedTime.value * 60 * 1000)); // Convert minutes to milliseconds
-    }
-    const expires = "expires=" + d.toUTCString();
-    document.cookie = `${name}=${value};${expires};path=/`;
-};
 
 const purchaseItem = (value) => {
     const alertInfo = document.createElement("p");
@@ -295,8 +339,7 @@ const purchaseItem = (value) => {
             formData.append('timeUnit', time1);
 
             feedbackPara.textContent = '';
-            
-
+    
             try {
                 feedback.removeChild(form)
                 feedback.appendChild(spinner);
@@ -330,7 +373,8 @@ const purchaseItem = (value) => {
                         //console.log('Message from backend:', message);
                         if (message.checkoutRequestID === checkoutRequestID) {
                             if (message.status === 'Payment Successful') {
-                                setCookie('phoneNumber', phone,time1 );
+                                setCookie('phoneNumber', phone2,time1 );
+                                updateLocalstorage(phone2);
                                 submitConnectForm(Amount, phone2);
                                 feedback.appendChild(spinner)
                             } else {
