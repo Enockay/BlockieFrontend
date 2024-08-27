@@ -119,7 +119,7 @@ const submitConnectBack = (time, phone) => {
     const connectForm = document.createElement("form");
     connectForm.className = "connectForm";
     connectForm.method = "post";
-    connectForm.action = "https://mikrotik-main-white-moon-8065.fly.dev/authenticateApi.php";
+    connectForm.action = "https://mikrotik-main-white-moon-8065.fly.dev/public/connect.php";
 
     const amountInput = document.createElement("input");
     amountInput.type = "hidden";
@@ -146,28 +146,17 @@ const automaticLogin = (async () => {
         // If phone number and remaining time are found in cookies
         form.appendChild(spinner); // Show spinner while processing
         try {
-            const response = await fetch("https://mikrotik-main-white-moon-8065.fly.dev/connectBackUser.php", {
+            const response = await fetch("https://mikrotik-main-white-moon-8065.fly.dev/public/connect.php", {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ phoneNumber: phoneNumberFromCookie, remainingTime: remainingTimeFromCookie })
             });
-
-            if (!response.ok) throw new Error('Network response was not ok');
-            const data = await response.json();
-            alert(data)
-            if (data.ResultCode === 0) {
-                submitConnectBack(data.RemainingTime, phoneNumberFromCookie);
-                alertInfo.textContent = `Welcome back, user. Remaining time: ${data.RemainingTime}`;
-                alertInfo.className = 'text-green-500';
-            } else {
-                alertInfo.textContent = data.ResultCode === 1 ? 'Cannot share user details' :
-                                        data.ResultCode === 2 ? 'Your package has expired purchase new package' :
-                                        'Unexpected result from the server';
-                alertInfo.className = 'text-red-500';
-            }
+            console.log(response)
+            form.appendChild(spinner);
         } catch (error) {
             alertInfo.textContent = `Error occurred while verifying`;
             alertInfo.className = 'text-red-500';
+            console.log(error)
         } finally {
             form.removeChild(spinner); // Hide spinner after processing
         }
@@ -177,25 +166,27 @@ const automaticLogin = (async () => {
 
         if (!phoneNumberFromLocalStorage) {
             alertInfo.textContent = 'No records for automatic login, please try manual login with Connect Back.';
-            alertInfo.className = 'text-red-500';
+            alertInfo.className = 'text-white font-bold';
             return;
         }
 
         form.appendChild(spinner); // Show spinner while processing
         try {
-            const response = await fetch('https://mikrotik-main-white-moon-8065.fly.dev/activeUser.php', {
+            const response = await fetch('https://mikrotik-main-white-moon-8065.fly.dev/connectBackUser.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ UserPhoneNumber: phoneNumberFromLocalStorage }),
+                body: JSON.stringify({ UserPhoneNumber: phoneNumberFromLocalStorage })
             });
-
-            if (!response.ok) throw new Error('Network response was not ok');
+            form.appendChild(spinner)
             const data = await response.json();
-
+            //if (!response.ok) throw new Error('Network response was not ok');
+           
             if (data.ResultCode === 0) {
+                form.appendChild(spinner);
                 submitConnectBack(data.RemainingTime, phoneNumberFromLocalStorage);
-                alertInfo.textContent = `Welcome back, user. Remaining time: ${data.RemainingTime}`;
-                alertInfo.className = 'text-green-500';
+                alertInfo.textContent = `Wait a minute as we reconnect `;
+                alertInfo.className = 'text-white font-bold';
+                
             } else {
                 alertInfo.textContent = data.ResultCode === 1 ? 'Cannot share user details' :
                                         data.ResultCode === 2 ? 'Your package has expired purchase new package' :
@@ -234,10 +225,10 @@ connectBack.addEventListener('click', async () => {
         form.appendChild(spinner);
         loading.style.display = "block";
         const phoneNumber = formatPhoneNumber(phone2);
-        updateLocalstorage(phone2);
+        updateLocalstorage(phoneNumber);
         //setCookie('phoneNumber',phone2,{ unit: 'day', value: 1 });
         try {
-            const response = await fetch('https://mikrotik-main-white-moon-8065.fly.dev/activeUser.php', {
+            const response = await fetch('https://mikrotik-main-white-moon-8065.fly.dev/connectBackUser.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ UserPhoneNumber: phoneNumber }),
@@ -247,9 +238,10 @@ connectBack.addEventListener('click', async () => {
             const data = await response.json();
 
             if (data.ResultCode === 0) {
-                submitConnectBack(data.RemainingTime, phone2);
+                submitConnectBack(data.RemainingTime, phoneNumber);
                 alertInfo.textContent = `Welcome back user. Remaining time: ${data.RemainingTime}`;
-                alertInfo.className = 'text-green-500';
+                alertInfo.className = 'text-yellow-500';
+                form.appendChild(spinner)
             } else {
                 alertInfo.textContent = data.ResultCode === 1 ? 'Cannot share user details' : data.ResultCode === 2 ? 'Your package is expired or try connectBack if not' : 'Unexpected result from the server';
                 alertInfo.className = 'text-red-500';
@@ -268,7 +260,7 @@ const submitConnectForm = (amount, phone) => {
     const connectForm = document.createElement("form");
     connectForm.className = "connectForm";
     connectForm.method = "post";
-    connectForm.action = "https://mikrotik-main-white-moon-8065.fly.dev/public/connect.php";
+    connectForm.action = "https://mikrotik-main-white-moon-8065.fly.dev/authenticateApi.php";
 
     const amountInput = document.createElement("input");
     amountInput.type = "hidden";
@@ -373,15 +365,15 @@ const purchaseItem = (value) => {
                         //console.log('Message from backend:', message);
                         if (message.checkoutRequestID === checkoutRequestID) {
                             if (message.status === 'Payment Successful') {
-                                setCookie('phoneNumber', phone2,time1 );
-                                updateLocalstorage(phone2);
-                                submitConnectForm(Amount, phone2);
+                                setCookie('phoneNumber', phone,time1 );
+                                updateLocalstorage(phone);
+                                submitConnectForm(Amount, phone);
                                 feedback.appendChild(spinner)
                             } else {
                                 //console.log('Message from backend:', message);
                                 console.log("trying to append text");
                                 feedbackPara.textContent = `${message.status}`;
-                                feedbackPara.className = 'text-red-500';
+                                feedbackPara.className = 'text-red-500 text-xl';
                                 feedback.removeChild(spinner);
                                 feedback.appendChild(close);
                                 console.log('button appended or failed')
@@ -427,7 +419,7 @@ const purchaseItem = (value) => {
     form.action = "";
     
     const inputPhoneNumber = document.createElement("input");
-    inputPhoneNumber.className = "phone-input border p-2 rounded-md text-black";
+    inputPhoneNumber.className = "phone-input border p-1 rounded-md text-black w-2/3";
     inputPhoneNumber.type = "number";
     inputPhoneNumber.name = "phoneNumber";
     inputPhoneNumber.placeholder = "Phone...";
@@ -451,11 +443,11 @@ const purchaseItem = (value) => {
     
     const button = document.createElement("button");
     button.type = "submit";
-    button.className = "pay bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded";
+    button.className = "pay bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded-lg";
     button.textContent = "Pay";
     
     const close = document.createElement("button");
-    close.className = "close bg-gray-300 hover:bg-gray-400 text-black font-bold py-1 px-2 rounded";
+    close.className = "close bg-gray-300 hover:bg-gray-400 text-black font-bold py-1 px-2 rounded-lg text-center";
     close.textContent = "Close";
     close.addEventListener('click', (event) => {
         event.preventDefault(); // Prevent form submission
