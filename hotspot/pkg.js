@@ -239,8 +239,8 @@ connectBack.addEventListener('click', async () => {
 
             if (data.ResultCode === 0) {
                 submitConnectBack(data.RemainingTime, phoneNumber);
-                alertInfo.textContent = `Welcome back user. Remaining time: ${data.RemainingTime}`;
-                alertInfo.className = 'text-yellow-500';
+                alertInfo.textContent = `wait as we connect you to internet yor remaing time: ${data.RemainingTime}`;
+                alertInfo.className = 'text-white font-semibold';
                 form.appendChild(spinner)
             } else {
                 alertInfo.textContent = data.ResultCode === 1 ? 'Cannot share user details' : data.ResultCode === 2 ? 'Your package is expired or try connectBack if not' : 'Unexpected result from the server';
@@ -373,7 +373,7 @@ const purchaseItem = (value) => {
                                 //console.log('Message from backend:', message);
                                 console.log("trying to append text");
                                 feedbackPara.textContent = `${message.status}`;
-                                feedbackPara.className = 'text-red-500 text-xl';
+                                feedbackPara.className = 'text-red-500 text-xm';
                                 feedback.removeChild(spinner);
                                 feedback.appendChild(close);
                                 console.log('button appended or failed')
