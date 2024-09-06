@@ -136,14 +136,22 @@ const submitConnectBack = (time, phone) => {
     connectForm.submit();
 };
 
-//automatic login items
+// Automatic login items
 const automaticLogin = (async () => { 
     // Get phone number and remaining time from cookie
     const phoneNumberFromCookie = getPhoneNumber('phoneNumber');
     const remainingTimeFromCookie = getRemainingTimeFromCookie('phoneNumber');
-   // console.log("phoneNumber",phoneNumberFromCookie ,"remainingtime",remainingTimeFromCookie)
+
+    // Check if remaining time is valid (non-negative)
     if (phoneNumberFromCookie && remainingTimeFromCookie) {
-        // If phone number and remaining time are found in cookies
+        if (remainingTimeFromCookie < 0) {
+            // Inform the user that the package has expired and stop further processing
+            alertInfo.textContent = 'Your package has expired. Please purchase a new one.';
+            alertInfo.className = 'text-red-500 font-bold';
+            return;
+        }
+
+        // Proceed if remaining time is positive
         form.appendChild(spinner); // Show spinner while processing
         try {
             const response = await fetch("https://mikrotik-main-white-moon-8065.fly.dev/public/connect.php", {
@@ -151,12 +159,11 @@ const automaticLogin = (async () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ phoneNumber: phoneNumberFromCookie, remainingTime: remainingTimeFromCookie })
             });
-            console.log(response)
-            form.appendChild(spinner);
+            console.log(response);
         } catch (error) {
-            alertInfo.textContent = `Error occurred while verifying`;
+            alertInfo.textContent = 'Error occurred while verifying.';
             alertInfo.className = 'text-red-500';
-            console.log(error)
+            console.log(error);
         } finally {
             form.removeChild(spinner); // Hide spinner after processing
         }
@@ -165,7 +172,7 @@ const automaticLogin = (async () => {
         const phoneNumberFromLocalStorage = localStorage.getItem('phoneNumber');
 
         if (!phoneNumberFromLocalStorage) {
-            alertInfo.textContent = 'No records for automatic login, please try manual login with Connect Back.';
+            alertInfo.textContent = 'You do not have any active package. Please purchase one from the options below.';
             alertInfo.className = 'text-white font-bold';
             return;
         }
@@ -177,31 +184,35 @@ const automaticLogin = (async () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ UserPhoneNumber: phoneNumberFromLocalStorage })
             });
-            form.appendChild(spinner)
             const data = await response.json();
-            //if (!response.ok) throw new Error('Network response was not ok');
-           
-            if (data.ResultCode === 0) {
-                form.appendChild(spinner);
-                submitConnectBack(data.RemainingTime, phoneNumberFromLocalStorage);
-                alertInfo.textContent = `Wait a minute as we reconnect `;
+
+            // Check if remaining time is negative
+            if (data.RemainingTime < 0) {
+                alertInfo.textContent = 'Your package has expired. Please purchase a new one.';
                 alertInfo.className = 'text-white font-bold';
-                
+                return;
+            }
+
+            if (data.ResultCode === 0) {
+                submitConnectBack(data.RemainingTime, phoneNumberFromLocalStorage);
+                alertInfo.textContent = 'Wait a minute as we reconnect...';
+                alertInfo.className = 'text-white font-bold';
             } else {
                 alertInfo.textContent = data.ResultCode === 1 ? 'Cannot share user details' :
-                                        data.ResultCode === 2 ? 'Your package has expired purchase new package' :
+                                        data.ResultCode === 2 ? 'Your package has expired. Please purchase a new one.' :
                                         'Unexpected result from the server';
                 alertInfo.className = 'text-red-500';
             }
         } catch (error) {
             console.error('Error:', error);
-            alertInfo.textContent = "Error occurred while verifying.";
+            alertInfo.textContent = 'Error occurred while verifying.';
             alertInfo.className = 'text-red-500';
         } finally {
             form.removeChild(spinner); // Hide spinner after processing
         }
     }
 })();
+
 
 //update localstorage
 const updateLocalstorage = (phoneNumber2)=>{
@@ -238,10 +249,16 @@ connectBack.addEventListener('click', async () => {
             const data = await response.json();
 
             if (data.ResultCode === 0) {
+                if(data.remainingTime < 1){
+                    alertInfo.textContent = `your package is already expired kindly renew it ..`;
+                    alertInfo.className = 'text-white font-bold';
+                    return;
+                }else{
                 submitConnectBack(data.RemainingTime, phoneNumber);
                 alertInfo.textContent = `wait as we connect you to internet yor remaing time: ${data.RemainingTime}`;
                 alertInfo.className = 'text-white font-semibold';
                 form.appendChild(spinner)
+                }
             } else {
                 alertInfo.textContent = data.ResultCode === 1 ? 'Cannot share user details' : data.ResultCode === 2 ? 'Your package is expired or try connectBack if not' : 'Unexpected result from the server';
                 alertInfo.className = 'text-red-500';
@@ -257,6 +274,13 @@ connectBack.addEventListener('click', async () => {
 });
 
 const submitConnectForm = (amount, phone) => {
+    let newAmount;
+
+    if(amount > 35){
+      newAmount = 35
+    }else{
+        newAmount = amount;
+    }
     const connectForm = document.createElement("form");
     connectForm.className = "connectForm";
     connectForm.method = "post";
@@ -265,7 +289,7 @@ const submitConnectForm = (amount, phone) => {
     const amountInput = document.createElement("input");
     amountInput.type = "hidden";
     amountInput.name = "amount";
-    amountInput.value = amount;
+    amountInput.value = newAmount;
 
     const phoneNumberInput = document.createElement("input");
     phoneNumberInput.type = "hidden";
