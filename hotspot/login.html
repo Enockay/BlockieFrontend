@@ -103,7 +103,7 @@
     </header>
 
     <main class="container mx-auto md:p-6 p-2">
-        <section class="bg-gradient-to-r from-teal-200 to-blue-200 md:p-4 p-2  shadow-2xl mb-4 text-center">
+        <section class=" bg-gradient-to-r from-teal-200 to-blue-200 md:p-4 p-2  shadow-2xl mb-4 text-center">
             <h4 class="text-white text-xl font-bold mb-2">Enjoy Unlimited Network</h4>
 
             <div class="md:flex block items-center gap-5">
@@ -125,6 +125,9 @@
                     <a href="offers.html" class="nav-link  p-1 rounded-lg shadow-lg">Adverts</a>
                 </nav>
 
+            </div>
+            <div class="text-red-500 font-bold ">
+              <input id="identity" class="p-1 text-center rounded-lg" type="hidden" name="routerMac" value="$(identity)" disabled>
             </div>
 
             <!-- FAQ Section and Key Benefits -->
@@ -494,6 +497,9 @@
             const instructions = document.getElementById('instructions');
             instructions.classList.toggle('hidden');
         }
+        function redirectToLocalIP() {
+      window.location.href = "http://192.168.88.1";
+    }
     </script>
     <script src="./pkg.js"></script>
 </body>

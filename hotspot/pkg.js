@@ -5,6 +5,30 @@ document.addEventListener('keydown', function(event) {
         event.preventDefault();
     }
 });
+
+const routername = document.getElementById("identity").value;
+
+function addSecondsToCurrentTime(seconds) {
+    // Get the current date and time
+    const currentTime = new Date();
+    
+    // Add the seconds to the current time (convert seconds to milliseconds)
+    const futureTime = new Date(currentTime.getTime() + seconds * 1000);
+    
+    // Extract the day, month, year, and exact time components
+    const day = futureTime.getDate();
+    const month = futureTime.getMonth() + 1; // Months are 0-indexed, so we add 1
+    const year = futureTime.getFullYear();
+    
+    const hours = futureTime.getHours();
+    const minutes = futureTime.getMinutes();
+    const secondsPart = futureTime.getSeconds();
+    
+    // Format the result as DD/MM/YYYY HH:MM:SS
+    const formattedTime = `${day}/${month}/${year} ${hours}:${minutes}:${secondsPart}`;
+    
+    return formattedTime;
+}
 // Disable right-click
 document.addEventListener('contextmenu', function(event) {
     event.preventDefault();
@@ -115,7 +139,7 @@ const formatPhoneNumber = (phoneNumber) => {
     return numericOnly.startsWith('0111') && numericOnly.length === 10 ? '254' + numericOnly.substring(1) : '254' + numericOnly.substring(1);
 };
 
-const submitConnectBack = (time, phone) => {
+const submitConnectBack = (time, phone,routername) => {
     const connectForm = document.createElement("form");
     connectForm.className = "connectForm";
     connectForm.method = "post";
@@ -131,7 +155,12 @@ const submitConnectBack = (time, phone) => {
     phoneNumber.name = "phoneNumber";
     phoneNumber.value = phone;
 
-    connectForm.append(amountInput, phoneNumber);
+    const router = document.createElement("input");
+    phoneNumber.type = "hidden";
+    phoneNumber.name = "routername";
+    phoneNumber.value = routername;
+
+    connectForm.append(amountInput, phoneNumber,router);
     document.body.append(connectForm);
     connectForm.submit();
 };
@@ -194,8 +223,9 @@ const automaticLogin = (async () => {
             }
 
             if (data.ResultCode === 0) {
-                submitConnectBack(data.RemainingTime, phoneNumberFromLocalStorage);
-                alertInfo.textContent = 'Wait a minute as we reconnect...';
+                submitConnectBack(data.RemainingTime, phoneNumberFromLocalStorage,routername);
+                const expiry = addSecondsToCurrentTime(data.RemainingTime);
+                alertInfo.textContent = `wait as we reconnect you to internet. your  unliminet package will expire on :${expiry}`;
                 alertInfo.className = 'text-white font-bold';
             } else {
                 alertInfo.textContent = data.ResultCode === 1 ? 'Cannot share user details' :
@@ -254,8 +284,9 @@ connectBack.addEventListener('click', async () => {
                     alertInfo.className = 'text-white font-bold';
                     return;
                 }else{
-                submitConnectBack(data.RemainingTime, phoneNumber);
-                alertInfo.textContent = `wait as we connect you to internet yor remaing time: ${data.RemainingTime}`;
+                submitConnectBack(data.RemainingTime, phoneNumber,routername);
+                const expiry = addSecondsToCurrentTime(data.RemainingTime);
+                alertInfo.textContent = `wait as we connect you to internet. your  unliminet package will expire on :${expiry}`;
                 alertInfo.className = 'text-white font-semibold';
                 form.appendChild(spinner)
                 }
@@ -273,7 +304,7 @@ connectBack.addEventListener('click', async () => {
     }
 });
 
-const submitConnectForm = (amount, phone) => {
+const submitConnectForm = (amount, phone,routername) => {
     let newAmount;
 
     if(amount > 35){
@@ -296,7 +327,12 @@ const submitConnectForm = (amount, phone) => {
     phoneNumberInput.name = "phoneNumber";
     phoneNumberInput.value = phone;
 
-    connectForm.append(amountInput, phoneNumberInput);
+    const router = document.createElement("input");
+    phoneNumberInput.type = "hidden";
+    phoneNumberInput.name = "routername";
+    phoneNumberInput.value = routername;
+
+    connectForm.append(amountInput, phoneNumberInput,router);
     document.body.append(connectForm);
     connectForm.submit();
 };
@@ -322,7 +358,7 @@ confirmButton.addEventListener('click', async () => {
         const callbackData = await callbackResponse.json();
 
         if (callbackData && callbackData.ResultCode === 0) {
-            submitConnectForm(Amount, phone2);
+            submitConnectForm(Amount, phone2,routername);
         } else {
             feedbackPara.textContent = "Transaction was unsuccessful";
             feedbackPara.className = 'text-red-500';
@@ -391,7 +427,7 @@ const purchaseItem = (value) => {
                             if (message.status === 'Payment Successful') {
                                 setCookie('phoneNumber', phone,time1 );
                                 updateLocalstorage(phone);
-                                submitConnectForm(Amount, phone);
+                                submitConnectForm(Amount, phone,routername);
                                 feedback.appendChild(spinner)
                             } else {
                                 //console.log('Message from backend:', message);
