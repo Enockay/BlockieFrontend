@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blackie Networks - Purchase Package</title>
+    <link rel="stylesheet" href="tailwind.min.css">
+    <link rel="stylesheet" href="./styles/pkg.css">
+    <style>
+        body {
+            background: linear-gradient(to right, #667eea, #764ba2);
+        }
+
+        .card-header {
+            background: linear-gradient(to right, #4e54c8, #8f94fb);
+            color: white;
+        }
+
+        .card-content {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .loading-spinner {
+            border-top-color: transparent;
+            -webkit-animation: spin 1s linear infinite;
+            animation: spin 1s linear infinite;
+        }
+
+        @-webkit-keyframes spin {
+            0% {
+                -webkit-transform: rotate(0deg);
+            }
+
+            100% {
+                -webkit-transform: rotate(360deg);
+            }
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .nav-link {
+            margin: 0 10px;
+            text-decoration: none;
+            color: white;
+            transition: color 0.3s;
+        }
+
+        .nav-link:hover {
+            color: #4e54c8;
+        }
+
+        .footer-link {
+            color: #d1d5db;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-link:hover {
+            color: white;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+
+    <header class="bg-blue-900 text-white p-2 flex items-center justify-between shadow-lg">
+        <div class="flex items-center">
+            <img src="./images/blogo.png" alt="Blackie Networks Logo" class="h-12 w-auto rounded-full">
+            <h6 class="ml-4 font-extrabold">Blackie Networks</h6>
+        </div>
+        <nav class="md:flex hidden">
+            <a href="#hourly-packages" class=" hidden  bg-blue-400 p-2 rounded-lg shadow-lg">Hourly Packages</a>
+            <a href="#gen-z-packages" class="nav-link bg-blue-400 p-2 rounded-lg shadow-lg">Gen-Z Packages</a>
+            <a href="#niokolee-packages"class="nav-link nav-link text-gray-800 bg-blue-400 p-2 rounded-lg shadow-lg text-black ">NiokoleePackages</a>
+            <a href="offers.html" class="nav-link bg-purple-600 p-2 rounded-lg shadow-lg">Adverts & Offers</a>
+        </nav>
+        <div class="text-right bg-teal-600 p-4 rounded-lg shadow-md inline-block">
+            <p class="text-white font-semibold mb-2">Contact Us:</p>
+            <div class="flex space-x-4">
+              <a href="tel:0796869402" class="text-gray-100 hover:text-gray-200 transition">
+                <img src="../Enock/images/telephone.png" alt="Call" class="w-6 h-6"/>
+              </a>
+              <a href="https://wa.me/+254796869402" target="_blank" rel="noopener noreferrer" class="text-gray-100 hover:text-gray-200 transition">
+                <img src="../Enock/images/whatsapp.png" alt="WhatsApp" class="w-6 h-6"/>
+              </a>
+              <a href="https://t.me/Enockaymwema" target="_blank" rel="noopener noreferrer" class="text-gray-100 hover:text-gray-200 transition">
+                <img src="../Enock/images/telegram.png" alt="Telegram" class="w-6 h-6"/>
+              </a>
+            </div>
+          </div>
+          
+
+    </header>
+
+    <main class="container mx-auto md:p-6 p-2">
+        <section class="bg-gradient-to-r from-teal-400 to-blue-500 md:p-4 p-2 rounded-lg shadow-2xl mb-4 text-center">
+            <h4 class="text-white text-xl font-bold mb-2">Enjoy Unlimited Network</h4>
+
+            <div class="md:flex block items-center gap-5">
+                <!-- Form Section -->
+                <div class="md:w-1/2 max-w-xs mx-auto w-full">
+                    <div class="form bg-teal-400 p-2 rounded-lg  md:p-2">
+                        <label class="block text-teal-700 font-semibold mb-2">Do you have an active package?</label>
+                        <input type="number" maxlength="10" placeholder="Enter phone number"
+                            class="phone w-64 p-1 border border-gray-300 rounded mb-2 focus:outline-none focus:border-teal-500 text-black"
+                            id="phoneNumber">
+                    </div>
+                </div>
+                <!-- Navigation for Packages -->
+                <nav class="md:hidden mb-3 flex justify-evenly mt-4">
+                    <a href="#hourly-packages"
+                        class="nav-link underline rounded-lg shadow-lg text-white p-1 mb-3">Comrade Pkgs</a>
+                    <a href="#gen-z-packages"
+                        class="nav-link  underline rounded-lg shadow-lg text-white mb-3 p-1">Gen-Z Pkgs</a>
+                    <a href="offers.html" class="nav-link  p-1 rounded-lg shadow-lg">Adverts</a>
+                </nav>
+
+            </div>
+
+            <!-- FAQ Section and Key Benefits -->
+        </section>
+        <div id="instructions"
+            class="hidden bg-gradient-to-r from-blue-400 to-blue-500 mb-3 p-6 rounded-lg shadow-2xl text-center">
+            <h5 class="text-white text-lg font-bold mb-4">How to Purchase a Package</h5>
+            <p class="text-white mb-4"><strong>If you have an active package, just login above</strong></p>
+            <ul class="list-decimal pl-6 mb-4 text-white text-left">
+                <li class="mb-2">Choose your package</li>
+                <li class="mb-2">Click Buy</li>
+                <li class="mb-2">Click on the Green connect button & wait for the internet connection</li>
+            </ul>
+            <p class="text-white">Thank you for choosing Blackie Networks</p>
+        </div>
+
+        <section id="hourly-packages">
+            <h3 class="text-2xl font-bold text-white mb-4">Comrade Packages</h3>
+            <div class="flex flex-wrap -mx-2">
+                <!-- Weekly Packages -->
+                <div class="w-full md:w-1/2 px-2 mb-4">
+                    <div class="card-header p-6 rounded-lg shadow-lg">
+                        <h4 class="text-xl font-bold mb-2">Weekly Packages</h4>
+                        <div class=" space-y-4 text-gray-900 p-3 rounded">
+                            <div class="flex justify-between items-center bg-blue-400 p-3 rounded ">
+                                <p>1-day package Ksh 35</p>
+                                <button class="bg-blue-900 text-white py-1 px-3 rounded hover:bg-blue-800 transition"
+                                    onclick="purchaseItem('1-day package ksh=35')">Buy</button>
+                            </div>
+                            <div class="flex justify-between items-center bg-blue-400 p-3 rounded">
+                                <p>2-days package Ksh 60</p>
+                                <button class="bg-blue-900 text-white py-1 px-3 rounded hover:bg-blue-800 transition"
+                                    onclick="purchaseItem('2-days package ksh=60')">Buy</button>
+                            </div>
+                            <div class="flex justify-between items-center bg-blue-400 p-3 rounded">
+                                <p>5-days package Ksh 180</p>
+                                <button class="bg-blue-900 text-white py-1 px-3 rounded hover:bg-blue-800 transition"
+                                    onclick="purchaseItem('5-days package ksh=180')">Buy</button>
+                            </div>
+                            <div class="flex justify-between items-center bg-blue-400 p-3 rounded">
+                                <p>7-days package Ksh 250</p>
+                                <button class="bg-blue-900 text-white py-1 px-3 rounded hover:bg-blue-800 transition"
+                                    onclick="purchaseItem('7-days package ksh=250')">Buy</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Monthly Packages -->
+                <div class="w-full md:w-1/2 px-2 mb-4">
+                    <div class="card-header p-6 rounded-lg shadow-lg">
+                        <h4 class="text-xl font-bold mb-2">Monthly Packages</h4>
+                        <div class=" space-y-4 text-gray-900 p-3 rounded">
+                            <div class="flex justify-between items-center bg-blue-400 p-3 rounded">
+                                <p>31-days package Ksh 600</p>
+                                <button class="bg-blue-900 text-white py-1 px-3 rounded hover:bg-blue-800 transition"
+                                    onclick="purchaseItem('1-month package ksh=600')">Buy</button>
+                            </div>
+                            <div class="flex justify-between items-center bg-blue-400 p-3 rounded">
+                                <p>14-days package Ksh 350</p>
+                                <button class="bg-blue-900 text-white py-1 px-3 rounded hover:bg-blue-800 transition"
+                                    onclick="purchaseItem('14-days package ksh=350')">Buy</button>
+                            </div>
+                            <div class="flex justify-between items-center bg-blue-400 p-3 rounded">
+                                <p>21-days package Ksh 430</p>
+                                <button class="bg-blue-900 text-white py-1 px-3 rounded hover:bg-blue-800 transition"
+                                    onclick="purchaseItem('21-days package ksh=430')">Buy</button>
+                            </div>
+                            <div class="flex justify-between items-center bg-blue-400 p-3 rounded">
+                                <p>28-days package Ksh 550</p>
+                                <button class="bg-blue-900 text-white py-1 px-3 rounded hover:bg-blue-800 transition"
+                                    onclick="purchaseItem('28-days package ksh=550')">Buy</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="gen-z-packages" class="mt-8">
+            <h3 class="text-2xl font-bold text-white mb-4">Gen-Z Packages</h3>
+            <div class="flex flex-wrap -mx-2">
+                <!-- Niokolee Packages -->
+                <div class="w-full md:w-1/2 px-2 mb-4">
+                    <div class="card-header p-6 rounded-lg shadow-lg">
+                        <h4 class="text-xl font-bold mb-2">Niokolee Packages</h4>
+                        <div class=" space-y-4 text-gray-900 p-3 rounded">
+                            <div class="flex justify-between items-center bg-blue-400 p-3 rounded">
+                                <p>30-mins package Ksh 5</p>
+                                <button class="bg-blue-900 text-white py-1 px-3 rounded hover:bg-blue-800 transition"
+                                    onclick="purchaseItem('30-mins package ksh=5')">Buy</button>
+                            </div>
+                            <div class="flex justify-between items-center bg-blue-400 p-3 rounded">
+                                <p>1-hour package Ksh 10</p>
+                                <button class="bg-blue-900 text-white py-1 px-3 rounded hover:bg-blue-800 transition"
+                                    onclick="purchaseItem('1-hour package ksh=10')">Buy</button>
+                            </div>
+                            <div class="flex justify-between items-center bg-blue-400 p-3 rounded">
+                                <p>5-hours package Ksh 20</p>
+                                <button class="bg-blue-900 text-white py-1 px-3 rounded hover:bg-blue-800 transition"
+                                    onclick="purchaseItem('5-hours package ksh=20')">Buy</button>
+                            </div>
+                            <div class="flex justify-between items-center bg-blue-400 p-3 rounded">
+                                <p>12-hours package Ksh 30</p>
+                                <button class="bg-blue-900 text-white py-1 px-3 rounded hover:bg-blue-800 transition"
+                                    onclick="purchaseItem('12-hours package ksh=30')">Buy</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- FAQ Section -->
+                <div class="text-left mt-5 md:mt-0 md:w-1/2 rounded-lg shadow-md w-full p-6 bg-blue-600">
+                    <h5 class="text-teal-700 text-xl font-semibold mb-4">Frequently Asked Questions</h5>
+                    <ul class="space-y-4">
+                        <li>
+                            <button
+                                class="w-full text-left flex justify-between items-center text-teal-700 font-semibold focus:outline-none"
+                                onclick="toggleAnswer('faq1')">
+                                <span>How do I set up my network?</span>
+                                <svg class="w-5 h-5 text-teal-700 transition-transform transform rotate-0" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                </svg>
+                            </button>
+                            <div id="faq1" class="hidden mt-2 text-teal-600 bg-white p-2 rounded">
+                                <p>To get started just click the buy button of your preferred package then insert your mpesa mobile and
+                                    await for stk push. Once the transaction is successful, the system will automatically detect you and
+                                    connect you to the network. Visit our <a href="https://blackiewebp.fly.dev" class="text-teal-800 underline">setup guide</a> page
+                                    for more details.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <button
+                                class="w-full text-left flex justify-between items-center text-teal-700 font-semibold focus:outline-none"
+                                onclick="toggleAnswer('faq2')">
+                                <span>What packages do you offer?</span>
+                                <svg class="w-5 h-5 text-teal-700 transition-transform transform rotate-0" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                </svg>
+                            </button>
+                            <div id="faq2" class="hidden mt-2 text-teal-600 bg-white p-2 rounded">
+                                <p>We offer a variety of packages to suit different needs. Check out our <a href="#" class="text-teal-800 underline">packages</a> page for more details on Comrade packages and Gen-Z packages.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <button
+                                class="w-full text-left flex justify-between items-center text-teal-700 font-semibold focus:outline-none"
+                                onclick="toggleAnswer('faq3')">
+                                <span>How can I contact customer support?</span>
+                                <svg class="w-5 h-5 text-teal-700 transition-transform transform rotate-0" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                </svg>
+                            </button>
+                            <div id="faq3" class="hidden mt-2 text-teal-600 bg-white p-2 rounded">
+                                <p>You can contact our customer support by calling <a href="tel:0796869402" class="text-teal-800 underline">0796869402</a> or emailing us at <a href="mailto:support@networkservice.com" class="text-teal-800 underline">support@networkservice.com</a>.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <button
+                                class="w-full text-left flex justify-between items-center text-teal-700 font-semibold focus:outline-none"
+                                onclick="toggleAnswer('faq4')">
+                                <span>Terms and Conditions</span>
+                                <svg class="w-5 h-5 text-teal-700 transition-transform transform rotate-0" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                </svg>
+                            </button>
+                            <div id="faq4" class="hidden mt-2 text-teal-600 bg-white p-2 rounded">
+                                <p>By agreeing to use Blackie Networks, the company does not refund instances caused by unavoidable circumstances such as power blackouts or even packages that you purchased but did not use. What we refund is only packages that faced technical issues during purchases, such as failed system transactions while your side was successful. We thank you for the great choice and hope you enjoy our products. Visit our <a href="#" class="text-teal-800 underline">packages</a> page for more details.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <script>
+                    function toggleAnswer(id) {
+                        const answer = document.getElementById(id);
+                        if (answer.classList.contains('hidden')) {
+                            answer.classList.remove('hidden');
+                        } else {
+                            answer.classList.add('hidden');
+                        }
+                    }
+                </script>
+
+            </div>
+
+
+        </section>
+        <section class="bg-teal-200 p-6 rounded-lg shadow-2xl mb-8">
+            <h4 class="text-gray-200 text-2xl font-bold mb-6 text-center">Blackie Networks Updates</h4>
+            <div class="md:flex block md:space-x-8 space-y-6 md:space-y-0">
+                <div class="md:w-1/2 w-full text-center md:text-left shadow-xl p-5  bg-white">
+                    <h4 class="text-xl font-bold mb-4 text-gray-700 text-center">Did You Know?</h4>
+                    <p class="mb-4 text-gray-600">You can configure Blackie Networks internet at your place for free! Just pay as you go per plan. Your only requirement is to have your own TP-Link router.</p>
+                    <p class="text-gray-600">To set up your connection please contact our technicians by clicking the icons below.</p>
+                    <div class="flex justify-center space-x-4 mt-4">
+                        <a href="https://api.whatsapp.com/send?phone=+254796869402&text=I%20need%20an%20internet%20connection%20from%20Blackie%20Networks%20unlimitedly%20to%20my%20house.%20My%20name%20is%20[YourName]" target="_blank" class="text-teal-600 hover:text-teal-800 transition">
+                            <img src="../Enock/images/whatsapp.png" alt="WhatsApp" class="w-8 h-8"/>
+                        </a>
+                        <a href="tel:0796869402" class="text-teal-600 hover:text-teal-800 transition">
+                            <img src="../Enock/images/telephone.png" alt="Call" class="w-8 h-8"/>
+                        </a>
+                        <a href="tg://resolve?domain=Enockaymwema" class="text-teal-600 hover:text-teal-800 transition">
+                            <img src="../Enock/images/telegram.png" alt="Telegram" class="w-8 h-8"/>
+                        </a>
+                    </div>
+                </div>
+                <div class="md:w-1/2 w-full shadow-xl p-5  bg-white">
+                    <h4 class="text-xl font-bold mb-4 text-gray-700 text-center">Who Are Blackie Networks</h4>
+                    <p class="mb-4 text-gray-600">Blackie Networks is a newly established company that specializes in software products. We provide affordable internet services to students and enhanced service offerings.</p>
+                    <p class="mb-4 text-gray-600">Our range of products includes online service booking for a variety of offerings, catering to both users and providers.</p>
+                    <p class="text-gray-600">To learn more, visit our website at <a href="https://blackienetwork.com" class="text-teal-700 font-semibold hover:underline">Blackie Networks</a>.</p>
+                </div>
+            </div>
+        </section>
+        
+        <section class="bg-gradient-to-r from-teal-400 to-blue-500 p-8  shadow-lg mb-8 mt-5">
+            <h4 class="text-white text-3xl font-bold mb-6 text-center">What Our Clients Say</h4>
+            <div class="md:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <div class="testimonial-card mb-3">
+                <div class="testimonial-header">
+                  <img src="../Enock//images/user.png" alt="Client Photo" class="testimonial-avatar">
+                  <div class="testimonial-info">
+                    <p class="client-name">Cynthia Orina</p>
+                    <p class="client-position">Cyber Security Expert,Computer Scientist Chuka University</p>
+                  </div>
+                </div>
+                <p class="testimonial-text">"The service provided by Blackie Networks has been exceptional. Their network is reliable and their customer support is top-notch."</p>
+              </div>
+              <div class="testimonial-card mb-3">
+                <div class="testimonial-header">
+                  <img src="../Enock//images/user.png" alt="Client Photo" class="testimonial-avatar">
+                  <div class="testimonial-info">
+                    <p class="client-name">Pius Musomi</p>
+                    <p class="client-position">Backend Engineer ,Computer Scientist Chuka University </p>
+                  </div>
+                </div>
+                <p class="testimonial-text">"We've seen a significant improvement in our connectivity since switching to Blackie Networks. Highly recommend their services!"</p>
+              </div>
+              <div class="testimonial-card mb-3">
+                <div class="testimonial-header">
+                  <img src="../Enock//images/user.png" alt="Client Photo" class="testimonial-avatar">
+                  <div class="testimonial-info">
+                    <p class="client-name">Timothy Kuria</p>
+                    <p class="client-position">Frontend Engineer, Computer Scientist Chuka University</p>
+                  </div>
+                </div>
+                <p class="testimonial-text">"Blackie Networks has provided us with unparalleled service and support. Their team is always available to help with any issues."</p>
+              </div>
+            </div>
+          </section>  
+        <section class="bg-gray-100 p-6 rounded-lg shadow-lg mb-8">
+            <h4 class="text-gray-900 text-2xl font-bold mb-4 text-center">Check Your Coverage</h4>
+            <p class="text-center text-gray-700 mb-4">Verify if our services are available in your area</p>
+            <div class="flex justify-center items-center gap-2 mb-4">
+                <input type="text" placeholder="Enter your location"
+                    class="w-full md:w-1/2 lg:w-1/3 xl:w-1/4 p-2 gap-3 border border-gray-300 rounded-l-lg focus:outline-none focus:border-blue-500">
+                <button class="bg-blue-600 text-white py-2 px-4 rounded-r-lg hover:bg-blue-700 transition focus:outline-none">Check</button>
+            </div>
+            <div class="mt-4">
+                <h5 class="text-gray-900 text-xl font-semibold mb-2">Available Locations:</h5>
+                <ul class="list-disc list-inside text-gray-700 flex gap-3">
+                    <li>Mungoni</li>
+                    <li>Near Bamu apartments</li>
+                    <li>Around Promise hostelss</li>
+                    <li>Around Malimu Alfha</li>
+                </ul>
+            </div>
+        </section>
+        
+        <div class="modal-content animate__animated animate__fadeInDown p-2 w-auto text-gray-100 bg-blue-800 hidden"
+            id="prompt">
+            <h4 class="text-white font-bold mb-4">BlackieNetwork purchase Modal</h4>
+        </div>
+        <div class="loading hidden">please wait..</div>
+        <div class="loading flex justify-center items-center h-20 w-full mb-3" id="loadingSpinner"
+            style="display:none;">
+            <div class="loading-spinner h-10 w-10 border-4 border-blue-600 rounded-full"></div>
+        </div>
+        <div class="text-left mt-5 md:mt-0 rounded-lg shadow-md w-full p-6 bg-white">
+            <section class="md:flex block items-center gap-5">
+
+                <!-- Key Benefits -->
+                <div class="text-center mt-5 md:mt-0 rounded-lg shadow-md w-full p-2 bg-blue300 border-2">
+                    <h5 class="text-teal-700 text-xl font-semibold mb-2">Why Choose Us?</h5>
+                    <ul class="list-disc list-inside text-teal-700">
+                        <li>Reliable connection with 99.9% uptime</li>
+                        <li class="text-white bg-blue-600 w-fit">System works by allocating you Unlimited internet
+                            access based on the package you purchased validity</li>
+                        <li>24/7 customer support</li>
+                        <li>Strong & Fast 20+Mbps Network</li>
+                    </ul>
+                </div>
+            </section>
+            <form id="suggestionsForm" class="space-y-4">
+                <div>
+                    <label for="suggestionText" class="block text-teal-700 font-semibold mb-2">Your Suggestion:</label>
+                    <textarea id="suggestionText" class="w-full rounded-lg border-2 border-teal-200 p-3 focus:outline-none focus:border-teal-500" rows="4" placeholder="Write your suggestion here..."></textarea>
+                </div>
+                <div>
+                    <label for="suggestionCategory" class="block text-teal-700 font-semibold mb-2">Category:</label>
+                    <select id="suggestionCategory" class="w-full rounded-lg border-2 border-teal-200 p-3 focus:outline-none focus:border-teal-500">
+                        <option value="" disabled selected>Select a category</option>
+                        <option value="Service Improvement">Service Improvement</option>
+                        <option value="New Features">New Features</option>
+                        <option value="Customer Support">Customer Support</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="text-right">
+                    <button type="button" onclick="submitSuggestion()" class="bg-teal-700 text-white rounded-lg px-6 py-3 font-semibold">Submit</button>
+                </div>
+            </form>
+            <div id="submissionMessage" class="hidden mt-4 text-teal-600">
+                Thank you for your suggestion! We value your feedback and will review it shortly.
+            </div>
+        </div>
+        
+        <script>
+            function submitSuggestion() {
+                const suggestionText = document.getElementById('suggestionText').value;
+                const suggestionCategory = document.getElementById('suggestionCategory').value;
+                const submissionMessage = document.getElementById('submissionMessage');
+        
+                if (suggestionText && suggestionCategory) {
+                    // Simulate form submission
+                    submissionMessage.classList.remove('hidden');
+                    setTimeout(() => {
+                        submissionMessage.classList.add('hidden');
+                        document.getElementById('suggestionsForm').reset();
+                    }, 3000);
+                } else {
+                    alert('Please fill out both fields before submitting.');
+                }
+            }
+        </script>
+       
+    </main>
+
+    <footer class="bg-blue-900 text-white p-4 text-center">
+        <p class="text-sm">© 2024 Blackie Networks. All rights reserved.</p>
+        <nav class="md:flex block justify-center mt-2">
+            <a href="#" class="footer-link mx-2">Privacy Policy</a>
+            <a href="#" class="footer-link mx-2">Terms of Service</a>
+        </nav>
+    </footer>
+
+    <script>
+        function toggleInstructions() {
+            const instructions = document.getElementById('instructions');
+            instructions.classList.toggle('hidden');
+        }
+    </script>
+    <script src="./pkg.js"></script>
+</body>
+
+</html>
