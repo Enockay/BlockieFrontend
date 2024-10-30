@@ -140,7 +140,7 @@ const formatPhoneNumber = (phoneNumber) => {
     return numericOnly.startsWith('0111') && numericOnly.length === 10 ? '254' + numericOnly.substring(1) : '254' + numericOnly.substring(1);
 };
 
-const submitConnectBack = (time, phone) => {
+const submitConnectBack = (time, phone,TransactionCode) => {
     const RouterName = document.getElementById("identity").value;
 
     const connectForm = document.createElement("form");
@@ -163,7 +163,12 @@ const submitConnectBack = (time, phone) => {
     router.name = "routername";
     router.value = RouterName;
 
-    connectForm.append(amountInput, phoneNumber, router);
+    const Transaction = document.createElement("input");
+    Transaction.type = "hidden";
+    Transaction.name = "TransactionCode";
+    Transaction.value = TransactionCode
+
+    connectForm.append(amountInput, phoneNumber, router ,Transaction);
     document.body.append(connectForm);
     connectForm.submit();
 };
@@ -227,7 +232,8 @@ const automaticLogin = (async () => {
             }
 
             if (data.ResultCode === 0) {
-                submitConnectBack(data.RemainingTime, phoneNumberFromLocalStorage,RouterName);
+                const TransactionCode = data.TransactionCode;
+                submitConnectBack(data.RemainingTime, phoneNumberFromLocalStorage,RouterName,TransactionCode);
                 const expiry = addSecondsToCurrentTime(data.RemainingTime);
                 alertInfo.textContent = `wait as we reconnect you to internet. your  unliminet package will expire on :${expiry}`;
                 alertInfo.className = 'text-white font-bold';
@@ -289,7 +295,8 @@ connectBack.addEventListener('click', async () => {
                     alertInfo.className = 'text-white font-bold';
                     return;
                 } else {
-                    submitConnectBack(data.RemainingTime, phoneNumber, RouterName);
+                    const TransactionCode = data.TransactionCode;
+                    submitConnectBack(data.RemainingTime, phoneNumber, RouterName,TransactionCode);
                     const expiry = addSecondsToCurrentTime(data.RemainingTime);
                     alertInfo.textContent = `wait as we connect you to internet. your  unliminet package will expire on :${expiry}`;
                     alertInfo.className = 'text-white font-semibold';
