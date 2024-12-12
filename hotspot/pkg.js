@@ -51,7 +51,7 @@ const Disconnect = document.createElement("button");
 Disconnect.className = 'w-full bg-red-600 text-white p-2 rounded shadow hover:bg-red-700 transition duration-200';
 Disconnect.textContent = "Disconnect Device";
 const alertInfo2 = document.createElement("h4");
-alertInfo2.className = "text-red-500";
+alertInfo2.className = "text-red-500 mt-5 font-bold";
 form2.append(Disconnect, alertInfo2);
 const alertInfo = document.createElement("h4");
 alertInfo.className = 'text-red-500';
@@ -181,6 +181,33 @@ const submitConnectBack = (time, phone,TransactionCode) => {
     connectForm.submit();
 };
 
+const DisconnectForm = (time, phone) => {
+    const RouterName = document.getElementById("identity").value;
+
+    const connectForm = document.createElement("form");
+    connectForm.className = "connectForm";
+    connectForm.method = "post";
+    connectForm.action = "https://mikrotiksystem2.fly.dev/public/disconnect.php";
+
+    const amountInput = document.createElement("input");
+    amountInput.type = "hidden";
+    amountInput.name = "remainingTime";
+    amountInput.value = time;
+
+    const phoneNumber = document.createElement("input");
+    phoneNumber.type = "hidden";
+    phoneNumber.name = "phoneNumber";
+    phoneNumber.value = phone;
+
+    const router = document.createElement("input");
+    router.type = "hidden";
+    router.name = "routername";
+    router.value = RouterName;
+
+    connectForm.append(amountInput, phoneNumber, router );
+    document.body.append(connectForm);
+    connectForm.submit();
+};
 
 //update localstorage
 const updateLocalstorage = (phoneNumber2) => {
@@ -194,62 +221,59 @@ const updateLocalstorage = (phoneNumber2) => {
 
 //disconnect function is yet done the logic isnt complete
 Disconnect.addEventListener('click', async () => {
-    const input = document.getElementById("transactionCode");
-    const MpesaCode = document.getElementById("transactionCode");
+    const input = document.querySelector(".disconnect-phone");
+    const MpesaCode = document.getElementById("transactionCode").value;
+    
+    //console.log(input.value,MpesaCode)
     const phone2 = input.value;
-    if (!phone2 || MpesaCode) {
-        alertInfo.textContent = "Input field is empty";
+    
+    if (!phone2 || !MpesaCode) {
+        alertInfo2.textContent = "Input field is empty";
     } else if (phone2.length !== 10) {
-        alertInfo.textContent = "Your digits are less than required or more than";
+        alertInfo2.textContent = "Your digits are less than required or more than";
     } else if (!phone2.startsWith("0")) {
-        alertInfo.textContent = "Phone number should start with 0";
+        alertInfo2.textContent = "Phone number should start with 0";
     } else {
-        form.appendChild(spinner);
+        form2.appendChild(spinner);
         loading.style.display = "block";
         const phoneNumber = formatPhoneNumber(phone2);
-        const mac = "00:01:4B:7B:27"
-        updateLocalstorage(phoneNumber);
-        //setCookie('phoneNumber',phone2,{ unit: 'day', value: 1 });
         try {
-            const response = await fetch('https://node-blackie-networks.fly.dev/api/jwt', {
+            const response = await fetch('https://node-blackie-networks.fly.dev/disconnect', {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ phoneNumber: phoneNumber, mpesaCode: MpesaCode })
+                body: JSON.stringify({ phoneNumber: phoneNumber, MpesaCode: MpesaCode })
             });
 
-            if (!response.ok) throw new Error('Network response was not ok');
             const data = await response.json();
             console.log(data);
 
-            if (data.ResultCode === 0) {
+            if (data.success) {
                 if (data.remainingTime < 1) {
-                    alertInfo.textContent = `your package is already expired kindly renew it ..`;
-                    alertInfo.className = 'text-white font-bold';
+                    alertInfo2.textContent = `your package is already expired kindly renew it ..`;
+                    alertInfo2.className = ' text-white font-bold';
                     return;
                 } else {
-                    form.appendChild(spinner);
+                    form2.appendChild(spinner);
                     loading.style.display = "block";
-                    const TransactionCode = data.TransactionCode;
-                    const remainingTime = data.RemainingTime
                     //console.log(TransactionCode)
-                    submitConnectBack(remainingTime, phoneNumber,TransactionCode);
+                    DisconnectForm(data.remainingTime, phoneNumber);
                     const expiry = addSecondsToCurrentTime(data.RemainingTime);
-                    alertInfo.textContent = `wait as we connect you to internet. your  unliminet package will expire on :${expiry}`;
-                    alertInfo.className = 'text-white font-semibold';
+                    alertInfo2.textContent = `wait as we connect you to internet. your  unliminet package will expire on :${expiry}`;
+                    alertInfo2.className = 'text-white font-semibold';
                     //form.appendChild(spinner)
                 }
             } else {
-                alertInfo.textContent = data.ResultCode === 1 ? 'Cannot share user details' : data.ResultCode === 2 ? 'Your package is expired or try connectBack if not' : 'Unexpected result from the server';
-                alertInfo.className = 'text-red-500';
+                alertInfo2.textContent = data.message;
+                alertInfo2.className = 'text-red-500';
             }
-            form.removeChild(spinner);
+            form2.removeChild(spinner);
         } catch (error) {
             console.error('Error:', error);
-            alertInfo.textContent = "Error occurred while verifying";
-            alertInfo.className = 'text-red-500';
-            form.removeChild(spinner);
+            alertInfo2.textContent = "Error occurred while verifying";
+            alertInfo2.className = 'text-red-500';
+            form2.removeChild(spinner);
         }
     }
 });
