@@ -21,20 +21,53 @@
             backdrop-filter: blur(10px);
         }
 
-        .loading-spinner {
-            border-top-color: transparent;
-            -webkit-animation: spin 1s linear infinite;
-            animation: spin 1s linear infinite;
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
         }
 
-        @-webkit-keyframes spin {
-            0% {
-                -webkit-transform: rotate(0deg);
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 400px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        /* Modal animations */
+        .animate-fade-in {
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
             }
 
-            100% {
-                -webkit-transform: rotate(360deg);
+            to {
+                opacity: 1;
+                transform: scale(1);
             }
+        }
+
+        /* Spinner style (if using a CSS spinner) */
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            border-top: 4px solid #6b46c1;
+            border-radius: 50%;
+            width: 3rem;
+            height: 3rem;
+            animation: spin 1s linear infinite;
         }
 
         @keyframes spin {
@@ -47,202 +80,237 @@
             }
         }
 
-        .nav-link {
-            margin: 0 10px;
-            text-decoration: none;
-            color: white;
-            transition: color 0.3s;
+
+        @keyframes bounce-slow {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-8px);
+            }
         }
 
-        .nav-link:hover {
-            color: #ff8a00;
+        .animate-bounce-slow {
+            animation: bounce-slow 3s infinite;
         }
 
-        .footer-link {
-            color: #f1f5f9;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        .footer-link:hover {
-            color: white;
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
         }
     </style>
 </head>
 
 <body class="bg-gray-100 font-sans leading-normal tracking-normal">
-
-    <header class="bg-purple-800 text-white p-4 flex items-center justify-between shadow-lg">
+    <header
+        class="card-header text-white p-4 flex items-center justify-between shadow-lg fixed top-0 left-0 w-full z-50">
         <div class="flex items-center">
             <img src="./images/blogo.png" alt="Blackie Networks Logo" class="hidden md:block h-12 w-auto rounded-full">
             <h6 class="ml-4 font-extrabold hidden md:block">Blackie Networks</h6>
             <a href="login.html" class="block md:hidden nav-link bg-purple-600 p-2 rounded-lg shadow-lg">Home</a>
         </div>
-        <nav class="md:flex hidden">
+        <nav class="md:flex hidden gap-5">
             <a href="#advertisements" class="nav-link bg-purple-600 p-2 rounded-lg shadow-lg">Advertisements</a>
             <a href="#special-offers" class="nav-link bg-purple-600 p-2 rounded-lg shadow-lg">Special Offers</a>
             <a href="login.html" class="nav-link bg-purple-600 p-2 rounded-lg shadow-lg">Home</a>
         </nav>
-        <div class="text-right bg-teal-700 p-4 rounded-lg shadow-md inline-block">
-            <p class="text-white font-semibold mb-2">Contact Us:</p>
-            <div class="flex space-x-4">
-              <a href="tel:0796869402" class="text-gray-100 hover:text-gray-200 transition">
-                <img src="../Enock/images/telephone.png" alt="Call" class="w-6 h-6"/>
-              </a>
-              <a href="https://wa.me/+254796869402" target="_blank" rel="noopener noreferrer" class="text-gray-100 hover:text-gray-200 transition">
-                <img src="../Enock/images/whatsapp.png" alt="WhatsApp" class="w-6 h-6"/>
-              </a>
-              <a href="https://t.me/Enockaymwema" target="_blank" rel="noopener noreferrer" class="text-gray-100 hover:text-gray-200 transition">
-                <img src="../Enock/images/telegram.png" alt="Telegram" class="w-6 h-6"/>
-              </a>
-            </div>
-          </div>
     </header>
 
-    <main class="container mx-auto md:p-6 p-2">
-        <section class="bg-gradient-to-r from-pink-400 to-yellow-500 md:p-4 p-2 rounded-lg shadow-2xl mb-4 text-center">
-            <h4 class="text-white text-xl font-bold mb-2">Exclusive Offers Just for You!</h4>
-
-            <div class="md:flex block items-center gap-5">
-                <!-- Search Form Section -->
-                <div class="md:w-1/2 max-w-xs mx-auto w-full">
-                    <div class="form bg-pink-400 p-2 rounded-lg shadow-md md:p-6">
-                        <label class="block text-pink-700 font-semibold mb-2">Search for Special Offers</label>
-                        <input type="text" placeholder="Enter keywords or promo codes"
-                            class="w-full p-2 border border-gray-300 rounded mb-2 focus:outline-none focus:border-pink-500 text-black"
-                            id="search">
-                    </div>
+    <main class="container mx-auto md:p-6 p-2 min-h-screen mt-16">
+        <div class="md:w-1/2 max-w-xs mx-auto w-full mt-10 relative">
+            <!-- Floating decorative element -->
+            <div class="form bg-teal-500 p-4 rounded-2xl shadow-xl border-2 border-teal-600">
+                <label class="block text-gray-700 font-bold mb-4 text-xl text-center">
+                    Enter your Number below to reconnect to the internet if you have an active offer Package.
+                </label>
+                <input type="number" maxlength="10" placeholder="Enter phone number"
+                    class="phone w-full p-3 border-2 border-gray-300 rounded-lg text-black focus:outline-none focus:border-teal-700 focus:ring-2 focus:ring-teal-400 transition"
+                    id="phone">
+                <div class="flex flex-col justify-center items-center mt-6">
+                    <div id="spinner1"
+                        class="spinner animate-spin  h-8 w-8 border-4 border-t-teal-700 border-white rounded-full"
+                        style="display: none;"></div>
+                    <div id="connect-notify" class=" text-teal-100 font-semibold text-center"
+                        style="display: none;"></div>
+                    <button id="connect-button"
+                        class="connect-button w-full mt-2 border-green-300 border-2 py-2 rounded-full bg-teal-700 text-gray-800 font-bold text-lg shadow-md hover:bg-teal-800 focus:outline-none focus:ring-4 focus:ring-teal-400 transition transform hover:scale-105">
+                        Connect Back to Internet
+                    </button>
                 </div>
             </div>
-        </section>
+        </div>
 
-        <!-- Advertisements Section -->
-        <section id="advertisements" class="mt-8">
-            <h3 class="text-2xl font-bold text-purple-800 mb-4">Advertisements</h3>
-            <div class="flex flex-wrap -mx-2">
-                <!-- Ad 1 -->
-                <div class="w-full md:w-1/3 px-2 mb-4">
-                    <div class="card-header p-6 rounded-lg shadow-lg">
-                        <h4 class="text-xl font-bold mb-2">Midnight sales!</h4>
-                        <div class="card-content p-4 text-gray-900">
-                            <p>Get 10% off on all packages during midnight. Use code <strong>@Midnight</strong> at checkout.</p>
-                            <button class="bg-purple-900 text-white py-1 px-3 rounded hover:bg-purple-800 transition"
-                                onclick="viewDetails('summer-sale')">View Details</button>
-                        </div>
-                    </div>
-                </div>
+        <!-- Navigation for Packages -->
+        <nav class="md:hidden hidden mb-3 flex justify-evenly mt-4">
+            <a href="#hourly-packages" class="nav-link underline rounded-lg shadow-lg text-white p-1 mb-3">Comrade
+                Pkgs</a>
+            <a href="#gen-z-packages" class="nav-link  underline rounded-lg shadow-lg text-white mb-3 p-1">Gen-Z
+                Pkgs</a>
+            <a href="offers.html" class="nav-link  p-1 rounded-lg shadow-lg">Adverts</a>
+        </nav>
+        </div>
 
-                <!-- Ad 2 -->
-                <div class="w-full md:w-1/3 px-2 mb-4">
-                    <div class="card-header p-6 rounded-lg shadow-lg">
-                        <h4 class="text-xl font-bold mb-2">Weekend Specials</h4>
-                        <div class="card-content p-4 text-gray-900">
-                            <p>Enjoy special weekend rates. Buy for 2 days and get 2 hours free.</p>
-                            <button class="bg-purple-900 text-white py-1 px-3 rounded hover:bg-purple-800 transition"
-                                onclick="viewDetails('weekend-specials')">View Details</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Ad 3 -->
-                <div class="w-full md:w-1/3 px-2 mb-4">
-                    <div class="card-header p-6 rounded-lg shadow-lg">
-                        <h4 class="text-xl font-bold mb-2">Refer a Friend</h4>
-                        <div class="card-content p-4 text-gray-900">
-                            <p>Refer a friend and get a discount on your next purchase. Refer more, save more!</p>
-                            <button class="bg-purple-900 text-white py-1 px-3 rounded hover:bg-purple-800 transition"
-                                onclick="viewDetails('refer-a-friend')">View Details</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
+        <div class="text-red-500 font-bold ">
+            <input id="identity" class="p-1 text-center rounded-lg" type="hidden" name="routerMac" value="$(identity)"
+                disabled>
+        </div>
         <!-- Special Offers Section -->
         <section id="special-offers" class="mt-8">
             <h3 class="text-2xl font-bold text-purple-800 mb-4">Special Offers</h3>
             <div class="flex flex-wrap -mx-2">
-                <!-- Offer 1 -->
-                <div class="w-full md:w-1/2 px-2 mb-4">
+                <!-- Midnight Package -->
+                <div class="w-full md:w-1/3 px-2 mb-4">
                     <div class="card-header p-6 rounded-lg shadow-lg">
-                        <h4 class="text-xl font-bold mb-2">Bundle Offer</h4>
+                        <h4 class="text-xl font-bold mb-2">Midnight Package</h4>
                         <div class="card-content p-4 text-gray-900">
-                            <p>Purchase a bundle of 3 packages and get a 20% discount on the total amount.</p>
-                            <button class="bg-purple-900 text-white py-1 px-3 rounded hover:bg-purple-800 transition"
-                                onclick="viewDetails('bundle-offer')">View Details</button>
+                            <p>Unlimited from midnight to 6:00 AM  daily for just <strong>19 Ksh</strong>.</p>
+                            <button id="midnightButton"
+                                class="bg-purple-900 text-white py-1 px-3 rounded hover:bg-purple-800 transition"
+                                onclick="openModal('Midnight Package', 'ksh 19')">Purchase</button>
+                            <p id="countdownToMidnight" class="text-red-500 font-bold mt-2"></p>
                         </div>
                     </div>
                 </div>
-
-                <!-- Offer 2 -->
-                <div class="w-full md:w-1/2 px-2 mb-4">
+                <!-- 3-Hour Package -->
+                <div class="w-full md:w-1/3 px-2 mb-4">
                     <div class="card-header p-6 rounded-lg shadow-lg">
-                        <h4 class="text-xl font-bold mb-2">Holiday Discounts</h4>
+                        <h4 class="text-xl font-bold mb-2">3-Hour Package</h4>
                         <div class="card-content p-4 text-gray-900">
-                            <p>Celebrate the holidays with 20% off on all packages. Limited time offer!</p>
-                            <button class="bg-purple-900 text-white py-1 px-3 rounded hover:bg-purple-800 transition"
-                                onclick="viewDetails('holiday-discounts')">View Details</button>
+                            <p>Unlimited internet for 3 hours available from 8pm - 6am daily for just <strong>15 Ksh</strong>.</p>
+                            <button id="threeHourButton"
+                                class="bg-purple-900 text-white py-1 px-3 rounded hover:bg-purple-800 transition"
+                                onclick="openModal('3-Hour Package', 'ksh 15')">Purchase</button>
+                            <p id="countdownToThreeHour" class="text-red-500 font-bold mt-2"></p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Weekend Package -->
+                <div class="w-full md:w-1/3 px-2 mb-4">
+                    <div class="card-header p-6 rounded-lg shadow-lg">
+                        <h4 class="text-xl font-bold mb-2">Weekend Package</h4>
+                        <div class="card-content p-4 text-gray-900">
+                            <p>Access unlimited internet for the entire weekend available on (Saturday-Sunday) for just <strong>49
+                                    Ksh</strong>.</p>
+                            <button id="weekendButton"
+                                class="bg-purple-900 text-white py-1 px-3 rounded hover:bg-purple-800 transition"
+                                onclick="openModal('Weekend Package', 'ksh 49')">Purchase</button>
+                            <p id="countdownToWeekend" class="text-red-500 font-bold mt-2"></p>
+                        </div>
+                    </div>
+                </div>
+                <!-- 24-Hour Package -->
+                <div class="w-full md:w-1/3 px-2 mb-4">
+                    <div class="card-header p-6 rounded-lg shadow-lg">
+                        <h4 class="text-xl font-bold mb-2">24-Hour Package</h4>
+                        <div class="card-content p-4 text-gray-900">
+                            <p>Enjoy unlimited internet access for 24 hours available from 11pm - 6am daily at just <strong>29
+                                    Ksh</strong>.</p>
+                            <button id="twentyFourHourButton"
+                                class="bg-purple-900 text-white py-1 px-3 rounded hover:bg-purple-800 transition"
+                                onclick="openModal('24-Hour Package', 'ksh 29')">Purchase</button>
+                            <p id="countdownToTwentyFourHour" class="text-red-500 font-bold mt-2"></p>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
+        <!-- Reusable Modal for Payment -->
+        <!-- Modal Background Overlay -->
+        <div id="purchaseModal"
+            class="modal hidden mt-28 md:mt-0">
+            <!-- Modal Content -->
+            <div class=" modal-content rounded-lg shadow-xl w-full max-w-md mx-4 p-6 relative animate-fade-in">
+                <!-- Close Button -->
+                <button class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 focus:outline-none"
+                    onclick="closeModal()">
+                    <span class="text-2xl">&times;</span>
+                </button>
 
-        <!-- Best Deals Section -->
-        <section id="best-deals" class="mt-8">
-            <h3 class="text-2xl font-bold text-purple-800 mb-4">Best Deals</h3>
-            <div class="flex flex-wrap -mx-2">
-                <!-- Deal 1 -->
-                <div class="w-full md:w-1/3 px-2 mb-4">
-                    <div class="card-header p-6 rounded-lg shadow-lg">
-                        <h4 class="text-xl font-bold mb-2">Limited Time Deal</h4>
-                        <div class="card-content p-4 text-gray-900">
-                            <p>Grab this limited time deal with 15% off on our top packages. Don’t miss out!</p>
-                            <button class="bg-purple-900 text-white py-1 px-3 rounded hover:bg-purple-800 transition"
-                                onclick="viewDetails('limited-time-deal')">View Details</button>
-                        </div>
-                    </div>
+                <!-- Modal Title -->
+                <h3 id="modalTitle" class="font-bold md:text-2xl text-xl text-purple-900 mb-4 text-center">Purchase Confirmation
+                </h3>
+
+                <!-- Modal Description -->
+                <p id="modalDescription" class="text-gray-700 mb-6 text-center">
+                    Confirm your purchase below by providing your contact details.
+                </p>
+
+                <!-- Mobile Number Input -->
+                <input type="text" id="userMobile" placeholder="Your Mobile Number"
+                    class="border rounded-lg p-3 mb-4 w-full focus:outline-none focus:ring-2 focus:ring-purple-500" />
+
+                <!-- Confirm Button -->
+                <button id="confirmButton"
+                    class="bg-purple-900 text-white py-3 px-6 rounded-lg w-full font-semibold hover:bg-purple-800 transition duration-300 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                    Confirm Purchase
+                </button>
+
+                <!-- Loading Spinner -->
+                <div id="spinner" class="spinner mt-4 hidden">
                 </div>
 
-                <!-- Deal 2 -->
-                <div class="w-full md:w-1/3 px-2 mb-4">
-                    <div class="card-header p-6 rounded-lg shadow-lg">
-                        <h4 class="text-xl font-bold mb-2">Exclusive Online Deal</h4>
-                        <div class="card-content p-4 text-gray-900">
-                            <p>Get an additional 10% off for online purchases. Use code <strong>ONLINE10</strong>.</p>
-                            <button class="bg-purple-900 text-white py-1 px-3 rounded hover:bg-purple-800 transition"
-                                onclick="viewDetails('exclusive-online-deal')">View Details</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Deal 3 -->
-                <div class="w-full md:w-1/3 px-2 mb-4">
-                    <div class="card-header p-6 rounded-lg shadow-lg">
-                        <h4 class="text-xl font-bold mb-2">Early Bird Special</h4>
-                        <div class="card-content p-4 text-gray-900">
-                            <p>Book now and save 20% on early bird specials. Limited availability!</p>
-                            <button class="bg-purple-900 text-white py-1 px-3 rounded hover:bg-purple-800 transition"
-                                onclick="viewDetails('early-bird-special')">View Details</button>
-                        </div>
-                    </div>
-                </div>
+                <!-- Notification Message -->
+                <div id="notify" class="mt-4 text-center text-purple-600 font-semibold hidden"></div>
             </div>
-        </section>
-
+        </div>
     </main>
 
-    <footer class="bg-purple-800 text-white p-6 text-center">
-        <p class="mb-2">© 2024 Blackie Networks. All Rights Reserved.</p>
-        <a href="privacy-policy.html" class="footer-link">Privacy Policy</a> | <a href="terms-of-service.html"
-            class="footer-link">Terms of Service</a>
+    <footer class="bg-gray-900 text-white p-8 text-center md:text-left">
+        <div class="container mx-auto flex flex-col md:flex-row justify-between items-center md:items-start gap-6">
+            <!-- Logo and Description -->
+            <div class="flex flex-col items-center md:items-start">
+                <img src="./images/blogo.png" alt="Blackie Networks Logo" class="h-12 w-auto rounded-full mb-2">
+                <p class="text-sm text-gray-300 mt-2 max-w-xs">
+                    Empowering connectivity with reliable, high-speed internet solutions tailored for your needs.
+                </p>
+            </div>
+
+            <!-- Links Section -->
+            <div class="flex flex-col items-center md:items-start">
+                <h4 class="font-bold mb-3">Quick Links</h4>
+                <ul class="space-y-2">
+                    <li><a href="#home" class="text-gray-300 hover:text-white transition">Home</a></li>
+                    <li><a href="#services" class="text-gray-300 hover:text-white transition">Services</a></li>
+                    <li><a href="#support" class="text-gray-300 hover:text-white transition">Support</a></li>
+                    <li><a href="#contact" class="text-gray-300 hover:text-white transition">Contact</a></li>
+                </ul>
+            </div>
+
+            <!-- Social Media Icons -->
+            <div class="flex flex-col items-center md:items-start">
+                <h4 class="font-bold mb-3">Connect with Us</h4>
+                <div class="flex space-x-4">
+                    <a href="https://facebook.com" target="_blank" class="hover:text-white transition">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <!-- Facebook Icon SVG Path -->
+                        </svg>
+                    </a>
+                    <a href="https://twitter.com" target="_blank" class="hover:text-white transition">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <!-- Twitter Icon SVG Path -->
+                        </svg>
+                    </a>
+                    <a href="https://instagram.com" target="_blank" class="hover:text-white transition">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <!-- Instagram Icon SVG Path -->
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Divider Line -->
+        <div class="border-t border-gray-700 my-4"></div>
+
+        <!-- Copyright -->
+        <p class="text-sm text-gray-400">© 2024 Blackie Networks. All rights reserved.</p>
     </footer>
 
-    <script>
-        function viewDetails(adType) {
-            alert('Viewing details for ' + adType);
-        }
-    </script>
+    <script src="./offers.js"></script>
 </body>
 
 </html>

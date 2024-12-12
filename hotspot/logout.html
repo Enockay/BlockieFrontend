@@ -1,44 +1,68 @@
-<html>
+<html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />   
-<meta http-equiv="pragma" content="no-cache">
-<meta http-equiv="expires" content="-1">
-<title>Internet hotspot - Log out</title>
-<link rel="stylesheet" href="css/style.css">
-<script>
-    function openLogin() {
-	if (window.name != 'hotspot_logout') return true;
-	open('$(link-login)', '_blank', '');
-	window.close();
-	return false;
-    }
-</script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">   
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="expires" content="-1">
+    <title>Blackie Networks</title>
+    <script>
+        function openLogin() {
+            if (window.name != 'hotspot_logout') return true;
+            open('$(link-login)', '_blank', '');
+            window.close();
+            return false;
+        }
+    </script>
+    <link rel="stylesheet" href="tailwind.min.css">
+    <link rel="stylesheet" href="./styles/pkg.css">
 </head>
 
-<body>
-    <div class="ie-fixMinHeight">
-        <div class="main">
-            <div class="wrap">
-                <h1>You have just logged out!</h1> 
-                <table>  
-                    <tr><td>Username</td><td>$(username)</td></tr>
-                    <tr><td>IP address</td><td>$(ip)</td></tr>
-                    <tr><td>MAC address</td><td>$(mac)</td></tr>
-                    <tr><td>Session time</td><td>$(uptime)</td></tr>
+<body class="bg-gray-50 font-sans leading-normal tracking-normal">
+    <div class="min-h-screen flex items-center justify-center bg-gradient-to-r from-purple-600 to-blue-500">
+        <div class="bg-white shadow-xl rounded-lg p-8 w-full max-w-lg">
+            <h1 class="text-3xl font-bold text-center text-black mb-6">You have just logged out!</h1>
+            
+            <table class="w-full text-sm text-gray-600 mb-6">
+                <tbody>
+                    <tr>
+                        <td class="py-2 font-medium">Username:</td>
+                        <td class="py-2 text-right">$(username)</td>
+                    </tr>
+                    <tr>
+                        <td class="py-2 font-medium">IP address:</td>
+                        <td class="py-2 text-right">$(ip)</td>
+                    </tr>
+                    <tr>
+                        <td class="py-2 font-medium">MAC address:</td>
+                        <td class="py-2 text-right">$(mac)</td>
+                    </tr>
+                    <tr>
+                        <td class="py-2 font-medium">Session time:</td>
+                        <td class="py-2 text-right">$(uptime)</td>
+                    </tr>
                     $(if session-time-left)
-                    <tr><td>Time left</td><td>$(session-time-left)</td></tr>
+                    <tr>
+                        <td class="py-2 font-medium">Time left:</td>
+                        <td class="py-2 text-right">$(session-time-left)</td>
+                    </tr>
                     $(endif)
-                    <tr><td>Bytes up / down:</td><td>$(bytes-in-nice) / $(bytes-out-nice)</td></tr>
-                </table>
+                    <tr>
+                        <td class="py-2 font-medium">Bytes up / down:</td>
+                        <td class="py-2 text-right">$(bytes-in-nice) / $(bytes-out-nice)</td>
+                    </tr>
+                </tbody>
+            </table>
 
+            <form action="$(link-login)" name="login" onSubmit="return openLogin()">
+                <button type="submit" class="w-full bg-blue-500 text-white py-2 px-4 rounded-full hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300">
+                    Log in
+                </button>
+            </form>
 
-                <form action="$(link-login)" name="login" onSubmit="return openLogin()">
-                <input type="submit" value="Log in">
-                </form>
-            </div>
+            <p class="text-center mt-6 text-sm text-gray-500">
+                Powered by <span class="font-semibold text-purple-600">Blackie Networks</span>
+            </p>
         </div>
     </div>
-
 </body>
 </html>

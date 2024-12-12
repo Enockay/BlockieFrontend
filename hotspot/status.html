@@ -1,71 +1,135 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-$(if refresh-timeout)
-<meta http-equiv="refresh" content="$(refresh-timeout-secs)">
-$(endif)
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />   
-<meta http-equiv="pragma" content="no-cache">
-<meta http-equiv="expires" content="-1">
-<title>Internet hotspot - Status</title>
-<link rel="stylesheet" href="css/style.css">
-<script>
-
-$(if advert-pending == 'yes')
-    var popup = '';
-    function focusAdvert() {
-	if (window.focus) popup.focus();
-    }
-    function openAdvert() {
-	popup = open('$(link-advert)', 'hotspot_advert', '');
-	setTimeout("focusAdvert()", 1000);
-    }
-$(endif)
-    function openLogout() {
-	if (window.name != 'hotspot_status') return true;
-        open('$(link-logout)', 'hotspot_logout', 'toolbar=0,location=0,directories=0,status=0,menubars=0,resizable=1,width=280,height=250');
-	window.close();
-	return false;
-    }
-</script>
-    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="expires" content="-1">
+    <title>BlackieNetworks - Status</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #1f2937, #3b82f6);
+            color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            text-align: center;
+            padding: 1rem;
+            background-color: #111827;
+        }
+        .header img {
+            max-width: 120px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        h1, h2 {
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            margin: 1rem 0;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid #fff;
+        }
+        th, td {
+            padding: 0.5rem;
+            text-align: left;
+        }
+        .button {
+            display: inline-block;
+            background-color: #3b82f6;
+            color: white;
+            padding: 0.5rem 1rem;
+            text-align: center;
+            border-radius: 4px;
+            text-decoration: none;
+            margin-top: 1rem;
+        }
+        .button:hover {
+            background-color: #2563eb;
+        }
+        .footer {
+            text-align: center;
+            padding: 1rem;
+            background-color: #111827;
+            margin-top: 2rem;
+        }
+        .footer .social-icons a {
+            margin: 0 5px;
+            color: white;
+            text-decoration: none;
+        }
+        .footer .social-icons a:hover {
+            color: #3b82f6;
+        }
+    </style>
+    <script>
+        function openLogout() {
+            if (window.name !== 'hotspot_status') return true;
+            open('logout-link', 'hotspot_logout', 'toolbar=0,location=0,status=0,width=280,height=250');
+            window.close();
+            return false;
+        }
+    </script>
 </head>
-<body $(if advert-pending == 'yes') onLoad="openAdvert()" $(endif)>
-    <div class="ie-fixMinHeight">
-        <div class="main">
-            <div class="wrap">
-                $(if login-by == 'trial')
-                    <h1>Hi, trial user!</h1>
-                $(elif login-by != 'mac')
-                    <h1>Hi, $(username)!</h1>
-                $(endif)                
+<body>
+    <header class="header">
+        <img src="./images/blogo.png" alt="BlackieNetworks Logo">
+        <h1>Welcome to BlackieNetworks</h1>
+    </header>
 
-                <form action="$(link-logout)" name="logout" onSubmit="return openLogout()">
-                    <table>
-                        <tr><td>IP address</td><td>$(ip)</td></tr>
-                        <tr><td>Bytes up / down</td><td>$(bytes-in-nice) / $(bytes-out-nice)</td></tr>
-                    $(if session-time-left)
-                        <tr><td>Connected / left</td><td>$(uptime) / $(session-time-left)</td></tr>
-                    $(else)
-                        <tr><td>Connected</td><td>$(uptime)</td></tr>
-                    $(endif)
-                    $(if blocked == 'yes')
-                        <tr><td>Status</td><td>
-                    <a href="$(link-advert)" target="hotspot_advert">Advertisement required</a></td>
-                        </tr>
-                    $(elif refresh-timeout)
-                        <tr><td>Status refresh</td><td>$(refresh-timeout)</td></tr>
-                    $(endif)
-                        </table>
-                    $(if login-by-mac != 'yes')
-                    <!-- user manager link. if user manager resides on other router, replace $(hostname) by its address
-                    <button onclick="document.location='http://$(hostname)/user?subs='; return false;">status</button>
-                    <!-- end of user manager link -->
-                    <input type="submit" value="Log out">
-                    $(endif)
-                </form>
-            </div>
-        </div>
+    <div class="container">
+        <h2>Session Status</h2>
+        <table>
+            <tr><th>IP Address</th><td>$(ip)</td></tr>
+            <tr><th>MAC Address</th><td>$(mac)</td></tr>
+            <tr><th>Router Uptime</th><td>$(router-uptime)</td></tr>
+            <tr><th>DNS Server</th><td>$(dns-server)</td></tr>
+            <tr><th>Data Usage</th><td>Upload: $(bytes-in-nice) / Download: $(bytes-out-nice)</td></tr>
+            <tr><th>Connection Time</th><td>$(uptime) / Remaining: $(session-time-left)</td></tr>
+            <tr><th>Real-time Traffic</th><td>Upload: $(upload-speed) / Download: $(download-speed)</td></tr>
+            <tr><th>Status</th><td>$(if blocked == 'yes') Advertisement Required $(else) Active $(endif)</td></tr>
+        </table>
+
+        <h2>Service Plan Details</h2>
+        <table>
+            <tr><th>Plan Name</th><td>$(plan-name)</td></tr>
+            <tr><th>Plan Speed</th><td>$(plan-speed)</td></tr>
+            <tr><th>Data Limit</th><td>$(data-limit)</td></tr>
+            <tr><th>Plan Expiry</th><td>$(plan-expiry)</td></tr>
+        </table>
+
+        <h2>Support Information</h2>
+        <ul>
+            <li>Email: <a href="mailto:support@blackienetworks.com">support@blackienetworks.com</a></li>
+            <li>Phone: 0796869402</li>
+            <li><a href="/faq" class="button">View FAQs</a></li>
+        </ul>
+
+        <form action="$(link-logout)" method="POST" onsubmit="return openLogout()">
+            <button type="submit" class="button">Log Out</button>
+        </form>
     </div>
+
+    <footer class="footer">
+        <p>&copy; 2024 BlackieNetworks. All rights reserved.</p>
+        <div class="social-icons">
+            <a href="https://facebook.com/blackienetworks" target="_blank">Facebook</a> | 
+            <a href="https://twitter.com/blackienetworks" target="_blank">Twitter</a> | 
+            <a href="https://instagram.com/blackienetworks" target="_blank">Instagram</a>
+        </div>
+        <p><a href="/terms" class="button">Terms of Service</a> | <a href="/privacy" class="button">Privacy Policy</a></p>
+    </footer>
 </body>
 </html>

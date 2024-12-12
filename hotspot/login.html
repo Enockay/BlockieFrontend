@@ -68,83 +68,145 @@
         .footer-link:hover {
             color: white;
         }
+
+        /* Slide Down Animation for Notification */
+        .animate-slide-down {
+            animation: slideDown 0.5s ease-out forwards;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
     </style>
 </head>
 
 <body class="bg-gray-100 font-sans leading-normal tracking-normal">
 
-    <header class="bg-blue-900 text-white p-2 flex items-center justify-between shadow-lg">
+    <header class="bg-blue-900 text-white p-1 flex items-center justify-between shadow-lg top-0 fixed w-full">
         <div class="flex items-center">
-            <img src="./images/blogo.png" alt="Blackie Networks Logo" class="h-12 w-auto rounded-full">
+            <img src="./images/blogo.png" alt="Blackie Networks Logo" class="h-10 w-auto rounded-full">
             <h6 class="ml-4 font-extrabold">Blackie Networks</h6>
         </div>
         <nav class="md:flex hidden">
             <a href="#hourly-packages" class=" hidden  bg-blue-400 p-2 rounded-lg shadow-lg">Hourly Packages</a>
             <a href="#gen-z-packages" class="nav-link bg-blue-400 p-2 rounded-lg shadow-lg">Gen-Z Packages</a>
-            <a href="#niokolee-packages"class="nav-link nav-link text-gray-800 bg-blue-400 p-2 rounded-lg shadow-lg text-black ">NiokoleePackages</a>
+            <a href="#niokolee-packages"
+                class="nav-link nav-link text-gray-800 bg-blue-400 p-2 rounded-lg shadow-lg text-black ">NiokoleePackages</a>
             <a href="offers.html" class="nav-link bg-purple-600 p-2 rounded-lg shadow-lg">Adverts & Offers</a>
         </nav>
-        <div class="text-right bg-teal-600 p-4 rounded-lg shadow-md inline-block">
+        <div class="text-right bg-teal-600 p-2 rounded-lg shadow-md inline-block">
             <p class="text-white font-semibold mb-2">Contact Us:</p>
             <div class="flex items-center space-x-2">
                 <a href="tel:0796869402" class="text-gray-100 hover:text-gray-200 transition">
-                    <img src="./images/telephone.png" alt="Call" class="w-6 h-6"/>
+                    <img src="./images/telephone.png" alt="Call" class="w-6 h-6" />
                 </a>
                 <p class="text-gray-100 font-semibold">0796 869 402</p>
             </div>
         </div>
-        
-          
-
     </header>
 
-    <main class="container mx-auto md:p-6 p-2">
-        <section class=" bg-gradient-to-r from-teal-200 to-blue-200 md:p-4 p-2  shadow-2xl mb-4 text-center">
+    <main class="container mx-auto md:p-6 p-2 md:mt-20 mt-28">
+        <section class="bg-gradient-to-r from-teal-200 to-blue-200 md:p-4 p-2 shadow-2xl mb-4 text-center">
             <h4 class="text-white text-xl font-bold mb-2">Enjoy Unlimited Network</h4>
 
-            <div class=" md:flex block items-center gap-5">
-                <div class="md:hidden  hidden md:w-1/2 flex items-start p-3 bg-gradient-to-r from-yellow-200 to-yellow-100 rounded-lg shadow-lg transform transition duration-300 hover:scale-105">
+            <div class="block items-center gap-5">
+                <!-- Existing Elements -->
+                <a href="offers.html">
+                    <div id="offerNotification hidden "
+                        class="bg-yellow-400 text-yellow-900 font-semibold p-3 rounded-t-lg shadow-lg mb-4 animate-slide-down flex items-center justify-between max-w-xs mx-auto w-full">
+                        <p onclick="window.location.href='/offers'">
+                            🎉 New Offers Available! Click Here for More! 🎉
+                        </p>
+
+                    </div>
+                </a>
+                <div
+                    class="md:hidden hidden md:w-1/2 flex items-start p-3 bg-gradient-to-r from-yellow-200 to-yellow-100 rounded-lg shadow-lg transform transition duration-300 hover:scale-105">
                     <div class="bg-yellow-400 p-2 rounded-full shadow-md">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-yellow-900" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1 0h.01M12 18h.01M12 9.5a2.5 2.5 0 10-5 0v1.5H9m3 0v1.5H9M9 11v1.5H6m0-1.5a2.5 2.5 0 005 0M7 13.5h1.5v1.5H7v1h3v-2.5H9V12.5m1 0V14m0 1v1.5h3V13.5h1.5V12H13v-1.5"/>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-yellow-900" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M13 16h-1v-4h-1m1 0h.01M12 18h.01M12 9.5a2.5 2.5 0 10-5 0v1.5H9m3 0v1.5H9M9 11v1.5H6m0-1.5a2.5 2.5 0 005 0M7 13.5h1.5v1.5H7v1h3v-2.5H9V12.5m1 0V14m0 1v1.5h3V13.5h1.5V12H13v-1.5" />
                         </svg>
                     </div>
-                    <div class="ml-4">
-                        <h3 class="font-bold text-xl text-yellow-900">We're With You</h3>
-                        <p class="mt-1 text-sm text-yellow-800">
-                            Dear valued client, we sincerely apologize for the current disruptions caused by server and network issues. We understand how frustrating this must be for you, and we want you to know we’re working tirelessly, day and night, to restore everything back to normal. We understand that some services, like purchasing packages or reconnecting, may experience delays. We're working around the clock to resolve these issues. As a token of appreciation for your patience, we'll ensure you're taken care of once services are restored.
-                        </p>
-                        <p class="mt-2 text-sm text-yellow-700 font-semibold">For immediate assistance, please call <strong>0796 869 402</strong>. Thank you for trusting us through this!</p>
-                        <p class="mt-3 text-xs font-semibold text-yellow-600 text-right">We appreciate your loyalty. ❤️</p>
-                    </div>
                 </div>
-                
-                <!-- Form Section -->
+
+               
+                <!-- Existing Form Section -->
                 <div class="md:w-1/2 max-w-xs mx-auto w-full">
-                    <div class="form bg-teal-400 p-2 rounded-lg  md:p-2">
-                        <label class="block text-teal-700 font-semibold mb-2">Enter your Number below if you have an active package to Reconnect to internet..</label>
+                    <div class="form bg-teal-400 p-4 rounded-lg shadow-lg">
+                        <label class="block text-teal-800 font-semibold mb-3">
+                            Enter your Number below if you have an active package to reconnect to the internet.
+                        </label>
                         <input type="number" maxlength="10" placeholder="Enter phone number"
-                            class="phone w-64 p-1 border border-gray-300 rounded mb-2 focus:outline-none focus:border-teal-500 text-black"
-                            id="phoneNumber">
+                            class="phone w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-teal-600 text-black mb-3"
+                            id="phoneNumber" required />
+                        <div class="form flex items-start mb-3">
+                            <input type="checkbox" id="termsCheckbox"
+                                class="mr-2 focus:outline-none focus:ring-2 focus:ring-teal-500 px-15 mt-1" required>
+                            <label for="termsCheckbox" class="text-teal-700">
+                                I accept the <a href="#" class="text-white underline hover:text-green-400"
+                                    onclick="toggleAnswer('faq4')">Terms and Conditions</a>.
+                            </label>
+                        </div>
                     </div>
                 </div>
-              
-                <!-- Navigation for Packages -->
-                <nav class="md:hidden mb-3 flex justify-evenly mt-4">
-                    <a href="#hourly-packages"
-                        class="nav-link underline rounded-lg shadow-lg text-white p-1 mb-3">Comrade Pkgs</a>
-                    <a href="#gen-z-packages"
-                        class="nav-link  underline rounded-lg shadow-lg text-white mb-3 p-1">Gen-Z Pkgs</a>
-                    <a href="offers.html" class="nav-link  p-1 rounded-lg shadow-lg">Adverts</a>
-                </nav>
             </div>
+           <!-- Disconnect Device Section -->
+           <div id="disconnectDeviceSection" class="hidden md:w-1/2 max-w-xs mx-auto w-full mt-4">
+            <div class=" bg-red-400 p-4 rounded-lg shadow-lg" id="form">
+                <!-- Description -->
+                <label class="block text-red-800 font-semibold mb-3">
+                    Enter the Account and the M-Pesa Transaction Code of the package you want to disconnect.
+                </label>
+                <input type="number" maxlength="10" placeholder="Enter phone number"
+                      class="disconnect-phone w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-teal-600 text-black mb-3"
+                      id="phoneNumber" required />
+                <!-- Transaction Code Input -->
+                <input type="text" placeholder="eg SLXXXXXX" maxlength="10"
+                    class="transaction-code w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-teal-600 text-black mb-3"
+                    id="transactionCode" required />
+            </div>
+        </div>
+
+        <!-- Toggle Button for Disconnect Section -->
+        <button id="toggleDisconnect"
+            class="bg-teal-500 text-white px-4 py-2 rounded shadow mt-4 hover:bg-teal-600 transition duration-200"
+            onclick="toggleDisconnectSection()">
+            Disconnect Device
+        </button>
 
             <div class="text-red-500 font-bold ">
-              <input id="identity" class="p-1 text-center rounded-lg" type="hidden" name="routerMac" value="$(identity)" disabled>
+                <input id="identity" class="p-1 text-center rounded-lg" type="hidden" name="routerMac"
+                    value="$(identity)" disabled>
             </div>
-
-            <!-- FAQ Section and Key Benefits -->
         </section>
+
+        <script>
+            function toggleDisconnectSection() {
+                const section = document.getElementById('disconnectDeviceSection');
+                section.classList.toggle('hidden');
+            }
+
+            function disconnectDevice() {
+                const transactionCode = document.getElementById('transactionCode').value;
+                if (transactionCode) {
+                    alert(`Device with transaction code ${transactionCode} has been disconnected.`);
+                    // Add logic here to handle the disconnection request, such as sending it to a server.
+                } else {
+                    alert('Please enter a valid transaction code.');
+                }
+            }
+        </script>
+
         <div id="instructions"
             class="hidden bg-gradient-to-r from-blue-400 to-blue-500 mb-3 p-6 rounded-lg shadow-2xl text-center">
             <h5 class="text-white text-lg font-bold mb-4">How to Purchase a Package</h5>
@@ -262,13 +324,17 @@
                                 <span>How do I set up my network?</span>
                                 <svg class="w-5 h-5 text-teal-700 transition-transform transform rotate-0" fill="none"
                                     stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 4v16m8-8H4"></path>
                                 </svg>
                             </button>
                             <div id="faq1" class="hidden mt-2 text-teal-600 bg-white p-2 rounded">
-                                <p>To get started just click the buy button of your preferred package then insert your mpesa mobile and
-                                    await for stk push. Once the transaction is successful, the system will automatically detect you and
-                                    connect you to the network. Visit our <a href="https://blackiewebp.fly.dev" class="text-teal-800 underline">setup guide</a> page
+                                <p>To get started just click the buy button of your preferred package then insert your
+                                    mpesa mobile and
+                                    await for stk push. Once the transaction is successful, the system will
+                                    automatically detect you and
+                                    connect you to the network. Visit our <a href="https://blackiewebp.fly.dev"
+                                        class="text-teal-800 underline">setup guide</a> page
                                     for more details.</p>
                             </div>
                         </li>
@@ -279,11 +345,14 @@
                                 <span>How many devices are allowed per package?</span>
                                 <svg class="w-5 h-5 text-teal-700 transition-transform transform rotate-0" fill="none"
                                     stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 4v16m8-8H4"></path>
                                 </svg>
                             </button>
                             <div id="faq7" class="hidden mt-2 text-teal-600 bg-white p-2 rounded">
-                                <p>the system is design to allow simulteneous connection of upto 2 devices per package  this  will enable seamless connection to the internet unless the stakeholders agree otherwise.</p>
+                                <p>the system is design to allow simulteneous connection of upto 2 devices per package
+                                    this will enable seamless connection to the internet unless the stakeholders agree
+                                    otherwise.</p>
                             </div>
                         </li>
                         <li>
@@ -293,11 +362,14 @@
                                 <span>What packages do you offer?</span>
                                 <svg class="w-5 h-5 text-teal-700 transition-transform transform rotate-0" fill="none"
                                     stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 4v16m8-8H4"></path>
                                 </svg>
                             </button>
                             <div id="faq2" class="hidden mt-2 text-teal-600 bg-white p-2 rounded">
-                                <p>We offer a variety of packages to suit different needs. Check out our <a href="#" class="text-teal-800 underline">packages</a> page for more details on Comrade packages and Gen-Z packages.</p>
+                                <p>We offer a variety of packages to suit different needs. Check out our <a href="#"
+                                        class="text-teal-800 underline">packages</a> page for more details on Comrade
+                                    packages and Gen-Z packages.</p>
                             </div>
                         </li>
                         <li>
@@ -307,11 +379,15 @@
                                 <span>How can I contact customer support?</span>
                                 <svg class="w-5 h-5 text-teal-700 transition-transform transform rotate-0" fill="none"
                                     stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 4v16m8-8H4"></path>
                                 </svg>
                             </button>
                             <div id="faq3" class="hidden mt-2 text-teal-600 bg-white p-2 rounded">
-                                <p>You can contact our customer support by calling <a href="tel:0796869402" class="text-teal-800 underline">0796869402</a> or emailing us at <a href="mailto:support@networkservice.com" class="text-teal-800 underline">support@networkservice.com</a>.</p>
+                                <p>You can contact our customer support by calling <a href="tel:0796869402"
+                                        class="text-teal-800 underline">0796869402</a> or emailing us at <a
+                                        href="mailto:support@networkservice.com"
+                                        class="text-teal-800 underline">support@networkservice.com</a>.</p>
                             </div>
                         </li>
                         <li>
@@ -319,13 +395,21 @@
                                 class="w-full text-left flex justify-between items-center text-teal-700 font-semibold focus:outline-none"
                                 onclick="toggleAnswer('faq4')">
                                 <span>Terms and Conditions</span>
-                                <svg class="w-5 h-5 text-teal-700 transition-transform transform rotate-0" fill="none"
+                                <svg class="w-8 h-5\8 text-teal-700 transition-transform transform rotate-0" fill="none"
                                     stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 4v16m8-8H4"></path>
                                 </svg>
                             </button>
                             <div id="faq4" class="hidden mt-2 text-teal-600 bg-white p-2 rounded">
-                                <p>By agreeing to use Blackie Networks, the company does not refund instances caused by unavoidable circumstances such as power blackouts or even packages that you purchased but did not use. What we refund is only packages that faced technical issues during purchases, such as failed system transactions while your side was successful. We thank you for the great choice and hope you enjoy our products. Visit our <a href="#" class="text-teal-800 underline">packages</a> page for more details.</p>
+                                <p>By agreeing to use Blackie Networks, the company does not refund instances caused by
+                                    unavoidable circumstances such as power blackouts or even packages that you
+                                    purchased but did not use. What we refund is only packages that faced technical
+                                    issues during purchases, such as failed system transactions while your side was
+                                    successful. We thank you for the great choice and hope you enjoy our products. Visit
+                                    our <a href="#" class="text-teal-800 underline">packages</a> page for more details.
+                                </p>
+
                             </div>
                         </li>
                     </ul>
@@ -351,71 +435,82 @@
             <div class="md:flex block md:space-x-8 space-y-6 md:space-y-0">
                 <div class="md:w-1/2 w-full text-center md:text-left shadow-xl p-5  bg-white">
                     <h4 class="text-xl font-bold mb-4 text-gray-700 text-center">Did You Know?</h4>
-                    <p class="mb-4 text-gray-600">You can configure Blackie Networks internet at your place for free! Just pay as you go per plan. Your only requirement is to have your own TP-Link router.</p>
-                    <p class="text-gray-600">To set up your connection please contact our technicians by clicking the icons below.</p>
+                    <p class="mb-4 text-gray-600">You can configure Blackie Networks internet at your place for free!
+                        Just pay as you go per plan. Your only requirement is to have your own TP-Link router.</p>
+                    <p class="text-gray-600">To set up your connection please contact our technicians by clicking the
+                        icons below.</p>
                     <div class="flex justify-center space-x-4 mt-4">
-                        <a href="https://api.whatsapp.com/send?phone=+254796869402&text=I%20need%20an%20internet%20connection%20from%20Blackie%20Networks%20unlimitedly%20to%20my%20house.%20My%20name%20is%20[YourName]" target="_blank" class="text-teal-600 hover:text-teal-800 transition">
-                            <img src="./images/whatsapp.png" alt="WhatsApp" class="w-8 h-8"/>
+                        <a href="https://api.whatsapp.com/send?phone=+254796869402&text=I%20need%20an%20internet%20connection%20from%20Blackie%20Networks%20unlimitedly%20to%20my%20house.%20My%20name%20is%20[YourName]"
+                            target="_blank" class="text-teal-600 hover:text-teal-800 transition">
+                            <img src="./images/whatsapp.png" alt="WhatsApp" class="w-8 h-8" />
                         </a>
                         <a href="tel:0796869402" class="text-teal-600 hover:text-teal-800 transition">
-                            <img src="./images/telephone.png" alt="Call" class="w-8 h-8"/>
+                            <img src="./images/telephone.png" alt="Call" class="w-8 h-8" />
                         </a>
                         <a href="tg://resolve?domain=Enockaymwema" class="text-teal-600 hover:text-teal-800 transition">
-                            <img src="./images/telegram.png" alt="Telegram" class="w-8 h-8"/>
+                            <img src="./images/telegram.png" alt="Telegram" class="w-8 h-8" />
                         </a>
                     </div>
                 </div>
                 <div class="md:w-1/2 w-full shadow-xl p-5  bg-white">
                     <h4 class="text-xl font-bold mb-4 text-gray-700 text-center">Who Are Blackie Networks</h4>
-                    <p class="mb-4 text-gray-600">Blackie Networks is a newly established company that specializes in software products. We provide affordable internet services to students and enhanced service offerings.</p>
-                    <p class="mb-4 text-gray-600">Our range of products includes online service booking for a variety of offerings, catering to both users and providers.</p>
-                    <p class="text-gray-600">To learn more, visit our website at <a href="https://blackienetwork.com" class="text-teal-700 font-semibold hover:underline">Blackie Networks</a>.</p>
+                    <p class="mb-4 text-gray-600">Blackie Networks is a newly established company that specializes in
+                        software products. We provide affordable internet services to students and enhanced service
+                        offerings.</p>
+                    <p class="mb-4 text-gray-600">Our range of products includes online service booking for a variety of
+                        offerings, catering to both users and providers.</p>
+                    <p class="text-gray-600">To learn more, visit our website at <a href="https://blackienetwork.com"
+                            class="text-teal-700 font-semibold hover:underline">Blackie Networks</a>.</p>
                 </div>
             </div>
         </section>
-        
+
         <section class="bg-gradient-to-r from-teal-400 to-blue-500 p-8  shadow-lg mb-8 mt-5">
             <h4 class="text-white text-3xl font-bold mb-6 text-center">What Our Clients Say</h4>
             <div class="md:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              <div class="testimonial-card mb-3">
-                <div class="testimonial-header">
-                  <img src="./images/user.png" alt="Client Photo" class="testimonial-avatar">
-                  <div class="testimonial-info">
-                    <p class="client-name">Cynthia Orina</p>
-                    <p class="client-position">Cyber Security Expert,Computer Scientist Chuka University</p>
-                  </div>
+                <div class="testimonial-card mb-3">
+                    <div class="testimonial-header">
+                        <img src="./images/user.png" alt="Client Photo" class="testimonial-avatar">
+                        <div class="testimonial-info">
+                            <p class="client-name">Cynthia Orina</p>
+                            <p class="client-position">Cyber Security Expert,Computer Scientist Chuka University</p>
+                        </div>
+                    </div>
+                    <p class="testimonial-text">"The service provided by Blackie Networks has been exceptional. Their
+                        network is reliable and their customer support is top-notch."</p>
                 </div>
-                <p class="testimonial-text">"The service provided by Blackie Networks has been exceptional. Their network is reliable and their customer support is top-notch."</p>
-              </div>
-              <div class="testimonial-card mb-3">
-                <div class="testimonial-header">
-                  <img src="./images/user.png" alt="Client Photo" class="testimonial-avatar">
-                  <div class="testimonial-info">
-                    <p class="client-name">Pius Musomi</p>
-                    <p class="client-position">Backend Engineer ,Computer Scientist Chuka University </p>
-                  </div>
+                <div class="testimonial-card mb-3">
+                    <div class="testimonial-header">
+                        <img src="./images/user.png" alt="Client Photo" class="testimonial-avatar">
+                        <div class="testimonial-info">
+                            <p class="client-name">Pius Musomi</p>
+                            <p class="client-position">Backend Engineer ,Computer Scientist Chuka University </p>
+                        </div>
+                    </div>
+                    <p class="testimonial-text">"We've seen a significant improvement in our connectivity since
+                        switching to Blackie Networks. Highly recommend their services!"</p>
                 </div>
-                <p class="testimonial-text">"We've seen a significant improvement in our connectivity since switching to Blackie Networks. Highly recommend their services!"</p>
-              </div>
-              <div class="testimonial-card mb-3">
-                <div class="testimonial-header">
-                  <img src="./images/user.png" alt="Client Photo" class="testimonial-avatar">
-                  <div class="testimonial-info">
-                    <p class="client-name">Timothy Kuria</p>
-                    <p class="client-position">Frontend Engineer, Computer Scientist Chuka University</p>
-                  </div>
+                <div class="testimonial-card mb-3">
+                    <div class="testimonial-header">
+                        <img src="./images/user.png" alt="Client Photo" class="testimonial-avatar">
+                        <div class="testimonial-info">
+                            <p class="client-name">Timothy Kuria</p>
+                            <p class="client-position">Frontend Engineer, Computer Scientist Chuka University</p>
+                        </div>
+                    </div>
+                    <p class="testimonial-text">"Blackie Networks has provided us with unparalleled service and support.
+                        Their team is always available to help with any issues."</p>
                 </div>
-                <p class="testimonial-text">"Blackie Networks has provided us with unparalleled service and support. Their team is always available to help with any issues."</p>
-              </div>
             </div>
-          </section>  
+        </section>
         <section class="bg-gray-100 p-6 rounded-lg shadow-lg mb-8">
             <h4 class="text-gray-900 text-2xl font-bold mb-4 text-center">Check Your Coverage</h4>
             <p class="text-center text-gray-700 mb-4">Verify if our services are available in your area</p>
             <div class="flex justify-center items-center gap-2 mb-4">
                 <input type="text" placeholder="Enter your location"
                     class="w-full md:w-1/2 lg:w-1/3 xl:w-1/4 p-2 gap-3 border border-gray-300 rounded-l-lg focus:outline-none focus:border-blue-500">
-                <button class="bg-blue-600 text-white py-2 px-4 rounded-r-lg hover:bg-blue-700 transition focus:outline-none">Check</button>
+                <button
+                    class="bg-blue-600 text-white py-2 px-4 rounded-r-lg hover:bg-blue-700 transition focus:outline-none">Check</button>
             </div>
             <div class="mt-4">
                 <h5 class="text-gray-900 text-xl font-semibold mb-2">Available Locations:</h5>
@@ -427,7 +522,7 @@
                 </ul>
             </div>
         </section>
-        
+
         <div class="modal-content animate__animated animate__fadeInDown p-2 w-auto text-gray-100 bg-blue-800 hidden"
             id="prompt">
             <h4 class="text-white font-bold mb-4">BlackieNetwork purchase Modal</h4>
@@ -455,11 +550,14 @@
             <form id="suggestionsForm" class="space-y-4">
                 <div>
                     <label for="suggestionText" class="block text-teal-700 font-semibold mb-2">Your Suggestion:</label>
-                    <textarea id="suggestionText" class="w-full rounded-lg border-2 border-teal-200 p-3 focus:outline-none focus:border-teal-500" rows="4" placeholder="Write your suggestion here..."></textarea>
+                    <textarea id="suggestionText"
+                        class="w-full rounded-lg border-2 border-teal-200 p-3 focus:outline-none focus:border-teal-500"
+                        rows="4" placeholder="Write your suggestion here..."></textarea>
                 </div>
                 <div>
                     <label for="suggestionCategory" class="block text-teal-700 font-semibold mb-2">Category:</label>
-                    <select id="suggestionCategory" class="w-full rounded-lg border-2 border-teal-200 p-3 focus:outline-none focus:border-teal-500">
+                    <select id="suggestionCategory"
+                        class="w-full rounded-lg border-2 border-teal-200 p-3 focus:outline-none focus:border-teal-500">
                         <option value="" disabled selected>Select a category</option>
                         <option value="Service Improvement">Service Improvement</option>
                         <option value="New Features">New Features</option>
@@ -468,20 +566,21 @@
                     </select>
                 </div>
                 <div class="text-right">
-                    <button type="button" onclick="submitSuggestion()" class="bg-teal-700 text-white rounded-lg px-6 py-3 font-semibold">Submit</button>
+                    <button type="button" onclick="submitSuggestion()"
+                        class="bg-teal-700 text-white rounded-lg px-6 py-3 font-semibold">Submit</button>
                 </div>
             </form>
             <div id="submissionMessage" class="hidden mt-4 text-teal-600">
                 Thank you for your suggestion! We value your feedback and will review it shortly.
             </div>
         </div>
-        
+
         <script>
             function submitSuggestion() {
                 const suggestionText = document.getElementById('suggestionText').value;
                 const suggestionCategory = document.getElementById('suggestionCategory').value;
                 const submissionMessage = document.getElementById('submissionMessage');
-        
+
                 if (suggestionText && suggestionCategory) {
                     // Simulate form submission
                     submissionMessage.classList.remove('hidden');
@@ -494,15 +593,58 @@
                 }
             }
         </script>
-       
+
     </main>
 
-    <footer class="bg-blue-900 text-white p-4 text-center">
-        <p class="text-sm">© 2024 Blackie Networks. All rights reserved.</p>
-        <nav class="md:flex block justify-center mt-2">
-            <a href="#" class="footer-link mx-2">Privacy Policy</a>
-            <a href="#" class="footer-link mx-2">Terms of Service</a>
-        </nav>
+    <footer class="bg-gray-800 text-white p-8 text-center md:text-left">
+        <div class="container mx-auto flex flex-col md:flex-row justify-between items-center md:items-start gap-6">
+            <!-- Logo and Description -->
+            <div class="flex flex-col items-center md:items-start ">
+                <img src="./images/blogo.png" alt="Blackie Networks Logo" class="h-12 w-auto rounded-full mb-2">
+                <p class="text-sm text-gray-300 mt-2 max-w-xs">
+                    Empowering connectivity with reliable, high-speed internet solutions tailored for your needs.
+                </p>
+            </div>
+
+            <!-- Links Section -->
+            <div class="flex flex-col items-center md:items-start">
+                <h4 class="font-bold mb-3">Quick Links</h4>
+                <ul class="space-y-2">
+                    <li><a href="#home" class="text-gray-300 hover:text-white transition">Home</a></li>
+                    <li><a href="#services" class="text-gray-300 hover:text-white transition">Services</a></li>
+                    <li><a href="#support" class="text-gray-300 hover:text-white transition">Support</a></li>
+                    <li><a href="#contact" class="text-gray-300 hover:text-white transition">Contact</a></li>
+                </ul>
+            </div>
+
+            <!-- Social Media Icons -->
+            <div class="flex flex-col items-center md:items-start">
+                <h4 class="font-bold mb-3">Connect with Us</h4>
+                <div class="flex space-x-4">
+                    <a href="https://facebook.com" target="_blank" class="hover:text-white transition">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <!-- Facebook Icon SVG Path -->
+                        </svg>
+                    </a>
+                    <a href="https://twitter.com" target="_blank" class="hover:text-white transition">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <!-- Twitter Icon SVG Path -->
+                        </svg>
+                    </a>
+                    <a href="https://instagram.com" target="_blank" class="hover:text-white transition">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <!-- Instagram Icon SVG Path -->
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Divider Line -->
+        <div class="border-t border-gray-700 my-4"></div>
+
+        <!-- Copyright -->
+        <p class="text-sm text-gray-400">© 2024 Blackie Networks. All rights reserved.</p>
     </footer>
 
     <script>
@@ -511,8 +653,8 @@
             instructions.classList.toggle('hidden');
         }
         function redirectToLocalIP() {
-      window.location.href = "http://192.168.88.1";
-    }
+            window.location.href = "http://192.168.88.1";
+        }
     </script>
     <script src="./pkg.js"></script>
 </body>

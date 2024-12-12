@@ -1,11 +1,21 @@
 {
    "captive": $(if logged-in == 'yes')false$(else)true$(endif),
    "user-portal-url": "$(link-login-only)",
-$(if session-timeout-secs != 0)
+   $(if session-timeout-secs != 0)
    "seconds-remaining": $(session-timeout-secs),
-$(endif)
-$(if remain-bytes-total)
+   $(endif)
+   $(if remain-bytes-total)
    "bytes-remaining": $(remain-bytes-total),
-$(endif)
-   "can-extend-session": true
+   $(endif)
+   "can-extend-session": $(if (session-timeout-secs < 600 || remain-bytes-total < 104857600))true$(else)false$(endif),
+   "user-name": "$(username)",
+   "user-profile": "$(user-profile)",
+   "connection-speed": "$(rate-limit)",
+   $(if user-profile == 'premium')
+   "can-access-premium-content": true,
+   $(endif)
+   $(if remain-bytes-total < 104857600)
+   "message": "Warning: You are close to your data limit.",
+   $(endif)
+   "promotion": "Get 1GB free when you upgrade to Premium!"
 }

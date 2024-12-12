@@ -1,3 +1,4 @@
+
 //disable page view functionslity
 document.addEventListener('keydown', function (event) {
     // Check if 'Ctrl' key is pressed along with 'U'
@@ -40,11 +41,18 @@ const feedback = document.getElementById("prompt");
 const feedbackPara = document.createElement('p')
 feedback.appendChild(feedbackPara)
 const form = document.querySelector(".form");
+const form2 = document.getElementById("form");
 const loading = document.querySelector(".loading");
 const phoneInput = document.querySelector(".phone");
 const connectBack = document.createElement("button");
 connectBack.className = "connectBack bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded";
 connectBack.textContent = "Connect Back";
+const Disconnect = document.createElement("button");
+Disconnect.className = 'w-full bg-red-600 text-white p-2 rounded shadow hover:bg-red-700 transition duration-200';
+Disconnect.textContent = "Disconnect Device";
+const alertInfo2 = document.createElement("h4");
+alertInfo2.className = "text-red-500";
+form2.append(Disconnect, alertInfo2);
 const alertInfo = document.createElement("h4");
 alertInfo.className = 'text-red-500';
 const spinner = document.createElement("div");
@@ -173,87 +181,6 @@ const submitConnectBack = (time, phone,TransactionCode) => {
     connectForm.submit();
 };
 
-// Automatic login items
-const automaticLogin = (async () => {
-    // Get phone number and remaining time from cookie
-    const phoneNumberFromCookie = getPhoneNumber('phoneNumber');
-    const remainingTimeFromCookie = getRemainingTimeFromCookie('phoneNumber');
-
-    // Check if remaining time is valid (non-negative)
-    if (phoneNumberFromCookie && remainingTimeFromCookie) {
-        if (remainingTimeFromCookie < 0) {
-            // Inform the user that the package has expired and stop further processing
-            alertInfo.textContent = 'Your package has expired. Please purchase a new one.';
-            alertInfo.className = 'text-red-500 font-bold';
-            return;
-        }
-
-        // Proceed if remaining time is positive
-        form.appendChild(spinner); // Show spinner while processing
-        try {
-            const response = await fetch("https://mikrotiksystem2.fly.dev/public/connect.php", {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ phoneNumber: phoneNumberFromCookie, remainingTime: remainingTimeFromCookie })
-            });
-            console.log(response);
-        } catch (error) {
-            alertInfo.textContent = 'Error occurred while verifying.';
-            alertInfo.className = 'text-red-500';
-            console.log(error);
-        } finally {
-            form.removeChild(spinner); // Hide spinner after processing
-        }
-    } else {
-        // If phone number and remaining time are not found in cookies, check local storage
-        const phoneNumberFromLocalStorage = localStorage.getItem('phoneNumber');
-
-        if (!phoneNumberFromLocalStorage) {
-            alertInfo.textContent = 'You do not have any active package. Please purchase one from the options below.';
-            alertInfo.className = 'text-white font-bold';
-            return;
-        }
-
-        form.appendChild(spinner); // Show spinner while processing
-        try {
-            const response = await fetch('https://mikrotiksystem2.fly.dev/connectBackUser.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ UserPhoneNumber: phoneNumberFromLocalStorage })
-            });
-            console.log(response);
-            const data = await response.json();
-
-            // Check if remaining time is negative
-            if (data.RemainingTime < 0) {
-                alertInfo.textContent = 'Your package has expired. Please purchase a new one.';
-                alertInfo.className = 'text-white font-bold';
-                return;
-            }
-
-            if (data.ResultCode === 0) {
-                const TransactionCode = data.TransactionCode;
-                submitConnectBack(data.RemainingTime, phoneNumberFromLocalStorage,RouterName,TransactionCode);
-                const expiry = addSecondsToCurrentTime(data.RemainingTime);
-                alertInfo.textContent = `wait as we reconnect you to internet. your  unliminet package will expire on :${expiry}`;
-                alertInfo.className = 'text-white font-bold';
-            } else {
-                alertInfo.textContent = data.ResultCode === 1 ? 'Cannot share user details' :
-                    data.ResultCode === 2 ? 'Your package has expired. Please purchase a new one.' :
-                        'Unexpected result from the server';
-                alertInfo.className = 'text-red-500';
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            console.log("error", error)
-            alertInfo.textContent = 'Error occurred while verifying.';
-            alertInfo.className = 'text-red-500';
-        } finally {
-            form.removeChild(spinner); // Hide spinner after processing
-        }
-    }
-})();
-
 
 //update localstorage
 const updateLocalstorage = (phoneNumber2) => {
@@ -265,10 +192,13 @@ const updateLocalstorage = (phoneNumber2) => {
 
 }
 
-connectBack.addEventListener('click', async () => {
-    const phone2 = phoneInput.value;
-    if (!phone2) {
-        alertInfo.textContent = "Input field is empty or incorrect input";
+//disconnect function is yet done the logic isnt complete
+Disconnect.addEventListener('click', async () => {
+    const input = document.getElementById("transactionCode");
+    const MpesaCode = document.getElementById("transactionCode");
+    const phone2 = input.value;
+    if (!phone2 || MpesaCode) {
+        alertInfo.textContent = "Input field is empty";
     } else if (phone2.length !== 10) {
         alertInfo.textContent = "Your digits are less than required or more than";
     } else if (!phone2.startsWith("0")) {
@@ -277,17 +207,21 @@ connectBack.addEventListener('click', async () => {
         form.appendChild(spinner);
         loading.style.display = "block";
         const phoneNumber = formatPhoneNumber(phone2);
+        const mac = "00:01:4B:7B:27"
         updateLocalstorage(phoneNumber);
         //setCookie('phoneNumber',phone2,{ unit: 'day', value: 1 });
         try {
-            const response = await fetch('https://mikrotiksystem2.fly.dev/connectBackUser.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ UserPhoneNumber: phoneNumber }),
+            const response = await fetch('https://node-blackie-networks.fly.dev/api/jwt', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ phoneNumber: phoneNumber, mpesaCode: MpesaCode })
             });
 
             if (!response.ok) throw new Error('Network response was not ok');
             const data = await response.json();
+            console.log(data);
 
             if (data.ResultCode === 0) {
                 if (data.remainingTime < 1) {
@@ -295,12 +229,16 @@ connectBack.addEventListener('click', async () => {
                     alertInfo.className = 'text-white font-bold';
                     return;
                 } else {
+                    form.appendChild(spinner);
+                    loading.style.display = "block";
                     const TransactionCode = data.TransactionCode;
-                    submitConnectBack(data.RemainingTime, phoneNumber, RouterName,TransactionCode);
+                    const remainingTime = data.RemainingTime
+                    //console.log(TransactionCode)
+                    submitConnectBack(remainingTime, phoneNumber,TransactionCode);
                     const expiry = addSecondsToCurrentTime(data.RemainingTime);
                     alertInfo.textContent = `wait as we connect you to internet. your  unliminet package will expire on :${expiry}`;
                     alertInfo.className = 'text-white font-semibold';
-                    form.appendChild(spinner)
+                    //form.appendChild(spinner)
                 }
             } else {
                 alertInfo.textContent = data.ResultCode === 1 ? 'Cannot share user details' : data.ResultCode === 2 ? 'Your package is expired or try connectBack if not' : 'Unexpected result from the server';
@@ -316,7 +254,75 @@ connectBack.addEventListener('click', async () => {
     }
 });
 
-const submitConnectForm = (amount, phone) => {
+//connect back logic functionality
+connectBack.addEventListener('click', async () => {
+    const phone2 = phoneInput.value;
+    const checkbox = document.getElementById("termsCheckbox");
+    if (!checkbox.checked) {
+        alertInfo.textContent = "Kindly accept our Terms and Conditions";
+        alertInfo.classList.add("text-red-600", "mt-2", "font-semibold"); // Add styling for emphasis
+        return;
+    } else {
+        alertInfo.textContent = ""; // Clear the message if checkbox is selected
+    }
+    if (!phone2) {
+        alertInfo.textContent = "Input field is empty or incorrect input";
+    } else if (phone2.length !== 10) {
+        alertInfo.textContent = "Your digits are less than required or more than";
+    } else if (!phone2.startsWith("0")) {
+        alertInfo.textContent = "Phone number should start with 0";
+    } else {
+        form.appendChild(spinner);
+        loading.style.display = "block";
+        const phoneNumber = formatPhoneNumber(phone2);
+        const mac = "00:01:4B:7B:27"
+        updateLocalstorage(phoneNumber);
+        //setCookie('phoneNumber',phone2,{ unit: 'day', value: 1 });
+        try {
+            const response = await fetch('https://node-blackie-networks.fly.dev/api/jwt', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ phoneNumber: phoneNumber, mac: mac })
+            });
+
+            if (!response.ok) throw new Error('Network response was not ok');
+            const data = await response.json();
+            console.log(data);
+
+            if (data.ResultCode === 0) {
+                if (data.remainingTime < 1) {
+                    alertInfo.textContent = `your package is already expired kindly renew it ..`;
+                    alertInfo.className = 'text-white font-bold';
+                    return;
+                } else {
+                    form.appendChild(spinner);
+                    loading.style.display = "block";
+                    const TransactionCode = data.TransactionCode;
+                    const remainingTime = data.RemainingTime
+                    //console.log(TransactionCode)
+                    submitConnectBack(remainingTime, phoneNumber,TransactionCode);
+                    const expiry = addSecondsToCurrentTime(data.RemainingTime);
+                    alertInfo.textContent = `wait as we connect you to internet. your  unliminet package will expire on :${expiry}`;
+                    alertInfo.className = 'text-white font-semibold';
+                    //form.appendChild(spinner)
+                }
+            } else {
+                alertInfo.textContent = data.ResultCode === 1 ? 'Cannot share user details' : data.ResultCode === 2 ? 'Your package is expired or try connectBack if not' : 'Unexpected result from the server';
+                alertInfo.className = 'text-red-500';
+            }
+            form.removeChild(spinner);
+        } catch (error) {
+            console.error('Error:', error);
+            alertInfo.textContent = "Error occurred while verifying";
+            alertInfo.className = 'text-red-500';
+            form.removeChild(spinner);
+        }
+    }
+});
+
+const submitConnectForm = (amount, phone,TransactionCode) => {
     // Retrieve the router name from the input element by ID
     const routerName = document.getElementById("identity")?.value;
     
@@ -327,7 +333,6 @@ const submitConnectForm = (amount, phone) => {
 
     // Set the maximum amount to 35 if the input amount exceeds it
     const newAmount = Math.min(amount, 35);
-
     // Create a form element with method POST and the correct action URL
     const connectForm = document.createElement("form");
     connectForm.className = "connectForm";
@@ -347,49 +352,14 @@ const submitConnectForm = (amount, phone) => {
     connectForm.append(
         createHiddenInput("amount", newAmount),      // Amount input
         createHiddenInput("phoneNumber", phone),     // Phone number input
-        createHiddenInput("routername", routerName)  // Router name input
+        createHiddenInput("routername", routerName),
+        createHiddenInput("TransactionCode", TransactionCode) // Router name input
     );
 
     // Append the form to the body and submit it
     document.body.append(connectForm);
     connectForm.submit();
 };
-
-
-//confirm button 
-const confirmButton = document.createElement("button");
-confirmButton.className = "connect bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded";
-confirmButton.textContent = "Connect";
-confirmButton.style.display = "none"; // Hide the confirm button initially
-
-confirmButton.addEventListener('click', async () => {
-    feedbackPara.textContent = '';
-    feedback.appendChild(spinner);
-    try {
-        const callbackResponse = await fetch("https://mikrotiksystem2.fly.dev/activeUser.php", {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ phoneNumber: phone, timeUnit: time1 })
-        });
-
-        if (!callbackResponse.ok) throw new Error('Network response was not ok');
-
-        const callbackData = await callbackResponse.json();
-
-        if (callbackData && callbackData.ResultCode === 0) {
-            submitConnectForm(Amount, phone2, RouterName);
-        } else {
-            feedbackPara.textContent = "Transaction was unsuccessful";
-            feedbackPara.className = 'text-red-500';
-            feedback.appendChild(close);
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        feedbackPara.textContent = "Error: in direct login try connecting with connectBack";
-        feedbackPara.className = 'text-red-500';
-        feedback.appendChild(close);
-    }
-});
 
 
 const purchaseItem = (value, routername) => {
@@ -437,11 +407,11 @@ const purchaseItem = (value, routername) => {
     }
 
     // Handle payment status received from WebSocket messages
-    function handlePaymentStatus(status, phone, Amount, routername,time1) {
+    function handlePaymentStatus(status, phone, Amount, routername,time1,TransactionCode) {
         if (status === 'Payment Successful') {
             setCookie('phoneNumber', phone, time1);
             updateLocalstorage(phone);
-            submitConnectForm(Amount, phone, routername);
+            submitConnectForm(Amount, phone,TransactionCode);
             feedback.appendChild(spinner);
         } else {
             feedbackPara.textContent = `${status}`;
@@ -496,7 +466,8 @@ const purchaseItem = (value, routername) => {
                         console.log(message)
 
                         if (message.checkoutRequestID === checkoutRequestID) {
-                            handlePaymentStatus(message.status, phone, Amount, routername,time1); // Handle the payment status
+                            const TransactionCode = message.Code;
+                            handlePaymentStatus(message.status, phone, Amount, routername,time1,TransactionCode); // Handle the payment status
                         }
                     });
 

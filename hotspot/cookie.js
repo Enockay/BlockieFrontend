@@ -1,103 +1,95 @@
-const loginTimestamp = new Date().toISOString(); // Get current timestamp
-localStorage.setItem('phoneNumber', phoneNumber);
-localStorage.setItem('loginTimestamp', loginTimestamp);
+const ROUTER_IP = '192.168.100.2'; // Replace with your RouterOS IP address
+const ADMIN_USER = 'api';       // Replace with your RouterOS admin username
+const ADMIN_PASS = 'enock';    // Replace with your RouterOS admin password
 
-const calculateRemainingTime = (loginTimestamp, sessionDurationInMinutes) => {
-    const now = new Date();
-    const loginTime = new Date(loginTimestamp);
-    const sessionDuration = sessionDurationInMinutes * 60 * 1000; // Convert minutes to milliseconds
-    const elapsed = now - loginTime; // Time elapsed since login
-    const remainingTime = sessionDuration - elapsed;
+// Function to fetch user details
+async function getUserDetails(username) {
+  try {
+    const response = await fetch(`http://${ROUTER_IP}/rest/ip/hotspot/user`, {
+      method: 'GET',
+      mode: 'no-cors',
+      headers: {
+        Authorization: 'Basic ' + btoa(`${ADMIN_USER}:${ADMIN_PASS}`),
+      },
+    });
 
-    return Math.max(0, Math.ceil(remainingTime / 1000)); // Return remaining time in seconds
-};
-
-const automaticLogin = async () => {
-    const phoneNumber = localStorage.getItem('phoneNumber');
-    const loginTimestamp = localStorage.getItem('loginTimestamp');
-
-    if (!phoneNumber || !loginTimestamp) {
-        alertInfo.textContent = 'No records for automatic login, please try manual login with Connect Back.';
-        return;
+    if (!response.ok) {
+      throw new Error(`Failed to fetch user details: ${response.statusText}`);
     }
 
-    const sessionDurationInMinutes = 30; // Example session duration
-    const remainingTime = calculateRemainingTime(loginTimestamp, sessionDurationInMinutes);
+    const users = await response.json();
+    return users.find((user) => user.name === username); // Find the user by name
+  } catch (error) {
+    console.error('Error fetching user details:', error.message);
+    return null;
+  }
+}
 
-    if (remainingTime <= 0) {
-        alertInfo.textContent = 'Session expired. Please log in again.';
-        return;
+// Function to create a new user (without password)
+async function createUser(username, profile) {
+  try {
+    const response = await fetch(`http://${ROUTER_IP}/rest/ip/hotspot/user`, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Basic ' + btoa(`${ADMIN_USER}:${ADMIN_PASS}`),
+      },
+      body: JSON.stringify({
+        name: username,
+        profile: profile,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to create user: ${response.statusText}`);
     }
 
-    form.appendChild(spinner); // Show spinner while processing
+    const result = await response.json();
+    console.log('User created successfully:', result);
+  } catch (error) {
+    console.error('Error creating user:', error.message);
+  }
+}
 
-    try {
-        const response = await fetch('https://mikrotik-main-white-moon-8065.fly.dev/connectBackUser.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ UserPhoneNumber: phoneNumber }),
-        });
+// Function to update user profile
+async function updateUserProfile(username, newProfile) {
+  try {
+    const response = await fetch(`http://${ROUTER_IP}/rest/ip/hotspot/user/${username}`, {
+      method: 'PUT',
+      mode: 'no-cors',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Basic ' + btoa(`${ADMIN_USER}:${ADMIN_PASS}`),
+      },
+      body: JSON.stringify({ profile: newProfile }),
+    });
 
-        if (!response.ok) throw new Error('Network response was not ok');
-        const data = await response.json();
-
-        if (data.ResultCode === 0) {
-            submitConnectBack(data.RemainingTime, phoneNumber);
-            alertInfo.textContent = `Welcome back, user. Remaining time: ${remainingTime}`;
-            alertInfo.className = 'text-green-500';
-        } else {
-            alertInfo.textContent = data.ResultCode === 1 ? 'Cannot share user details' :
-                                    data.ResultCode === 2 ? 'Your package has expired. Purchase a new package.' :
-                                    'Unexpected result from the server';
-            alertInfo.className = 'text-red-500';
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        alertInfo.textContent = "Error occurred while verifying.";
-        alertInfo.className = 'text-red-500';
-    } finally {
-        form.removeChild(spinner); // Hide spinner after processing
+    if (!response.ok) {
+      throw new Error(`Failed to update user profile: ${response.statusText}`);
     }
-};
 
-connectBack.addEventListener('click', async () => {
-    const phone2 = phoneInput.value;
-    if (!phone2) {
-        alertInfo.textContent = "Input field is empty or incorrect input";
-    } else if (phone2.length !== 10) {
-        alertInfo.textContent = "Your digits are less than required or more than";
-    } else if (!phone2.startsWith("0")) {
-        alertInfo.textContent = "Phone number should start with 0";
-    } else {
-        form.appendChild(spinner);
-        loading.style.display = "block";
-        const phoneNumber = formatPhoneNumber(phone2);
-        localStorage.setItem('phoneNumber', phoneNumber);
-        localStorage.setItem('loginTimestamp', new Date().toISOString()); // Store the current timestamp
-        try {
-            const response = await fetch('https://mikrotik-main-white-moon-8065.fly.dev/connectBackUser.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ UserPhoneNumber: phoneNumber }),
-            });
+    const result = await response.json();
+    console.log('User profile updated successfully:', result);
+  } catch (error) {
+    console.error('Error updating user profile:', error.message);
+  }
+}
 
-            if (!response.ok) throw new Error('Network response was not ok');
-            const data = await response.json();
+// Function to check, create, or modify the user profile
+async function checkAndModifyUserProfile(username, targetProfile) {
+  const user = await getUserDetails(username);
 
-            if (data.ResultCode === 0) {
-                submitConnectBack(data.RemainingTime, phone2);
-                alertInfo.textContent = `Welcome back user. Remaining time: ${data.RemainingTime}`;
-                alertInfo.className = 'text-green-500';
-            } else {
-                alertInfo.textContent = data.ResultCode === 1 ? 'Cannot share user details' : data.ResultCode === 2 ? 'Your package is expired or try Connect Back if not' : 'Unexpected result from the server';
-                alertInfo.className = 'text-red-500';
-            }
-            form.removeChild(spinner);
-        } catch (error) {
-            console.error('Error:', error);
-            alertInfo.textContent = "Error occurred while verifying";
-            alertInfo.className = 'text-red-500';
-            form.removeChild(spinner);
-        }
-    }
-});
+  if (!user) {
+    console.log(`User "${username}" not found. Creating a new user.`);
+    await createUser(username, targetProfile);
+  } else if (user.profile === targetProfile) {
+    console.log(`User "${username}" already has the profile "${targetProfile}". No changes needed.`);
+  } else {
+    console.log(`Updating profile for user "${username}" to "${targetProfile}".`);
+    await updateUserProfile(username, targetProfile);
+  }
+}
+
+// Example usage
+checkAndModifyUserProfile('254796869402', 'default');
