@@ -121,25 +121,50 @@
     </header>
 
     <main class="container mx-auto md:p-6 p-2 min-h-screen mt-16">
-        <div class="md:w-1/2 max-w-xs mx-auto w-full mt-10 relative">
-            <!-- Floating decorative element -->
-            <div class="form bg-teal-500 p-4 rounded-2xl shadow-xl border-2 border-teal-600">
-                <label class="block text-gray-700 font-bold mb-4 text-xl text-center">
-                    Enter your Number below to reconnect to the internet if you have an active offer Package.
-                </label>
-                <input type="number" maxlength="10" placeholder="Enter phone number"
-                    class="phone w-full p-3 border-2 border-gray-300 rounded-lg text-black focus:outline-none focus:border-teal-700 focus:ring-2 focus:ring-teal-400 transition"
-                    id="phone">
-                <div class="flex flex-col justify-center items-center mt-6">
-                    <div id="spinner1"
-                        class="spinner animate-spin  h-8 w-8 border-4 border-t-teal-700 border-white rounded-full"
-                        style="display: none;"></div>
-                    <div id="connect-notify" class=" text-teal-100 font-semibold text-center"
-                        style="display: none;"></div>
-                    <button id="connect-button"
-                        class="connect-button w-full mt-2 border-green-300 border-2 py-2 rounded-full bg-teal-700 text-gray-800 font-bold text-lg shadow-md hover:bg-teal-800 focus:outline-none focus:ring-4 focus:ring-teal-400 transition transform hover:scale-105">
-                        Connect Back to Internet
-                    </button>
+        <div class="flex items-center justify-center">
+            <div
+                class="w-3/4 mt-10 relative flex flex-col lg:flex-row lg:space-x-8 items-center lg:items-start space-y-8 lg:space-y-0">
+                <!-- Floating decorative element -->
+                <div class="form bg-teal-500 p-4 rounded-2xl shadow-2xl w-full max-w-lg">
+                    <label class="block text-gray-700 font-bold mb-4 text-xm md:text-xl text-center">
+                        Enter your Number below to reconnect to the internet if you have an active offer Package.
+                    </label>
+                    <input type="number" maxlength="10" placeholder="Enter phone number"
+                        class="phone w-full p-2 border-2 border-gray-300 rounded-lg text-black focus:outline-none focus:border-teal-700 focus:ring-2 focus:ring-teal-400 transition"
+                        id="phone">
+                    <div class="flex flex-col justify-center items-center mt-6">
+                        <button id="connect-button"
+                            class="connect-button w-full mt-2 border-green-300 border-2 py-2 rounded-full bg-teal-700 text-gray-800 font-bold text-lg shadow-md hover:bg-teal-800 focus:outline-none focus:ring-4 focus:ring-teal-400 transition transform hover:scale-105">
+                            Connect Back to Internet
+                        </button>
+                        <div id="spinner1"
+                            class="spinner mt-3 animate-spin h-8 w-8 border-4 border-t-teal-700 border-white rounded-full"
+                            style="display: none;"></div>
+                        <div id="connect-notify" class="text-teal-100 mt-2 text-xs text-center mt-4"
+                            style="display: none;"></div>
+                    </div>
+                </div>
+
+                <!-- Promo Code Section -->
+                <div class=" shadow-lg rounded-lg p-4 max-w-lg w-full text-center">
+                    <h1 class="text-2xl font-bold text-gray-800">Hourly Promo Code</h1>
+                    <p id="promo-display" class="text-lg mt-4 text-blue-600 font-mono">
+                        Fetching promo code...
+                    </p>
+
+                    <div class="mt-6">
+                        <label for="promo-input" class="block text-sm font-medium text-gray-700">
+                            Enter Promo Code:
+                        </label>
+                        <input id="promo-input" type="text"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2"
+                            placeholder="Enter Promo Code">
+                        <button id="submit-btn"
+                            class="mt-4 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md">
+                            Submit
+                        </button>
+                    </div>
+                    <p id="response-message" class="mt-4 text-sm font-medium"></p>
                 </div>
             </div>
         </div>
@@ -167,7 +192,7 @@
                     <div class="card-header p-6 rounded-lg shadow-lg">
                         <h4 class="text-xl font-bold mb-2">Midnight Package</h4>
                         <div class="card-content p-4 text-gray-900">
-                            <p>Unlimited from midnight to 6:00 AM  daily for just <strong>19 Ksh</strong>.</p>
+                            <p>Unlimited from midnight to 6:00 AM daily for just <strong>19 Ksh</strong>.</p>
                             <button id="midnightButton"
                                 class="bg-purple-900 text-white py-1 px-3 rounded hover:bg-purple-800 transition"
                                 onclick="openModal('Midnight Package', 'ksh 19')">Purchase</button>
@@ -180,7 +205,8 @@
                     <div class="card-header p-6 rounded-lg shadow-lg">
                         <h4 class="text-xl font-bold mb-2">3-Hour Package</h4>
                         <div class="card-content p-4 text-gray-900">
-                            <p>Unlimited internet for 3 hours available from 8pm - 6am daily for just <strong>15 Ksh</strong>.</p>
+                            <p>Unlimited internet for 3 hours available from 8pm - 6am daily for just <strong>15
+                                    Ksh</strong>.</p>
                             <button id="threeHourButton"
                                 class="bg-purple-900 text-white py-1 px-3 rounded hover:bg-purple-800 transition"
                                 onclick="openModal('3-Hour Package', 'ksh 15')">Purchase</button>
@@ -193,7 +219,8 @@
                     <div class="card-header p-6 rounded-lg shadow-lg">
                         <h4 class="text-xl font-bold mb-2">Weekend Package</h4>
                         <div class="card-content p-4 text-gray-900">
-                            <p>Access unlimited internet for the entire weekend available on (Saturday-Sunday) for just <strong>49
+                            <p>Access unlimited internet for the entire weekend available on (Saturday-Sunday) for just
+                                <strong>49
                                     Ksh</strong>.</p>
                             <button id="weekendButton"
                                 class="bg-purple-900 text-white py-1 px-3 rounded hover:bg-purple-800 transition"
@@ -207,7 +234,8 @@
                     <div class="card-header p-6 rounded-lg shadow-lg">
                         <h4 class="text-xl font-bold mb-2">24-Hour Package</h4>
                         <div class="card-content p-4 text-gray-900">
-                            <p>Enjoy unlimited internet access for 24 hours available from 11pm - 6am daily at just <strong>29
+                            <p>Enjoy unlimited internet access for 24 hours available from 11pm - 6am daily at just
+                                <strong>29
                                     Ksh</strong>.</p>
                             <button id="twentyFourHourButton"
                                 class="bg-purple-900 text-white py-1 px-3 rounded hover:bg-purple-800 transition"
@@ -220,8 +248,7 @@
         </section>
         <!-- Reusable Modal for Payment -->
         <!-- Modal Background Overlay -->
-        <div id="purchaseModal"
-            class="modal hidden mt-28 md:mt-0">
+        <div id="purchaseModal" class="modal hidden mt-28 md:mt-0">
             <!-- Modal Content -->
             <div class=" modal-content rounded-lg shadow-xl w-full max-w-md mx-4 p-6 relative animate-fade-in">
                 <!-- Close Button -->
@@ -231,7 +258,8 @@
                 </button>
 
                 <!-- Modal Title -->
-                <h3 id="modalTitle" class="font-bold md:text-2xl text-xl text-purple-900 mb-4 text-center">Purchase Confirmation
+                <h3 id="modalTitle" class="font-bold md:text-2xl text-xl text-purple-900 mb-4 text-center">Purchase
+                    Confirmation
                 </h3>
 
                 <!-- Modal Description -->

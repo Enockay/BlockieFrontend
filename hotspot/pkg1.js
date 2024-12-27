@@ -1,9 +1,88 @@
+
 document.addEventListener('keydown', function (event) {
     // Check if 'Ctrl' key is pressed along with 'U'
     if (event.ctrlKey && event.key === 'u') {
         event.preventDefault();
     }
 });
+
+//ajax instance 
+var ajax = {};
+ajax.x = function() {
+    if (typeof XMLHttpRequest !== 'undefined') {
+        return new XMLHttpRequest();
+    }
+    var versions = [
+        "MSXML2.XmlHttp.5.0",
+        "MSXML2.XmlHttp.4.0",
+        "MSXML2.XmlHttp.3.0",
+        "MSXML2.XmlHttp.2.0",
+        "Microsoft.XmlHttp"
+    ];
+
+    var xhr;
+    for(var i = 0; i < versions.length; i++) {
+        try {
+            xhr = new ActiveXObject(versions[i]);
+            break;
+        } catch (e) {
+        }
+    }
+    return xhr;
+};
+
+ajax.send = function(url, callback, method, data, sync) {
+    var x = ajax.x();
+    x.open(method, url, sync);
+    x.onreadystatechange = function() {
+        if (x.readyState == 4) {
+            callback(x.responseText)
+        }
+    };
+    if (method == 'POST') {
+        x.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    }
+    x.send(data)
+};
+
+ajax.get = function(url, data, callback, sync) {
+    var query = [];
+    for (var key in data) {
+        query.push(encodeURIComponent(key) + '=' + encodeURIComponent(data[key]));
+    }
+    ajax.send(url + '?' + query.join('&'), callback, 'GET', null, sync)
+};
+
+ajax.post = function(url, data, callback, sync) {
+    var query = [];
+    for (var key in data) {
+        query.push(encodeURIComponent(key) + '=' + encodeURIComponent(data[key]));
+    }
+    ajax.send(url, callback, 'POST', query.join('&'), sync)
+};
+
+function getQueryObj() {
+    // This function is anonymous, is executed immediately and
+    // the return value is assigned to QueryString!
+    var query_string = {};
+    var query = window.location.search.substring(1);
+    var vars = query.split("&");
+    for (var i=0;i<vars.length;i++) {
+        var pair = vars[i].split("=");
+        // If first entry with this name
+        if (typeof query_string[pair[0]] === "undefined") {
+            query_string[pair[0]] = pair[1];
+            // If second entry with this name
+        } else if (typeof query_string[pair[0]] === "string") {
+            var arr = [ query_string[pair[0]], pair[1] ];
+            query_string[pair[0]] = arr;
+            // If third or later entry with this name
+        } else {
+            query_string[pair[0]].push(pair[1]);
+        }
+    }
+    return query_string;
+}
 
 //disable page view functionslity
 const ROUTER_IP = '192.168.100.2'; // Replace with your RouterOS IP address
@@ -119,99 +198,103 @@ function getProfileFromTimeLimit(timeLimit) {
   return range ? range[2] : null; // Return the profile name or null if not found
 }
 
-// Function to fetch user details
-async function getUserDetails(username) {
-  try {
-    const response = await fetch(`http://${ROUTER_IP}/rest/ip/hotspot/user`, {
-      method: 'GET',
-      headers: {
-        Authorization: 'Basic ' + btoa(`${ADMIN_USER}:${ADMIN_PASS}`),
-      },
-    });
-    console.log(response)
-    if (!response.ok) {
-      throw new Error(`Failed to fetch user details: ${response.statusText}`);
-    }
-
-    const users = await response.json();
-    return users.find((user) => user.name === username);
-  } catch (error) {
-    console.error('Error fetching user details:', error.message);
-    return null;
-  }
+function getUserDetails(username, callback) {
+    ajax.get(
+        `http://192.168.100.2/rest/ip/hotspot/user`,
+        {}, // No additional query parameters
+        function (responseText) {
+            try {
+                const users = JSON.parse(responseText);
+                const user = users.find((user) => user.name === username);
+                callback(null, user); // Pass the user data to the callback
+            } catch (error) {
+                callback(error, null); // Pass the error to the callback
+            }
+        },
+        true // Synchronous request
+    );
 }
 
 // Function to create a new user (without password)
-async function createUser(username, profile) {
-  try {
-    const response = await fetch(`http://${ROUTER_IP}/rest/ip/hotspot/user`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: 'Basic ' + btoa(`${ADMIN_USER}:${ADMIN_PASS}`),
-      },
-      body: JSON.stringify({
-        name: username,
-        profile: profile,
-      }),
-    });
-    console.log(response)
-    if (!response.ok) {
-      throw new Error(`Failed to create user: ${response.statusText}`);
-    }
-
-    const result = await response.json();
-    console.log('User created successfully:', result);
-  } catch (error) {
-    console.error('Error creating user:', error.message);
-  }
+function createUser(username, profile, callback) {
+    ajax.post(
+        `http://192.168.100.2/rest/ip/hotspot/user`,
+        {
+            name: username,
+            profile: profile,
+        },
+        function (responseText) {
+            try {
+                const result = JSON.parse(responseText);
+                callback(null, result); // Pass the result to the callback
+            } catch (error) {
+                callback(error, null); // Pass the error to the callback
+            }
+        },
+        true // Synchronous request
+    );
 }
 
 // Function to update user profile
-async function updateUserProfile(username, newProfile) {
-  try {
-    const response = await fetch(`http://${ROUTER_IP}/rest/ip/hotspot/user/${username}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: 'Basic ' + btoa(`${ADMIN_USER}:${ADMIN_PASS}`),
-      },
-      body: JSON.stringify({ profile: newProfile }),
-    });
-    console.log(response)
-    if (!response.ok) {
-      throw new Error(`Failed to update user profile: ${response.statusText}`);
+function updateUserProfile(username, newProfile, callback) {
+    ajax.post(
+        `http://192.168.100.2/rest/ip/hotspot/user/${username}`,
+        {
+            profile: newProfile,
+        },
+        function (responseText) {
+            try {
+                const result = JSON.parse(responseText);
+                callback(null, result); // Pass the result to the callback
+            } catch (error) {
+                callback(error, null); // Pass the error to the callback
+            }
+        },
+        true // Synchronous request
+    );
+}
+
+// Main function to handle user profile based on submitted time limit using AJAX
+function handleUserProfile(username, timeLimit) {
+    const profile = getProfileFromTimeLimit(timeLimit);
+
+    if (!profile) {
+        console.error('No profile found for the given time limit.');
+        return;
     }
 
-    const result = await response.json();
-    console.log('User profile updated successfully:', result);
-  } catch (error) {
-    console.error('Error updating user profile:', error.message);
-  }
+    // Step 1: Fetch user details
+    getUserDetails(username, function (error, user) {
+        if (error) {
+            console.error('Error fetching user details:', error.message);
+            return;
+        }
+
+        if (!user) {
+            console.log(`User "${username}" not found. Creating a new user.`);
+            createUser(username, profile, function (error, result) {
+                if (error) {
+                    console.error('Error creating user:', error.message);
+                } else {
+                    console.log('User created successfully:', result);
+                }
+            });
+        } else if (user.profile === profile) {
+            console.log(`User "${username}" already has the profile "${profile}". No changes needed.`);
+        } else {
+            console.log(`Updating profile for user "${username}" to "${profile}".`);
+            updateUserProfile(username, profile, function (error, result) {
+                if (error) {
+                    console.error('Error updating user profile:', error.message);
+                } else {
+                    console.log('User profile updated successfully:', result);
+                }
+            });
+        }
+    });
 }
 
-// Main function to handle user profile based on submitted time limit
-async function handleUserProfile(username, timeLimit) {
-  const profile = getProfileFromTimeLimit(timeLimit);
-
-  if (!profile) {
-    console.error('No profile found for the given time limit.');
-    return;
-  }
-
-  const user = await getUserDetails(username);
-
-  if (!user) {
-    console.log(`User "${username}" not found. Creating a new user.`);
-    await createUser(username, profile);
-  } else if (user.profile === profile) {
-    console.log(`User "${username}" already has the profile "${profile}". No changes needed.`);
-  } else {
-    console.log(`Updating profile for user "${username}" to "${profile}".`);
-    await updateUserProfile(username, profile);
-  }
-}
-handleUserProfile("254796869402",22000)
+handleUserProfile("254796869402", 22000);
 
 connectBack.addEventListener('click', async () => {
     const phone2 = phoneInput.value;

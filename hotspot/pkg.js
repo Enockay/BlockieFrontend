@@ -7,6 +7,21 @@ document.addEventListener('keydown', function (event) {
     }
 });
 
+//diconnect button 
+function toggleDisconnectSection() {
+    const section = document.getElementById('disconnectDeviceSection');
+    const button = document.getElementById('toggleDisconnect');
+
+    section.classList.toggle('hidden');
+
+    // Update the button text based on the section's visibility
+    if (section.classList.contains('hidden')) {
+        button.textContent = 'Disconnect Device';
+    } else {
+        button.textContent = 'Close Disconnect';
+    }
+}
+
 const RouterName = document.getElementById("identity").value;
 
 function addSecondsToCurrentTime(seconds) {
@@ -54,83 +69,12 @@ const alertInfo2 = document.createElement("h4");
 alertInfo2.className = "text-red-500 mt-5 font-bold";
 form2.append(Disconnect, alertInfo2);
 const alertInfo = document.createElement("h4");
-alertInfo.className = 'text-red-500';
+alertInfo.className = 'text-red-500 ';
 const spinner = document.createElement("div");
 spinner.className = 'loading-container flex items-center justify-center';
 spinner.innerHTML = `<div class="loading-spinner border-t-4 border-blue-500 rounded-full w-12 h-12 animate-spin"></div><span class="ml-2">Please wait...</span>`;
 const formDiv = document.createElement("div");
 form.append(connectBack, alertInfo);
-
-const setCookie = (name, value, allocatedTime) => {
-    const d = new Date();
-    const { unit, value: timeValue } = allocatedTime;
-
-    switch (unit) {
-        case 'hour':
-            d.setTime(d.getTime() + timeValue * 60 * 60 * 1000);
-            break;
-        case 'day':
-            d.setTime(d.getTime() + timeValue * 24 * 60 * 60 * 1000);
-            break;
-        case 'min':
-            d.setTime(d.getTime() + timeValue * 60 * 1000);
-            break;
-        default:
-            console.error('Invalid time unit');
-            return;
-    }
-
-    const expires = d.toUTCString();
-    const cookieValue = `${value}|${expires}`;
-    document.cookie = `${name}=${encodeURIComponent(cookieValue)}; expires=${expires}; path=/; SameSite=Lax`;
-    //console.log('Cookie set:', document.cookie);
-};
-
-const getCookie = (name) => {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    //console.log(parts)
-    if (parts.length === 2) return decodeURIComponent(parts.pop().split(';').shift());
-    return null;
-};
-
-const parseCookieValue = (cookieValue) => {
-    const [phoneNumber, expiryDate] = cookieValue.split('|');
-    return { phoneNumber, expiryDate: new Date(expiryDate) };
-};
-
-const getPhoneNumber = (name) => {
-    const cookieValue = getCookie(name);
-    if (cookieValue) {
-        const { phoneNumber } = parseCookieValue(cookieValue);
-        return phoneNumber;
-    }
-    return null;
-};
-
-const getCookieExpiry = (name) => {
-    const cookie = getCookie(name);
-    if (cookie) {
-        const [value, expiryDate] = cookie.split('|');
-        if (expiryDate) {
-            console.log(expiryDate)
-            return new Date(expiryDate);
-        }
-    }
-    return null;
-};
-
-const getRemainingTimeFromCookie = (name) => {
-    const expiryDate = getCookieExpiry(name);
-    if (expiryDate) {
-        const now = new Date();
-        const remainingTimeMs = expiryDate - now;
-        if (remainingTimeMs > 0) {
-            return Math.floor(remainingTimeMs / 1000); // Return remaining time in seconds
-        }
-    }
-    return null;
-};
 
 const showPrompt = () => {
     checkPromptContent();
@@ -148,66 +92,93 @@ const formatPhoneNumber = (phoneNumber) => {
     return numericOnly.startsWith('0111') && numericOnly.length === 10 ? '254' + numericOnly.substring(1) : '254' + numericOnly.substring(1);
 };
 
-const submitConnectBack = (time, phone,TransactionCode) => {
-    const RouterName = document.getElementById("identity").value;
+async function activateAccount(transactionCode, phoneNumber, remainingTime) {
+    const routerHost = document.getElementById("identity").value;
+    const ipAddress = document.getElementById("ip").value;
+    const macAddress = document.getElementById("mac").value;
 
-    const connectForm = document.createElement("form");
-    connectForm.className = "connectForm";
-    connectForm.method = "post";
-    connectForm.action = "https://mikrotiksystem2.fly.dev/public/connect.php";
+    // Prepare data for the POST request
+    const requestData = {
+        routerHost ,
+        macAddress,
+        phoneNumber,
+        transactionCode,
+        remainingTime,
+        ipAddress 
+    };
 
-    const amountInput = document.createElement("input");
-    amountInput.type = "hidden";
-    amountInput.name = "remainingTime";
-    amountInput.value = time;
+    try {
+        // Send data to the backend
+        const response = await fetch("https://node-blackie-networks.fly.dev/hotspot/activate-account", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(requestData)
+        });
 
-    const phoneNumber = document.createElement("input");
-    phoneNumber.type = "hidden";
-    phoneNumber.name = "phoneNumber";
-    phoneNumber.value = phone;
+        // Handle the response
+        if (response.ok) {
+            const data = await response.json();
+            alertInfo.textContent = `${data.message}`;
+            alertInfo.className = "text-green mt-2 font-semibold bg-gray-100 p-2"
+            return { success: true, data };
+        } else {
+            const error = await response.json();
+             alertInfo.textContent = ` ${error.message}`;
+             alertInfo.className = "text-red-600 mt-2 font-semibold bg-gray-100 p-2"
+            return { success: false, error: error.message };
+        }
+    } catch (err) {
+        alertInfo.textContent = `failed: ${err.message}`;
+        alertInfo.className = "text-red-600 mt-2 font-semibold bg-gray-100 p-2"
+        return { success: false, error: err.message };
+    }
+}
 
-    const router = document.createElement("input");
-    router.type = "hidden";
-    router.name = "routername";
-    router.value = RouterName;
+async function disconnectAccount(transactionCode, phoneNumber, remainingTime) {
+    const routerHost = document.getElementById("identity").value;
+    const ipAddress = document.getElementById("ip").value;
+    const macAddress = document.getElementById("mac").value;
 
-    const Transaction = document.createElement("input");
-    Transaction.type = "hidden";
-    Transaction.name = "TransactionCode";
-    Transaction.value = TransactionCode
+    // Prepare data for the POST request
+    const requestData = {
+        routerHost,
+        macAddress,
+        phoneNumber,
+        transactionCode,
+        remainingTime,
+        ipAddress 
+    };
 
-    connectForm.append(amountInput, phoneNumber, router ,Transaction);
-    document.body.append(connectForm);
-    connectForm.submit();
-};
+    try {
+        // Send data to the backend
+        const response = await fetch("https://node-blackie-networks.fly.dev/hotspot/disconnect-user", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(requestData)
+        });
 
-const DisconnectForm = (time, phone) => {
-    const RouterName = document.getElementById("identity").value;
-
-    const connectForm = document.createElement("form");
-    connectForm.className = "connectForm";
-    connectForm.method = "post";
-    connectForm.action = "https://mikrotiksystem2.fly.dev/public/disconnect.php";
-
-    const amountInput = document.createElement("input");
-    amountInput.type = "hidden";
-    amountInput.name = "remainingTime";
-    amountInput.value = time;
-
-    const phoneNumber = document.createElement("input");
-    phoneNumber.type = "hidden";
-    phoneNumber.name = "phoneNumber";
-    phoneNumber.value = phone;
-
-    const router = document.createElement("input");
-    router.type = "hidden";
-    router.name = "routername";
-    router.value = RouterName;
-
-    connectForm.append(amountInput, phoneNumber, router );
-    document.body.append(connectForm);
-    connectForm.submit();
-};
+        // Handle the response
+        if (response.ok) {
+            const data = await response.json();
+            alertInfo2.textContent = `${data.message}`;
+            alertInfo2.className = "text-green mt-2 font-semibold bg-gray-100 p-2"
+            return { success: true, data };
+        } else {
+            const error = await response.json();
+             alertInfo2.textContent = ` ${error.message}`;
+             alertInfo2.className = "text-red-600 mt-2 font-semibold bg-gray-100 p-2"
+            return { success: false, error: error.message };
+        }
+    } catch (err) {
+        alertInfo2.textContent = `failed: ${err.message}`;
+        alertInfo2.className = "text-red-600 mt-2 font-semibold bg-gray-100 p-2"
+        return { success: false, error: err.message };
+    }
+}
 
 //update localstorage
 const updateLocalstorage = (phoneNumber2) => {
@@ -258,7 +229,8 @@ Disconnect.addEventListener('click', async () => {
                     form2.appendChild(spinner);
                     loading.style.display = "block";
                     //console.log(TransactionCode)
-                    DisconnectForm(data.remainingTime, phoneNumber);
+                    disconnectAccount(MpesaCode,phoneNumber,data.remainingTime)
+                    //DisconnectForm(data.remainingTime, phoneNumber);
                     const expiry = addSecondsToCurrentTime(data.RemainingTime);
                     alertInfo2.textContent = `wait as we connect you to internet. your  unliminet package will expire on :${expiry}`;
                     alertInfo2.className = 'text-white font-semibold';
@@ -283,18 +255,21 @@ connectBack.addEventListener('click', async () => {
     const phone2 = phoneInput.value;
     const checkbox = document.getElementById("termsCheckbox");
     if (!checkbox.checked) {
+        alertInfo.className = "text-red-600 mt-2 font-semibold bg-gray-100 p-1"
         alertInfo.textContent = "Kindly accept our Terms and Conditions";
-        alertInfo.classList.add("text-red-600", "mt-2", "font-semibold"); // Add styling for emphasis
         return;
     } else {
         alertInfo.textContent = ""; // Clear the message if checkbox is selected
     }
     if (!phone2) {
         alertInfo.textContent = "Input field is empty or incorrect input";
+       alertInfo.className = "text-red-600 mt-2 font-semibold bg-gray-100 p-2"
     } else if (phone2.length !== 10) {
         alertInfo.textContent = "Your digits are less than required or more than";
+        alertInfo.className = "text-red-600 mt-2 font-semibold bg-gray-100 p-2"
     } else if (!phone2.startsWith("0")) {
         alertInfo.textContent = "Phone number should start with 0";
+        alertInfo.className = "text-red-600 mt-2 font-semibold bg-gray-100 p-2"
     } else {
         form.appendChild(spinner);
         loading.style.display = "block";
@@ -318,7 +293,7 @@ connectBack.addEventListener('click', async () => {
             if (data.ResultCode === 0) {
                 if (data.remainingTime < 1) {
                     alertInfo.textContent = `your package is already expired kindly renew it ..`;
-                    alertInfo.className = 'text-white font-bold';
+                   alertInfo.className = "text-red-600 mt-2 font-semibold bg-gray-100 p-2"
                     return;
                 } else {
                     form.appendChild(spinner);
@@ -326,69 +301,69 @@ connectBack.addEventListener('click', async () => {
                     const TransactionCode = data.TransactionCode;
                     const remainingTime = data.RemainingTime
                     //console.log(TransactionCode)
-                    submitConnectBack(remainingTime, phoneNumber,TransactionCode);
+                    activateAccount(TransactionCode,phoneNumber,remainingTime)
+                    //submitConnectBack(remainingTime, phoneNumber,TransactionCode);
                     const expiry = addSecondsToCurrentTime(data.RemainingTime);
-                    alertInfo.textContent = `wait as we connect you to internet. your  unliminet package will expire on :${expiry}`;
-                    alertInfo.className = 'text-white font-semibold';
+                    alertInfo.textContent = `Success.. wait as we connect you to internet. your  unliminet package will expire on :${expiry}`;
+                    alertInfo.className = "text-green-500 mt-2 font-semibold bg-gray-100 p-2"
                     //form.appendChild(spinner)
                 }
             } else {
                 alertInfo.textContent = data.ResultCode === 1 ? 'Cannot share user details' : data.ResultCode === 2 ? 'Your package is expired or try connectBack if not' : 'Unexpected result from the server';
-                alertInfo.className = 'text-red-500';
+                alertInfo.className = "text-red-600 mt-2 font-semibold bg-gray-100 p-2"
             }
             form.removeChild(spinner);
         } catch (error) {
             console.error('Error:', error);
-            alertInfo.textContent = "Error occurred while verifying";
-            alertInfo.className = 'text-red-500';
+            alertInfo.textContent = `Network Error ${error}`;
+            alertInfo.className = "text-red-600 mt-2 font-semibold bg-gray-100 p-2"
             form.removeChild(spinner);
         }
     }
 });
 
-const submitConnectForm = (amount, phone,TransactionCode) => {
-    // Retrieve the router name from the input element by ID
-    const routerName = document.getElementById("identity")?.value;
-    
-    if (!routerName) {
-        console.error("Router name not provided.");
-        return;
-    }
+const directLogin = async (phoneNumber, transactionCode, amount) => {
+    const routerHost = document.getElementById("identity").value;
+    const ipAddress = document.getElementById("ip").value;
+    const macAddress = document.getElementById("mac").value;
 
-    // Set the maximum amount to 35 if the input amount exceeds it
-    const newAmount = Math.min(amount, 35);
-    // Create a form element with method POST and the correct action URL
-    const connectForm = document.createElement("form");
-    connectForm.className = "connectForm";
-    connectForm.method = "POST";
-    connectForm.action = "https://mikrotiksystem2.fly.dev/authenticateApi.php";
-
-    // Helper function to create hidden inputs
-    const createHiddenInput = (name, value) => {
-        const input = document.createElement("input");
-        input.type = "hidden";
-        input.name = name;
-        input.value = value;
-        return input;
+    const url = "https://node-blackie-networks.fly.dev/hotspot/direct-login";
+    const payload = {
+        routerHost,
+        macAddress,
+        phoneNumber,
+        transactionCode,
+        ipAddress,
+        amount
     };
 
-    // Append necessary hidden inputs to the form
-    connectForm.append(
-        createHiddenInput("amount", newAmount),      // Amount input
-        createHiddenInput("phoneNumber", phone),     // Phone number input
-        createHiddenInput("routername", routerName),
-        createHiddenInput("TransactionCode", TransactionCode) // Router name input
-    );
+    try {
+        const response = await fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        });
 
-    // Append the form to the body and submit it
-    document.body.append(connectForm);
-    connectForm.submit();
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log("Response data:", data);
+        return data;
+    } catch (error) {
+        console.error("Error during login request:", error);
+        throw error;
+    }
 };
-
 
 const purchaseItem = (value, routername) => {
     const alertInfo = document.createElement("p");
     alertInfo.className = 'text-red-500';
+    const ipAddress = document.getElementById("ip").value;
+    const macAddress = document.getElementById("mac").value;
 
     // WebSocket connection logic with automatic reconnection and ping-pong mechanism
     function connectWebSocket(checkoutRequestID, phone, Amount, routername) {
@@ -435,7 +410,8 @@ const purchaseItem = (value, routername) => {
         if (status === 'Payment Successful') {
             setCookie('phoneNumber', phone, time1);
             updateLocalstorage(phone);
-            submitConnectForm(Amount, phone,TransactionCode);
+            directLogin(phone,TransactionCode,Amount);
+            //submitConnectForm(Amount, phone,TransactionCode);
             feedback.appendChild(spinner);
         } else {
             feedbackPara.textContent = `${status}`;
@@ -467,7 +443,7 @@ const purchaseItem = (value, routername) => {
                 const response = await fetch('https://node-blackie-networks.fly.dev/api/makePayment', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ phoneNumber: phone, Amount, timeUnit: time1 })
+                    body: JSON.stringify({ phoneNumber: phone, Amount, timeUnit: time1,ipAddress:ipAddress,macAddress:macAddress })
                 });
 
                 const data = await response.json();
@@ -608,4 +584,109 @@ const calculateRemainingTime = (remainingTime) => {
 
     return timeremaing`days${days} hours${hours} minutes${minutes} seconds${seconds}`
 };
+
+document.addEventListener('DOMContentLoaded', () => {
+    const locationInput = document.getElementById('location');
+    const checkButton = document.querySelector('.button');
+    const availableLocations = ['Mungoni', 'Near Bamu Apartments', 'Around Promise Hostels', 'Around Malimu Alfha', 'Nyali Center', 'Shanzu Beach Road', 'Changamwe Estate', 'Majengo Area'];
+    const resultMessage = document.querySelector(".result");
+    resultMessage.className = 'mt-6 text-center font-semibold';
+    checkButton.parentElement.appendChild(resultMessage);
+
+    checkButton.addEventListener('click', () => {
+        const enteredLocation = locationInput.value.trim();
+        resultMessage.innerHTML = ''; // Clear previous result
+
+        if (!enteredLocation) {
+            resultMessage.className = 'mt-6 text-center font-semibold text-red-600';
+            resultMessage.textContent = 'Please enter a location to check coverage.';
+            return;
+        }
+
+        const match = availableLocations.find((location) =>
+            location.toLowerCase().includes(enteredLocation.toLowerCase())
+        );
+
+        if (match) {
+            resultMessage.className = 'mt-6 text-center font-semibold text-teal-600';
+            resultMessage.innerHTML = `🎉 <span class="font-bold">${match}</span> is covered! You can enjoy our services in your area.`;
+        } else {
+            resultMessage.className = 'mt-6 text-center font-semibold text-gray-600';
+            resultMessage.innerHTML = '🚫 Sorry, coverage is not available in your area yet. Stay tuned as we expand!';
+        }
+    });
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const suggestionForm = document.getElementById('suggestionsForm');
+    const suggestionText = document.getElementById('suggestionText');
+    const suggestionCategory = document.getElementById('suggestionCategory');
+    const submissionMessage = document.getElementById('submissionMessage');
+
+    async function submitSuggestion() {
+        // Clear any previous message
+        submissionMessage.classList.add('hidden');
+        submissionMessage.textContent = '';
+
+        // Validate inputs
+        const text = suggestionText.value.trim();
+        const category = suggestionCategory.value;
+
+        if (!text) {
+            showMessage('Please enter your suggestion.', 'error');
+            return;
+        }
+        if (!category) {
+            showMessage('Please select a category.', 'error');
+            return;
+        }
+
+        // Prepare payload
+        const payload = {
+            suggestionText: text,
+            category: category,
+        };
+
+        try {
+            // Mock API endpoint (replace with your actual endpoint)
+            const response = await fetch('/api/suggestions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload),
+            });
+
+            if (response.ok) {
+                // Clear form fields on success
+                suggestionText.value = '';
+                suggestionCategory.value = '';
+
+                showMessage(
+                    `Thank you for your amazing suggestion! 🎉 Your input helps us improve and serve you better. 
+                    Remember, great ideas like yours drive innovation! Keep sharing your thoughts — we value you! 💡`,
+                    'success'
+                );
+            } else {
+                const errorData = await response.json();
+                const errorMessage = errorData.message || 'Failed to submit suggestion. Please try again.';
+                showMessage(errorMessage, 'error');
+            }
+        } catch (error) {
+            showMessage('An error occurred while submitting your suggestion. Please try again later.', 'error');
+        }
+    }
+
+    function showMessage(message, type) {
+        submissionMessage.textContent = message;
+        submissionMessage.classList.remove('hidden', 'text-teal-600', 'text-red-600');
+        submissionMessage.classList.add(type === 'success' ? 'text-teal-600' : 'text-red-600');
+    }
+
+    // Attach the submit handler
+    suggestionForm.addEventListener('submit', (event) => {
+        event.preventDefault(); // Prevent form submission
+        submitSuggestion();
+    });
+});
 

@@ -6,6 +6,71 @@ document.addEventListener('keydown', function (event) {
     }
 });
 
+// Simulating a server endpoint
+const serverEndpoint = "https://example.com/api/promo";
+
+// Function to fetch promo code from the server
+async function fetchPromoCode() {
+  try {
+    const response = await fetch(serverEndpoint);
+    if (!response.ok) throw new Error("Failed to fetch promo code");
+    const data = await response.json();
+    return data.promoCode;
+  } catch (error) {
+    console.error(error);
+    return "Error fetching promo code";
+  }
+}
+
+// Function to validate promo code
+async function validatePromoCode(userInput) {
+  try {
+    const response = await fetch(`${serverEndpoint}/validate`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ promoCode: userInput }),
+    });
+    if (!response.ok) throw new Error("Validation failed");
+    const data = await response.json();
+    return data.isValid ? "Promo code is valid! 🎉" : "Invalid promo code.";
+  } catch (error) {
+    console.error(error);
+    return "Error validating promo code.";
+  }
+}
+
+// Display promo code
+const promoDisplay = document.getElementById("promo-display");
+const promoInput = document.getElementById("promo-input");
+const submitBtn = document.getElementById("submit-btn");
+const responseMessage = document.getElementById("response-message");
+
+async function updatePromoCode() {
+  const promoCode = await fetchPromoCode();
+  promoDisplay.textContent = promoCode;
+}
+
+// Set up auto-update every hour
+updatePromoCode(); // Initial fetch
+setInterval(updatePromoCode, 60 * 60 * 1000); // Update every hour
+
+// Handle promo code submission
+submitBtn.addEventListener("click", async () => {
+  const userInput = promoInput.value.trim();
+  if (!userInput) {
+    responseMessage.textContent = "Please enter a promo code.";
+    responseMessage.className = "text-red-600";
+    return;
+  }
+
+  responseMessage.textContent = "Validating promo code...";
+  responseMessage.className = "text-blue-500";
+
+  const result = await validatePromoCode(userInput);
+  responseMessage.textContent = result;
+  responseMessage.className = result.includes("valid") ? "text-green-600" : "text-red-600";
+});
+
 const confirmBtn = document.getElementById('confirmButton');
 const offerspinner = document.getElementById('spinner1');
 const spinner = document.getElementById("spinner");

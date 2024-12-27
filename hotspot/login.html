@@ -121,9 +121,9 @@
                 <!-- Existing Elements -->
                 <a href="offers.html">
                     <div id="offerNotification hidden "
-                        class="bg-green-400 text-yellow-900 font-semibold p-3 rounded-t-lg shadow-lg mb-4 animate-slide-down flex items-center justify-between max-w-xs mx-auto w-full">
+                        class="bg-green-400 animate-pulse text-yellow-900 font-semibold p-3 rounded-t-lg shadow-lg mb-4 animate-slide-down flex items-center justify-between max-w-xs mx-auto w-full">
                         <p onclick="window.location.href='/offers'">
-                            🎉 New Offers Available! Click Here for More! 🎉
+                            🎉 Daily Offers ! Click Here for More! 🎉
                         </p>
 
                     </div>
@@ -179,33 +179,22 @@
 
         <!-- Toggle Button for Disconnect Section -->
         <button id="toggleDisconnect"
-            class="bg-green-500 text-white px-4 py-2 rounded shadow mt-4 hover:bg-teal-600 transition duration-200"
-            onclick="toggleDisconnectSection()">
-            Disconnect Device
-        </button>
+    class="bg-green-500 text-white px-4 py-2 rounded shadow mt-4 hover:bg-teal-600 transition duration-200"
+    onclick="toggleDisconnectSection()">
+    Disconnect Device
+</button>
 
             <div class="text-red-500 font-bold ">
                 <input id="identity" class="p-1 text-center rounded-lg" type="hidden" name="routerMac"
                     value="$(identity)" disabled>
+                <input id="ip" class="p-1 text-center rounded-lg" type="hidden" name="ip"
+                    value="$(ip)" disabled>
+                <input id="mac" class="p-1 text-center rounded-lg" type="hidden" name="Mac"
+                    value="$(mac)" disabled>
             </div>
         </section>
 
-        <script>
-            function toggleDisconnectSection() {
-                const section = document.getElementById('disconnectDeviceSection');
-                section.classList.toggle('hidden');
-            }
-
-            function disconnectDevice() {
-                const transactionCode = document.getElementById('transactionCode').value;
-                if (transactionCode) {
-                    alert(`Device with transaction code ${transactionCode} has been disconnected.`);
-                    // Add logic here to handle the disconnection request, such as sending it to a server.
-                } else {
-                    alert('Please enter a valid transaction code.');
-                }
-            }
-        </script>
+        
 
         <div id="instructions"
             class="hidden bg-gradient-to-r from-blue-400 to-blue-500 mb-3 p-6 rounded-lg shadow-2xl text-center">
@@ -503,25 +492,46 @@
                 </div>
             </div>
         </section>
-        <section class="bg-gray-100 p-6 rounded-lg shadow-lg mb-8">
-            <h4 class="text-gray-900 text-2xl font-bold mb-4 text-center">Check Your Coverage</h4>
-            <p class="text-center text-gray-700 mb-4">Verify if our services are available in your area</p>
-            <div class="flex justify-center items-center gap-2 mb-4">
-                <input type="text" placeholder="Enter your location"
-                    class="w-full md:w-1/2 lg:w-1/3 xl:w-1/4 p-2 gap-3 border border-gray-300 rounded-l-lg focus:outline-none focus:border-blue-500">
+        <section class="bg-white p-8 rounded-lg shadow-xl mb-10">
+            <h4 class="text-teal-800 text-3xl font-extrabold mb-6 text-center">Check Your Coverage</h4>
+            <p class="text-center text-gray-600 mb-6 text-lg">
+                Find out if our reliable and fast services are available in your area. Simply enter your location below.
+            </p>
+            <div class="flex justify-center items-center gap-4 mb-8">
+                <input 
+                    type="text" 
+                    placeholder="Enter your location"
+                    id="location"
+                    class="w-full md:w-2/3 lg:w-1/2 xl:w-1/3 p-3 border border-gray-300 rounded-l-lg shadow-sm focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-400 transition"
+                >
                 <button
-                    class="bg-blue-600 text-white py-2 px-4 rounded-r-lg hover:bg-blue-700 transition focus:outline-none">Check</button>
+                    class="button bg-teal-700 text-white py-3 px-6 rounded-r-lg font-bold shadow-md hover:bg-teal-800 focus:outline-none focus:ring-4 focus:ring-teal-400 transition">
+                    Check Coverage
+                </button>
             </div>
-            <div class="mt-4">
-                <h5 class="text-gray-900 text-xl font-semibold mb-2">Available Locations:</h5>
-                <ul class="list-disc list-inside text-gray-700 flex gap-3">
+            <div class="result"></div>
+            <div class="mt-6">
+                <h5 class="text-teal-800 text-2xl font-semibold mb-4">Available Locations:</h5>
+                <p class="text-gray-700 mb-4">
+                    Our services are currently available in the following locations. If your area isn’t listed, stay tuned—we’re expanding!
+                </p>
+                <ul class="list-disc pl-6 text-gray-700 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-2">
                     <li>Mungoni</li>
-                    <li>Near Bamu apartments</li>
-                    <li>Around Promise hostelss</li>
+                    <li>Near Bamu Apartments</li>
+                    <li>Around Promise Hostels</li>
                     <li>Around Malimu Alfha</li>
+                    <li>Around Mungoni primary</li>
+                    <li>Around Executive Hostels</li>
+                    
                 </ul>
             </div>
+            <p class="text-center mt-8 text-gray-600 text-sm">
+                Didn’t find your location? Contact us at 
+                <a href="mailto:support@blackienet.com" class="text-teal-700 font-medium hover:underline">support@blackienet.com</a> 
+                to request coverage in your area.
+            </p>
         </section>
+        
 
         <div class="modal-content animate__animated animate__fadeInDown p-2 w-auto text-gray-100 bg-blue-800 hidden"
             id="prompt">
@@ -532,68 +542,60 @@
             style="display:none;">
             <div class="loading-spinner h-10 w-10 border-4 border-blue-600 rounded-full"></div>
         </div>
-        <div class="text-left mt-5 md:mt-0 rounded-lg shadow-md w-full p-6 bg-white">
-            <section class="md:flex block items-center gap-5">
-
-                <!-- Key Benefits -->
-                <div class="text-center mt-5 md:mt-0 rounded-lg shadow-md w-full p-2 bg-blue300 border-2">
-                    <h5 class="text-teal-700 text-xl font-semibold mb-2">Why Choose Us?</h5>
-                    <ul class="list-disc list-inside text-teal-700">
-                        <li>Reliable connection with 99.9% uptime</li>
-                        <li class="text-white bg-blue-600 w-fit">System works by allocating you Unlimited internet
-                            access based on the package you purchased validity</li>
-                        <li>24/7 customer support</li>
-                        <li>Strong & Fast 20+Mbps Network</li>
+        <div class="text-left mt-5 md:mt-0 rounded-lg shadow-md w-full p-8 bg-gray-50">
+            <section class="flex flex-col md:flex-row items-start gap-8">
+        
+                <!-- Key Benefits Section -->
+                <div class="flex-1 bg-teal-100 rounded-lg shadow-lg p-6">
+                    <h5 class="text-teal-800 text-2xl font-bold mb-4 text-center">Why Choose Us?</h5>
+                    <p class="text-teal-700 mb-4 leading-relaxed">
+                        Experience the best internet service designed to keep you connected, productive, and entertained. Here's what we offer:
+                    </p>
+                    <ul class="list-disc pl-5 text-teal-700 space-y-2">
+                        <li><strong>Reliable Uptime:</strong> Enjoy 99.9% network uptime, ensuring you're always connected.</li>
+                        <li><strong>Unlimited Access:</strong> Access unlimited internet based on your chosen package validity.</li>
+                        <li><strong>24/7 Support:</strong> Our dedicated team is here to assist you around the clock.</li>
+                        <li><strong>Fast Speeds:</strong> Surf, stream, and download with our blazing-fast 20+ Mbps network.</li>
+                        <li><strong>Secure Network:</strong> State-of-the-art security measures for a safe browsing experience.</li>
                     </ul>
                 </div>
+        
+                <!-- Suggestion Form Section -->
+                <div class="flex-1 bg-white rounded-lg shadow-lg p-6 border border-gray-200">
+                    <h5 class="text-teal-800 text-2xl font-bold mb-4 text-center">We Value Your Feedback</h5>
+                    <p class="text-gray-600 mb-4 leading-relaxed">
+                        Help us improve by sharing your suggestions or ideas. Your feedback ensures we continue to meet your expectations and enhance our services.
+                    </p>
+                    <form id="suggestionsForm" class="space-y-6">
+                        <div>
+                            <label for="suggestionText" class="block text-teal-800 font-semibold mb-2">Your Suggestion:</label>
+                            <textarea id="suggestionText"
+                                class="w-full rounded-lg border border-gray-300 p-3 focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-400 transition"
+                                rows="4" placeholder="Write your suggestion here..."></textarea>
+                        </div>
+                        <div>
+                            <label for="suggestionCategory" class="block text-teal-800 font-semibold mb-2">Category:</label>
+                            <select id="suggestionCategory"
+                                class="w-full rounded-lg border border-gray-300 p-3 focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-400 transition">
+                                <option value="" disabled selected>Select a category</option>
+                                <option value="Service Improvement">Service Improvement</option>
+                                <option value="New Features">New Features</option>
+                                <option value="Customer Support">Customer Support</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="text-right">
+                            <button type="button"
+                                class="bg-teal-700 text-white rounded-lg px-6 py-3 font-bold shadow-lg hover:bg-teal-800 focus:outline-none focus:ring-4 focus:ring-teal-400 transition">
+                                Submit Suggestion
+                            </button>
+                        </div>
+                    </form>
+                    <div id="submissionMessage" class=" mt-6 text-teal-600 text-center font-semibold">
+                    </div>
+                </div>
             </section>
-            <form id="suggestionsForm" class="space-y-4">
-                <div>
-                    <label for="suggestionText" class="block text-teal-700 font-semibold mb-2">Your Suggestion:</label>
-                    <textarea id="suggestionText"
-                        class="w-full rounded-lg border-2 border-teal-200 p-3 focus:outline-none focus:border-teal-500"
-                        rows="4" placeholder="Write your suggestion here..."></textarea>
-                </div>
-                <div>
-                    <label for="suggestionCategory" class="block text-teal-700 font-semibold mb-2">Category:</label>
-                    <select id="suggestionCategory"
-                        class="w-full rounded-lg border-2 border-teal-200 p-3 focus:outline-none focus:border-teal-500">
-                        <option value="" disabled selected>Select a category</option>
-                        <option value="Service Improvement">Service Improvement</option>
-                        <option value="New Features">New Features</option>
-                        <option value="Customer Support">Customer Support</option>
-                        <option value="Other">Other</option>
-                    </select>
-                </div>
-                <div class="text-right">
-                    <button type="button" onclick="submitSuggestion()"
-                        class="bg-teal-700 text-white rounded-lg px-6 py-3 font-semibold">Submit</button>
-                </div>
-            </form>
-            <div id="submissionMessage" class="hidden mt-4 text-teal-600">
-                Thank you for your suggestion! We value your feedback and will review it shortly.
-            </div>
         </div>
-
-        <script>
-            function submitSuggestion() {
-                const suggestionText = document.getElementById('suggestionText').value;
-                const suggestionCategory = document.getElementById('suggestionCategory').value;
-                const submissionMessage = document.getElementById('submissionMessage');
-
-                if (suggestionText && suggestionCategory) {
-                    // Simulate form submission
-                    submissionMessage.classList.remove('hidden');
-                    setTimeout(() => {
-                        submissionMessage.classList.add('hidden');
-                        document.getElementById('suggestionsForm').reset();
-                    }, 3000);
-                } else {
-                    alert('Please fill out both fields before submitting.');
-                }
-            }
-        </script>
-
     </main>
 
     <footer class="bg-gray-800 text-white p-8 text-center md:text-left">
