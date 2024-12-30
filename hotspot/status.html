@@ -17,7 +17,7 @@
         }
         .header {
             text-align: center;
-            padding: 1rem;
+            padding: 0.5rem;
             background-color: #111827;
         }
         .header img {
@@ -32,6 +32,14 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
         }
         h1, h2 {
+            text-align: center;
+        }
+        p.notice {
+            font-size: 1.2rem;
+            background: rgba(59, 130, 246, 0.2);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
             text-align: center;
         }
         table {
@@ -55,6 +63,7 @@
             border-radius: 4px;
             text-decoration: none;
             margin-top: 1rem;
+            cursor: pointer;
         }
         .button:hover {
             background-color: #2563eb;
@@ -85,11 +94,15 @@
 </head>
 <body>
     <header class="header">
-        <img src="./images/blogo.png" alt="BlackieNetworks Logo">
+        <img src="./images/blogo.png" alt="BlackieNetworks Logo" width="40px" height="auto">
         <h1>Welcome to BlackieNetworks</h1>
     </header>
 
     <div class="container">
+        <p class="notice">
+            You are now authenticated! You can browse the internet freely. If you're done with this page, feel free to close it.
+        </p>
+
         <h2>Session Status</h2>
         <table>
             <tr><th>IP Address</th><td>$(ip)</td></tr>

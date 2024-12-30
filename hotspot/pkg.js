@@ -99,12 +99,12 @@ async function activateAccount(transactionCode, phoneNumber, remainingTime) {
 
     // Prepare data for the POST request
     const requestData = {
-        routerHost ,
+        routerHost,
         macAddress,
         phoneNumber,
         transactionCode,
         remainingTime,
-        ipAddress 
+        ipAddress,
     };
 
     try {
@@ -121,12 +121,15 @@ async function activateAccount(transactionCode, phoneNumber, remainingTime) {
         if (response.ok) {
             const data = await response.json();
             alertInfo.textContent = `${data.message}`;
-            alertInfo.className = "text-green mt-2 font-semibold bg-gray-100 p-2"
+            alertInfo.className = "text-green mt-2 font-semibold bg-gray-100 p-2";
+            if (data.redirectUrl) {
+                window.location.href = data.redirectUrl;  // Redirect the user automatically
+            }
             return { success: true, data };
         } else {
             const error = await response.json();
-             alertInfo.textContent = ` ${error.message}`;
-             alertInfo.className = "text-red-600 mt-2 font-semibold bg-gray-100 p-2"
+            alertInfo.textContent = ` ${error.message}`;
+            alertInfo.className = "text-red-600 mt-2 font-semibold bg-gray-100 p-2"
             return { success: false, error: error.message };
         }
     } catch (err) {
@@ -148,7 +151,7 @@ async function disconnectAccount(transactionCode, phoneNumber, remainingTime) {
         phoneNumber,
         transactionCode,
         remainingTime,
-        ipAddress 
+        ipAddress
     };
 
     try {
@@ -165,12 +168,15 @@ async function disconnectAccount(transactionCode, phoneNumber, remainingTime) {
         if (response.ok) {
             const data = await response.json();
             alertInfo2.textContent = `${data.message}`;
-            alertInfo2.className = "text-green mt-2 font-semibold bg-gray-100 p-2"
+            alertInfo2.className = "text-green mt-2 font-semibold bg-gray-100 p-2";
+            if (data.redirectUrl) {
+                window.location.href = data.redirectUrl;  // Redirect the user automatically
+            }
             return { success: true, data };
         } else {
             const error = await response.json();
-             alertInfo2.textContent = ` ${error.message}`;
-             alertInfo2.className = "text-red-600 mt-2 font-semibold bg-gray-100 p-2"
+            alertInfo2.textContent = ` ${error.message}`;
+            alertInfo2.className = "text-red-600 mt-2 font-semibold bg-gray-100 p-2"
             return { success: false, error: error.message };
         }
     } catch (err) {
@@ -194,10 +200,10 @@ const updateLocalstorage = (phoneNumber2) => {
 Disconnect.addEventListener('click', async () => {
     const input = document.querySelector(".disconnect-phone");
     const MpesaCode = document.getElementById("transactionCode").value;
-    
+
     //console.log(input.value,MpesaCode)
     const phone2 = input.value;
-    
+
     if (!phone2 || !MpesaCode) {
         alertInfo2.textContent = "Input field is empty";
     } else if (phone2.length !== 10) {
@@ -229,8 +235,7 @@ Disconnect.addEventListener('click', async () => {
                     form2.appendChild(spinner);
                     loading.style.display = "block";
                     //console.log(TransactionCode)
-                    disconnectAccount(MpesaCode,phoneNumber,data.remainingTime)
-                    //DisconnectForm(data.remainingTime, phoneNumber);
+                    disconnectAccount(MpesaCode, phoneNumber, data.remainingTime)
                     const expiry = addSecondsToCurrentTime(data.RemainingTime);
                     alertInfo2.textContent = `wait as we connect you to internet. your  unliminet package will expire on :${expiry}`;
                     alertInfo2.className = 'text-white font-semibold';
@@ -263,7 +268,7 @@ connectBack.addEventListener('click', async () => {
     }
     if (!phone2) {
         alertInfo.textContent = "Input field is empty or incorrect input";
-       alertInfo.className = "text-red-600 mt-2 font-semibold bg-gray-100 p-2"
+        alertInfo.className = "text-red-600 mt-2 font-semibold bg-gray-100 p-2"
     } else if (phone2.length !== 10) {
         alertInfo.textContent = "Your digits are less than required or more than";
         alertInfo.className = "text-red-600 mt-2 font-semibold bg-gray-100 p-2"
@@ -293,7 +298,7 @@ connectBack.addEventListener('click', async () => {
             if (data.ResultCode === 0) {
                 if (data.remainingTime < 1) {
                     alertInfo.textContent = `your package is already expired kindly renew it ..`;
-                   alertInfo.className = "text-red-600 mt-2 font-semibold bg-gray-100 p-2"
+                    alertInfo.className = "text-red-600 mt-2 font-semibold bg-gray-100 p-2"
                     return;
                 } else {
                     form.appendChild(spinner);
@@ -301,11 +306,11 @@ connectBack.addEventListener('click', async () => {
                     const TransactionCode = data.TransactionCode;
                     const remainingTime = data.RemainingTime
                     //console.log(TransactionCode)
-                    activateAccount(TransactionCode,phoneNumber,remainingTime)
+                    activateAccount(TransactionCode, phoneNumber, remainingTime)
                     //submitConnectBack(remainingTime, phoneNumber,TransactionCode);
                     const expiry = addSecondsToCurrentTime(data.RemainingTime);
                     alertInfo.textContent = `Success.. wait as we connect you to internet. your  unliminet package will expire on :${expiry}`;
-                    alertInfo.className = "text-green-500 mt-2 font-semibold bg-gray-100 p-2"
+                    alertInfo.className = "text-green-200 mt-2 font-semibold bg-gray-100 p-2"
                     //form.appendChild(spinner)
                 }
             } else {
@@ -351,6 +356,9 @@ const directLogin = async (phoneNumber, transactionCode, amount) => {
         }
 
         const data = await response.json();
+        if (data.redirectUrl) {
+            window.location.href = data.redirectUrl;  // Redirect the user automatically
+        }
         console.log("Response data:", data);
         return data;
     } catch (error) {
@@ -359,67 +367,77 @@ const directLogin = async (phoneNumber, transactionCode, amount) => {
     }
 };
 
-const purchaseItem = (value, routername) => {
-    const alertInfo = document.createElement("p");
-    alertInfo.className = 'text-red-500';
-    const ipAddress = document.getElementById("ip").value;
-    const macAddress = document.getElementById("mac").value;
+function connectWebSocket(checkoutRequestID) {
+    let socket;
+    let reconnectInterval = 5000; // Reconnection interval in milliseconds
+    let pingInterval;
 
-    // WebSocket connection logic with automatic reconnection and ping-pong mechanism
-    function connectWebSocket(checkoutRequestID, phone, Amount, routername) {
-        const socket = new WebSocket(`ws://node-blackie-networks.fly.dev/${checkoutRequestID}`);
-
-        let pingInterval;
+    function initializeWebSocket() {
+        // Create a new WebSocket instance
+        socket = new WebSocket(`wss://node-blackie-networks.fly.dev/${checkoutRequestID}`);
 
         // Handle WebSocket opening
         socket.addEventListener('open', () => {
             console.log('WebSocket is open now.');
-            // Start sending ping messages every 30 seconds
+
+            // Start sending pings every 30 seconds
             pingInterval = setInterval(() => {
-                socket.send(JSON.stringify({ type: 'ping' }));
-            }, 3000);
+                if (socket.readyState === WebSocket.OPEN) {
+                    console.log('Sending ping');
+                    socket.send(JSON.stringify({ type: 'ping' }));
+                }
+            }, 30000);
+        });
+
+        // Handle WebSocket messages
+        socket.addEventListener('message', (event) => {
+            const data = JSON.parse(event.data);
+            console.log('Message from server:', data);
+
+            // Handle specific server responses
+            if (data.type === 'pong') {
+                console.log('Received pong from server');
+            } else if (data.type === 'statusUpdate') {
+                console.log('Received status update:', data);
+                if (data.status === 'success') {
+                    window.location.href = data.redirectUrl; // Redirect on success
+                }
+            } else if (data.type === 'error') {
+                console.error('Error from server:', data.message);
+            }
         });
 
         // Handle WebSocket errors
         socket.addEventListener('error', (error) => {
             console.error('WebSocket error:', error);
-            feedbackPara.textContent = "Error: WebSocket connection failed, retrying...";
-            reconnectWebSocket(checkoutRequestID, phone, Amount, routername); // Attempt reconnection
         });
 
         // Handle WebSocket closure
         socket.addEventListener('close', () => {
             console.log('WebSocket connection closed');
-            clearInterval(pingInterval); // Stop pinging when the connection closes
-            reconnectWebSocket(checkoutRequestID, phone, Amount, routername); // Attempt reconnection
+
+            // Clear ping interval
+            clearInterval(pingInterval);
+
+            // Attempt to reconnect
+            setTimeout(() => {
+                console.log('Attempting to reconnect...');
+                initializeWebSocket();
+            }, reconnectInterval);
         });
-
-        return socket;
     }
 
-    // Reconnection logic for WebSocket
-    function reconnectWebSocket(checkoutRequestID, phone, Amount, routername) {
-        setTimeout(() => {
-            console.log('Attempting to reconnect WebSocket...');
-            connectWebSocket(checkoutRequestID, phone, Amount, routername);
-        }, 1000); // Retry after 5 seconds
-    }
+    // Initialize WebSocket connection
+    initializeWebSocket();
+    return socket; // Return the WebSocket instance
+}
 
-    // Handle payment status received from WebSocket messages
-    function handlePaymentStatus(status, phone, Amount, routername,time1,TransactionCode) {
-        if (status === 'Payment Successful') {
-            setCookie('phoneNumber', phone, time1);
-            updateLocalstorage(phone);
-            directLogin(phone,TransactionCode,Amount);
-            //submitConnectForm(Amount, phone,TransactionCode);
-            feedback.appendChild(spinner);
-        } else {
-            feedbackPara.textContent = `${status}`;
-            feedbackPara.className = 'text-red-500 text-xm';
-            feedback.removeChild(spinner);
-            feedback.appendChild(close);
-        }
-    }
+const purchaseItem = (value, routername) => {
+    const alertInfo = document.createElement("p");
+    alertInfo.className = 'text-red-500';
+    const ipAddress = document.getElementById("ip").value;
+    const macAddress = document.getElementById("mac").value;
+    const RouterName = document.getElementById("identity").value;
 
     const checkInput = async (input) => {
         if (!input.value || input.value.length !== 10) {
@@ -443,31 +461,27 @@ const purchaseItem = (value, routername) => {
                 const response = await fetch('https://node-blackie-networks.fly.dev/api/makePayment', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ phoneNumber: phone, Amount, timeUnit: time1,ipAddress:ipAddress,macAddress:macAddress })
+                    body: JSON.stringify({ phoneNumber: phone, Amount, timeUnit: time1, ipAddress: ipAddress, macAddress: macAddress, RouterName: RouterName })
                 });
 
                 const data = await response.json();
                 if (data.success && data.message.CheckoutRequestID) {
                     const checkoutRequestID = data.message.CheckoutRequestID;
 
-                    const socket = connectWebSocket(checkoutRequestID, phone, Amount, routername);
-
-                    // Fallback mechanism if no WebSocket message is received within 30 seconds
-                    const fallbackTimeout = setTimeout(() => {
-                        feedback.removeChild(spinner);
-                        feedback.appendChild(confirmButton);
-                        feedbackPara.textContent = "Waiting for Mpesa transaction verification. Do not close or refresh this page. If it takes too long, try with the connect button.";
-                    }, 30000); // 30 seconds timeout
+                    // Usage Example
+                    const socket = connectWebSocket(checkoutRequestID);
 
                     // WebSocket message handler
                     socket.addEventListener('message', (event) => {
-                        clearTimeout(fallbackTimeout); // Clear the fallback timeout
                         const message = JSON.parse(event.data);
-                        console.log(message)
+                        console.log('Received message:', message);
 
-                        if (message.checkoutRequestID === checkoutRequestID) {
-                            const TransactionCode = message.Code;
-                            handlePaymentStatus(message.status, phone, Amount, routername,time1,TransactionCode); // Handle the payment status
+                        if (message.type === 'statusUpdate' && message.status === 'success') {
+                            window.location.href = message.redirectUrl;
+                        }else{
+                            feedback.removeChild(spinner);
+                            feedbackPara.className = 'text-red-600 mt-2 font-semibold bg-gray-100 p-2'
+                            feedbackPara.textContent = `${message.status}`
                         }
                     });
 
@@ -542,7 +556,7 @@ const purchaseItem = (value, routername) => {
 
 document.querySelectorAll(".badges").forEach(badge => {
     badge.addEventListener("click", () => {
-        purchaseItem(badge.value, RouterName);
+        purchaseItem(badge.value);
     });
 });
 
