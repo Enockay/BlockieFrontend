@@ -6,71 +6,6 @@ document.addEventListener('keydown', function (event) {
     }
 });
 
-// Simulating a server endpoint
-const serverEndpoint = "https://example.com/api/promo";
-
-// Function to fetch promo code from the server
-async function fetchPromoCode() {
-  try {
-    const response = await fetch(serverEndpoint);
-    if (!response.ok) throw new Error("Failed to fetch promo code");
-    const data = await response.json();
-    return data.promoCode;
-  } catch (error) {
-    console.error(error);
-    return "Error fetching promo code";
-  }
-}
-
-// Function to validate promo code
-async function validatePromoCode(userInput) {
-  try {
-    const response = await fetch(`${serverEndpoint}/validate`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ promoCode: userInput }),
-    });
-    if (!response.ok) throw new Error("Validation failed");
-    const data = await response.json();
-    return data.isValid ? "Promo code is valid! 🎉" : "Invalid promo code.";
-  } catch (error) {
-    console.error(error);
-    return "Error validating promo code.";
-  }
-}
-
-// Display promo code
-const promoDisplay = document.getElementById("promo-display");
-const promoInput = document.getElementById("promo-input");
-const submitBtn = document.getElementById("submit-btn");
-const responseMessage = document.getElementById("response-message");
-
-async function updatePromoCode() {
-  const promoCode = await fetchPromoCode();
-  promoDisplay.textContent = promoCode;
-}
-
-// Set up auto-update every hour
-updatePromoCode(); // Initial fetch
-setInterval(updatePromoCode, 60 * 60 * 1000); // Update every hour
-
-// Handle promo code submission
-submitBtn.addEventListener("click", async () => {
-  const userInput = promoInput.value.trim();
-  if (!userInput) {
-    responseMessage.textContent = "Please enter a promo code.";
-    responseMessage.className = "text-red-600";
-    return;
-  }
-
-  responseMessage.textContent = "Validating promo code...";
-  responseMessage.className = "text-blue-500";
-
-  const result = await validatePromoCode(userInput);
-  responseMessage.textContent = result;
-  responseMessage.className = result.includes("valid") ? "text-green-600" : "text-red-600";
-});
-
 const confirmBtn = document.getElementById('confirmButton');
 const offerspinner = document.getElementById('spinner1');
 const spinner = document.getElementById("spinner");
@@ -79,38 +14,53 @@ const Router = document.getElementById("identity").value;
 const connectBack = document.getElementById("connect-button");
 const textNotify = document.getElementById("connect-notify");
 
-const submitConnectBack = (time, phone, TransactionCode) => {
-    const RouterName = document.getElementById("identity").value;
+async function activateAccount(transactionCode, phoneNumber, remainingTime) {
+    const routerHost = document.getElementById("identity").value;
+    const ipAddress = document.getElementById("ip").value;
+    const macAddress = document.getElementById("mac").value;
 
-    const connectForm = document.createElement("form");
-    connectForm.className = "connectForm";
-    connectForm.method = "post";
-    connectForm.action = "https://mikrotiksystem2.fly.dev/public/connect.php";
+    // Prepare data for the POST request
+    const requestData = {
+        routerHost,
+        macAddress,
+        phoneNumber,
+        transactionCode,
+        remainingTime,
+        ipAddress,
+    };
 
-    const amountInput = document.createElement("input");
-    amountInput.type = "hidden";
-    amountInput.name = "remainingTime";
-    amountInput.value = time;
+    try {
+        // Send data to the backend
+        const response = await fetch("https://node-blackie-networks.fly.dev/hotspot/activate-account", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(requestData)
+        });
 
-    const phoneNumber = document.createElement("input");
-    phoneNumber.type = "hidden";
-    phoneNumber.name = "phoneNumber";
-    phoneNumber.value = phone;
+        // Handle the response
+        if (response.ok) {
+            const data = await response.json();
+            textNotify.textContent = `${data.message}`;
+            textNotify.className = "text-green mt-2 font-semibold bg-gray-100 p-2";
+            if (data.redirectUrl) {
+                window.location.href = data.redirectUrl;  // Redirect the user automatically
+            }
+            return { success: true, data };
+        } else {
+            const error = await response.json();
+            textNotify.textContent = ` ${error.message}`;
+            textNotify.className = "text-red-600 mt-2 font-semibold bg-gray-100 p-2"
+            return { success: false, error: error.message };
+        }
+    } catch (err) {
+        textNotify.textContent = `failed: ${err.message}`;
+        textNotify.className = "text-red-600 mt-2 font-semibold bg-gray-100 p-2"
+        return { success: false, error: err.message };
+    }
+}
 
-    const router = document.createElement("input");
-    router.type = "hidden";
-    router.name = "routername";
-    router.value = RouterName;
-
-    const Transaction = document.createElement("input");
-    Transaction.type = "hidden";
-    Transaction.name = "TransactionCode";
-    Transaction.value = TransactionCode
-
-    connectForm.append(amountInput, phoneNumber, router, Transaction);
-    document.body.append(connectForm);
-    connectForm.submit();
-};
 
 connectBack.addEventListener("click", async () => {
     const input = document.getElementById("phone").value;
@@ -154,7 +104,7 @@ connectBack.addEventListener("click", async () => {
                 textNotify.style.display = "inline-block";
                 textNotify.textContent = "wait as we connect you to internet"
                 textNotify.className = "text-green-600 text-xm mt-5 font-bold";
-                submitConnectBack(remainingTime, PhoneNumber, TransactionCode);
+                activateAccount(TransactionCode, PhoneNumber,remainingTime,);
                 break;
             case 1:
                 textNotify.style.display = "inline-block";
@@ -228,140 +178,118 @@ const extractTime2 = (packageName) => {
 
     return allocatedTime;
 };
-const submitConnectForm2 = (amount, phone) => {
-    // Retrieve the router name from the input element by ID
-    const routerName = document.getElementById("identity")?.value;
 
-    if (!routerName) {
-        console.error("Router name not provided.");
-        return;
-    }
+const directLogin = async (phoneNumber, transactionCode, amount) => {
+    const routerHost = document.getElementById("identity").value;
+    const ipAddress = document.getElementById("ip").value;
+    const macAddress = document.getElementById("mac").value;
 
-    // Set the maximum amount to 35 if the input amount exceeds it
-    const newAmount = Math.min(amount, 35);
-
-    // Create a form element with method POST and the correct action URL
-    const connectForm = document.createElement("form");
-    connectForm.className = "connectForm";
-    connectForm.method = "POST";
-    connectForm.action = "https://mikrotiksystem2.fly.dev/authenticateApi.php";
-
-    // Helper function to create hidden inputs
-    const createHiddenInput = (name, value) => {
-        const input = document.createElement("input");
-        input.type = "hidden";
-        input.name = name;
-        input.value = value;
-        return input;
+    const url = "https://node-blackie-networks.fly.dev/hotspot/direct-login";
+    const payload = {
+        routerHost,
+        macAddress,
+        phoneNumber,
+        transactionCode,
+        ipAddress,
+        amount
     };
 
-    // Append necessary hidden inputs to the form
-    connectForm.append(
-        createHiddenInput("amount", newAmount),      // Amount input
-        createHiddenInput("phoneNumber", phone),     // Phone number input
-        createHiddenInput("routername", routerName)  // Router name input
-    );
+    try {
+        const response = await fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        });
 
-    // Append the form to the body and submit it
-    document.body.append(connectForm);
-    connectForm.submit();
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        if (data.redirectUrl) {
+            window.location.href = data.redirectUrl;  // Redirect the user automatically
+        }
+        console.log("Response data:", data);
+        return data;
+    } catch (error) {
+        console.error("Error during login request:", error);
+        throw error;
+    }
 };
 
-// WebSocket connection logic with automatic reconnection and ping-pong mechanism
-function connectWebSocket2(checkoutRequestID, phone, Amount, routername) {
-    const socket = new WebSocket(`wss://node-blackie-networks.fly.dev/${checkoutRequestID}`); // Use wss if your server supports it
+function connectWebSocket(checkoutRequestID) {
+    let socket;
+    let reconnectInterval = 5000; // Reconnection interval in milliseconds
     let pingInterval;
 
-    // Define a placeholder for the text element if not already in your HTML
-    const text = document.getElementById('websocketErrorText') || document.createElement('span');
+    function initializeWebSocket() {
+        // Create a new WebSocket instance
+        socket = new WebSocket(`wss://node-blackie-networks.fly.dev/${checkoutRequestID}`);
 
-    // Handle WebSocket opening
-    socket.addEventListener('open', () => {
-        console.log('WebSocket is open now.');
-        text.style.display = "none"; // Hide error message if connection is successful
+        // Handle WebSocket opening
+        socket.addEventListener('open', () => {
+            console.log('WebSocket is open now.');
 
-        // Start sending ping messages every 30 seconds
-        pingInterval = setInterval(() => {
-            if (socket.readyState === WebSocket.OPEN) {
-                socket.send(JSON.stringify({ type: 'ping' }));
+            // Start sending pings every 30 seconds
+            pingInterval = setInterval(() => {
+                if (socket.readyState === WebSocket.OPEN) {
+                    console.log('Sending ping');
+                    socket.send(JSON.stringify({ type: 'ping' }));
+                }
+            }, 30000);
+        });
+
+        // Handle WebSocket messages
+        socket.addEventListener('message', (event) => {
+            const data = JSON.parse(event.data);
+            console.log('Message from server:', data);
+
+            // Handle specific server responses
+            if (data.type === 'pong') {
+                console.log('Received pong from server');
+            } else if (data.type === 'statusUpdate') {
+                console.log('Received status update:', data);
+                if (data.status === 'success') {
+                    window.location.href = data.redirectUrl; // Redirect on success
+                }
+            } else if (data.type === 'error') {
+                console.error('Error from server:', data.message);
             }
-        }, 3000);
-    });
+        });
 
-    // Handle WebSocket errors
-    socket.addEventListener('error', (error) => {
-        console.error('WebSocket error:', error);
-        text.style.display = "inline-block";
-        text.className = "text-red-500 text-sm";
-        text.textContent = "Error: WebSocket connection failed, retrying...";
-        socket.close(); // Close socket and trigger reconnect
-    });
+        // Handle WebSocket errors
+        socket.addEventListener('error', (error) => {
+            console.error('WebSocket error:', error);
+        });
 
-    let isProcessingComplete = false;
+        // Handle WebSocket closure
+        socket.addEventListener('close', () => {
+            console.log('WebSocket connection closed');
 
-    // Handle WebSocket messages (to check for pong responses if needed)
-    socket.addEventListener('message', (message) => {
-        const data = JSON.parse(message.data);
-        if (data.type === 'pong') {
-            console.log('Received pong response');
-        } else {
-            if (data) {
-                isProcessingComplete = true
-            }
-            console.log('Received data:', data);
-        }
-        function closeWebSocket() {
-            if (pingInterval) clearInterval(pingInterval); // Clear ping interval
-            if (isProcessingComplete) {
-                socket.close();
-            }
-        }
-        closeWebSocket();
-    });
+            // Clear ping interval
+            clearInterval(pingInterval);
 
-    // Handle WebSocket closure
-    socket.addEventListener('close', () => {
-        console.log('WebSocket connection closed');
-        // clearInterval(pingInterval); // Stop pinging when the connection closes
-        if (!isProcessingComplete) {
-            reconnectWebSocket(checkoutRequestID, phone, Amount, routername);
-        } // Attempt reconnection
-    });
+            // Attempt to reconnect
+            setTimeout(() => {
+                console.log('Attempting to reconnect...');
+                initializeWebSocket();
+            }, reconnectInterval);
+        });
+    }
 
-    return socket;
+    // Initialize WebSocket connection
+    initializeWebSocket();
+    return socket; // Return the WebSocket instance
 }
 
-// Define the reconnection function
-function reconnectWebSocket(checkoutRequestID, phone, Amount, routername) {
-    // Wait a few seconds before reconnecting to avoid too many rapid retries
-    setTimeout(() => {
-        console.log('Reconnecting WebSocket...');
-        connectWebSocket2(checkoutRequestID, phone, Amount, routername);
-    }, 5000); // 5-second delay before retry
-}
+
+
 
 
 function closeModal() {
     document.getElementById('purchaseModal').style.display = 'none';
-}
-
-// Handle payment status received from WebSocket messages
-function handlePaymentStatus2(status, phone, Amount, routername, time1) {
-    if (status === 'Payment Successful') {
-        // setCookie('phoneNumber', phone, time1);
-        // updateLocalstorage(phone);
-        text.style.display = "block";
-        text.textContent = "Success! processing internet connection";
-        text.className = 'text-green-400 text-xm'
-        submitConnectForm2(Amount, phone, routername);
-        spinner.style.display = 'inline-block';
-        confirmBtn.style.display = 'none';
-    } else {
-        text.style.display = "inline-block"
-        text.textContent = `${status}`;
-        text.className = 'text-red-500 text-xm';
-        spinner.style.display = 'none';
-    }
 }
 
 function openModal(packageName, packagePrice) {
@@ -369,7 +297,11 @@ function openModal(packageName, packagePrice) {
     document.getElementById('modalTitle').innerText = `Purchase ${packageName}`;
     document.getElementById('modalDescription').innerText = `Enter your mobile number to proceed with payment of ${packagePrice}:`;
     document.getElementById('purchaseModal').style.display = 'block';
-
+    
+    const ipAddress = document.getElementById("ip").value;
+    const macAddress = document.getElementById("mac").value;
+    const RouterName = document.getElementById("identity").value;
+    
     async function confirmPurchase() {
         const mobileNumber = document.getElementById('userMobile').value;
         const formatPhoneNumber = (phoneNumber) => {
@@ -416,46 +348,43 @@ function openModal(packageName, packagePrice) {
         }, 30000); // 30 seconds timeout
 
         try {
-            // Replace this with the actual endpoint for purchase confirmation
-            const response = await fetch("https://node-blackie-networks.fly.dev/api/makePayment", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ phoneNumber: phoneNumber, Amount, timeUnit: time }), // Send mobile number in the request body
+            offerspinner.style.display = "block";
+
+            const response = await fetch('https://node-blackie-networks.fly.dev/api/makePayment', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ phoneNumber: phoneNumber, Amount:Amount, timeUnit: time, ipAddress: ipAddress, macAddress: macAddress, RouterName: RouterName })
             });
 
-            if (!response.ok) {
-                throw new Error("Failed to confirm purchase. Please try again.");
-            }
+            const data = await response.json();
+            if (data.success && data.message.CheckoutRequestID) {
+                const checkoutRequestID = data.message.CheckoutRequestID;
 
-            const result = await response.json(); // Parse JSON response if needed
-            if (result.success && result.message.CheckoutRequestID) {
-                const checkoutRequestID = result.message.CheckoutRequestID;
-
-                const socket = connectWebSocket2(checkoutRequestID, phoneNumber, Amount, Router);
+                // Usage Example
+                const socket = connectWebSocket(checkoutRequestID);
 
                 // WebSocket message handler
                 socket.addEventListener('message', (event) => {
-                    clearTimeout(fallbackTimeout); // Clear the fallback timeout
                     const message = JSON.parse(event.data);
-                    //console.log(message)
+                    //console.log('Received message:', message);
 
-                    if (message.checkoutRequestID === checkoutRequestID) {
-                        handlePaymentStatus2(message.status, phoneNumber, Amount, Router, time); // Handle the payment status
+                    if (message.type === 'statusUpdate' && message.status === 'success') {
+                        window.location.href = message.redirectUrl;
+                        socket.close()
+                    }else{
+                        spinner.style.display = "none";
+                        text.className = 'text-red-600 mt-2 font-semibold bg-gray-100 p-2'
+                        text.textContent = `${message.status}`
                     }
                 });
+            } else {
+                spinner.style.display = "none";
+                text.textContent = "Your request failed, try again";
             }
-            //alert("Purchase Successful!");
-
         } catch (error) {
-            // Handle any errors that occurred during the API call
-            console.error(error);
-            text.style.display = 'block';
-            text.className = "text-red-500 text-xm";
-            text.textContent = "An error occurred while confirming the purchase. Please try again";
-            spinner.style.display = 'none';
-            confirmBtn.style.display = 'inline-block';
+            text.textContent = "Error in processing transaction";
+            spinner.style.display = "none";
+            console.error("Error submitting form: " + error.message);
         }
     }
 

@@ -12,6 +12,16 @@
             background: linear-gradient(to right, #667eea, #764ba2);
         }
 
+        /* Spinner style (if using a CSS spinner) */
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            border-top: 4px solid #6b46c1;
+            border-radius: 50%;
+            width: 3rem;
+            height: 3rem;
+            animation: spin 1s linear infinite;
+        }
+
         .card-header {
             background: linear-gradient(to right, #4e54c8, #8f94fb);
             color: white;
@@ -117,11 +127,11 @@
         <section class="bg-gradient-to-r from-teal-200 to-blue-200 md:p-4 p-2 shadow-2xl mb-4 text-center">
             <h4 class="text-white text-xl font-bold mb-2">Enjoy Unlimited Network</h4>
 
-            <div class="block items-center gap-5">
+            <div class="block items-center gap-5 animate-bounce-slow">
                 <!-- Existing Elements -->
                 <a href="offers.html">
                     <div id="offerNotification hidden "
-                        class="bg-green-400 animate-pulse text-yellow-900 font-semibold p-3 rounded-t-lg shadow-lg mb-4 animate-slide-down flex items-center justify-between max-w-xs mx-auto w-full">
+                        class="bg-green-400 animate-pulse text-yellow-900 font-semibold p-3 rounded-t-lg shadow-lg mb-4 animate-slide-down flex items-center justify-between max-w-xs mx-auto w-full animate-pulse">
                         <p onclick="window.location.href='/offers'">
                             🎉 Daily Offers ! Click Here for More! 🎉
                         </p>
@@ -138,75 +148,77 @@
                         </svg>
                     </div>
                 </div>
-
-               
-                <!-- Existing Form Section -->
-                <div class="md:w-1/2 max-w-xs mx-auto w-full">
-                    <div class="form bg-teal-400 p-4 rounded-lg shadow-lg">
-                        <label class="block text-teal-800 font-semibold mb-3">
-                            Enter your Number below if you have an active package to reconnect to the internet.
-                        </label>
-                        <input type="number" maxlength="10" placeholder="Enter phone number"
-                            class="phone w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-teal-600 text-black mb-3"
-                            id="phoneNumber" required />
-                        <div class="form flex items-start mb-3">
-                            <input type="checkbox" id="termsCheckbox"
-                                class="mr-2 focus:outline-none focus:ring-2 focus:ring-teal-500 px-15 mt-1" required>
-                            <label for="termsCheckbox" class="text-teal-700">
-                                I accept the <a href="#" class="text-white underline hover:text-green-400"
-                                    onclick="toggleAnswer('faq4')">Terms and Conditions</a>.
-                            </label>
-                        </div>
-                    </div>
+                <!-- Action Buttons -->
+                <div class="max-w-xs mx-auto w-full mb-4 flex justify-between gap-2">
+                    <button id="reconnectButton"
+                        class="bg-purple-900 text-white py-2 px-4 rounded-lg shadow-md hover:bg-teal-400 focus:ring-2 focus:ring-teal-300 transition duration-300">
+                        Reconnect Internet
+                    </button>
+                    <button id="activateVoucherButton"
+                        class="bg-purple-900 text-white py-2 px-4 rounded-lg shadow-md hover:bg-teal-500 focus:ring-2 focus:ring-teal-400 transition duration-300">
+                        Activate Voucher
+                    </button>
+                    <button id="disconnectDeviceButton"
+                        class="bg-purple-900 text-white py-2 px-4 rounded-lg shadow-md hover:bg-teal-600 focus:ring-2 focus:ring-teal-500 transition duration-300">
+                        Disconnect Device
+                    </button>
                 </div>
-            </div>
-           <!-- Disconnect Device Section -->
-           <div id="disconnectDeviceSection" class="hidden md:w-1/2 max-w-xs mx-auto w-full mt-4">
-            <div class="bg-gray-300 p-4 rounded shadow-2xl" id="form">
-                <!-- Description -->
-                <label class="block text-red-800 font-semibold mb-3">
-                    Enter the Account and the M-Pesa Transaction Code of the package you want to disconnect.
-                </label>
-                <input type="number" maxlength="10" placeholder="Enter phone number"
-                      class="disconnect-phone w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-teal-600 text-black mb-3"
-                      id="phoneNumber" required />
-                <!-- Transaction Code Input -->
-                <input type="text" placeholder="eg SLXXXXXX" maxlength="10"
-                    class="transaction-code w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-teal-600 text-black mb-3"
-                    id="transactionCode" required />
-            </div>
-        </div>
 
-        <!-- Toggle Button for Disconnect Section -->
-        <button id="toggleDisconnect"
-    class="bg-green-500 text-white px-4 py-2 rounded shadow mt-4 hover:bg-teal-600 transition duration-200"
-    onclick="toggleDisconnectSection()">
-    Disconnect Device
-</button>
 
-            <div class="text-red-500 font-bold ">
-                <input id="identity" class="p-1 text-center rounded-lg" type="hidden" name="routerMac"
-                    value="$(identity)" disabled>
-                <input id="ip" class="p-1 text-center rounded-lg" type="hidden" name="ip"
-                    value="$(ip)" disabled>
-                <input id="mac" class="p-1 text-center rounded-lg" type="hidden" name="Mac"
-                    value="$(mac)" disabled>
-            </div>
+                <!-- Reconnect Section -->
+                <div id="reconnectSection" class="form bg-blue-200 p-4 rounded-lg shadow-lg max-w-xs mx-auto w-full">
+                    <label class="block text-teal-400 font-semibold mb-3">
+                        Enter your Number below if you have an active package to reconnect to the internet.
+                    </label>
+                    <input type="number" maxlength="10" placeholder="Enter phone number"
+                        class="phone w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-teal-600 text-black mb-3"
+                        id="phoneNumber" required />
+                </div>
+
+                <!-- Activate Voucher Section -->
+                <div id="activateVoucherSection"
+                    class="form bg-blue-100 p-6 rounded-lg shadow-lg max-w-xs mx-auto hidden flex flex-col justify-center items-center">
+                    <label for="voucherCode" class="block text-blue-800 font-semibold mb-2">
+                        Enter your Voucher Code to activate your service:
+                    </label>
+                    <input type="text" id="voucherCode" maxlength="16" placeholder="Enter voucher code"
+                        class="w-full p-3 border border-gray-300 rounded focus:outline-none focus:border-blue-500 text-black mb-2"
+                        required />
+                    <div id="spinner1"
+                        class="spinner mt-3 animate-spin h-8 w-8 border-4 border-t-teal-700 border-white rounded-full"
+                        style="display: none;"></div>
+                    <div id="connect-notify" class="text-teal-100 mt-2 text-xs text-center mt-4" style="display: none;">
+                    </div>
+                    <div id="display" class="p-2 text-gray-800 bg-gray-200"></div>
+                    <button type="submit" id="voucher"
+                        class="max-w-md p-3 bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition duration-300">
+                        Activate Voucher
+                    </button>
+                </div>
+
+                <!-- Disconnect Device Section -->
+                <div id="disconnectDeviceSection"
+                    class="hidden bg-gray-300 p-4 rounded shadow-2xl max-w-xs mx-auto w-full">
+                    <label class="block text-red-800 font-semibold mb-3">
+                        Enter the Account and the M-Pesa Transaction Code of the package you want to disconnect.
+                    </label>
+                    <input type="number" maxlength="10" placeholder="Enter phone number"
+                        class="disconnect-phone w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-teal-600 text-black mb-3"
+                        id="phoneNumber" required />
+                    <input type="text" placeholder="eg SLXXXXXX" maxlength="10"
+                        class="transaction-code w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-teal-600 text-black mb-3"
+                        id="transactionCode" required />
+                </div>
+
+
+
+                <div class="text-red-500 font-bold ">
+                    <input id="identity" class="p-1 text-center rounded-lg" type="hidden" name="routerMac"
+                        value="$(identity)" disabled>
+                    <input id="ip" class="p-1 text-center rounded-lg" type="hidden" name="ip" value="$(ip)" disabled>
+                    <input id="mac" class="p-1 text-center rounded-lg" type="hidden" name="Mac" value="$(mac)" disabled>
+                </div>
         </section>
-
-        
-
-        <div id="instructions"
-            class="hidden bg-gradient-to-r from-blue-400 to-blue-500 mb-3 p-6 rounded-lg shadow-2xl text-center">
-            <h5 class="text-white text-lg font-bold mb-4">How to Purchase a Package</h5>
-            <p class="text-white mb-4"><strong>If you have an active package, just login above</strong></p>
-            <ul class="list-decimal pl-6 mb-4 text-white text-left">
-                <li class="mb-2">Choose your package</li>
-                <li class="mb-2">Click Buy</li>
-                <li class="mb-2">Click on the Green connect button & wait for the internet connection</li>
-            </ul>
-            <p class="text-white">Thank you for choosing Blackie Networks</p>
-        </div>
 
         <section id="hourly-packages">
             <h3 class="text-2xl font-bold text-white mb-4">Comrade Packages</h3>
@@ -498,12 +510,8 @@
                 Find out if our reliable and fast services are available in your area. Simply enter your location below.
             </p>
             <div class="flex justify-center items-center gap-4 mb-8">
-                <input 
-                    type="text" 
-                    placeholder="Enter your location"
-                    id="location"
-                    class="w-full md:w-2/3 lg:w-1/2 xl:w-1/3 p-3 border border-gray-300 rounded-l-lg shadow-sm focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-400 transition"
-                >
+                <input type="text" placeholder="Enter your location" id="location"
+                    class="w-full md:w-2/3 lg:w-1/2 xl:w-1/3 p-3 border border-gray-300 rounded-l-lg shadow-sm focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-400 transition">
                 <button
                     class="button bg-teal-700 text-white py-3 px-6 rounded-r-lg font-bold shadow-md hover:bg-teal-800 focus:outline-none focus:ring-4 focus:ring-teal-400 transition">
                     Check Coverage
@@ -513,7 +521,8 @@
             <div class="mt-6">
                 <h5 class="text-teal-800 text-2xl font-semibold mb-4">Available Locations:</h5>
                 <p class="text-gray-700 mb-4">
-                    Our services are currently available in the following locations. If your area isn’t listed, stay tuned—we’re expanding!
+                    Our services are currently available in the following locations. If your area isn’t listed, stay
+                    tuned—we’re expanding!
                 </p>
                 <ul class="list-disc pl-6 text-gray-700 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-2">
                     <li>Mungoni</li>
@@ -522,16 +531,17 @@
                     <li>Around Malimu Alfha</li>
                     <li>Around Mungoni primary</li>
                     <li>Around Executive Hostels</li>
-                    
+
                 </ul>
             </div>
             <p class="text-center mt-8 text-gray-600 text-sm">
-                Didn’t find your location? Contact us at 
-                <a href="mailto:support@blackienet.com" class="text-teal-700 font-medium hover:underline">support@blackienet.com</a> 
+                Didn’t find your location? Contact us at
+                <a href="mailto:support@blackienet.com"
+                    class="text-teal-700 font-medium hover:underline">support@blackienet.com</a>
                 to request coverage in your area.
             </p>
         </section>
-        
+
 
         <div class="modal-content animate__animated animate__fadeInDown p-2 w-auto text-gray-100 bg-blue-800 hidden"
             id="prompt">
@@ -544,37 +554,46 @@
         </div>
         <div class="text-left mt-5 md:mt-0 rounded-lg shadow-md w-full p-8 bg-gray-50">
             <section class="flex flex-col md:flex-row items-start gap-8">
-        
+
                 <!-- Key Benefits Section -->
                 <div class="flex-1 bg-teal-100 rounded-lg shadow-lg p-6">
                     <h5 class="text-teal-800 text-2xl font-bold mb-4 text-center">Why Choose Us?</h5>
                     <p class="text-teal-700 mb-4 leading-relaxed">
-                        Experience the best internet service designed to keep you connected, productive, and entertained. Here's what we offer:
+                        Experience the best internet service designed to keep you connected, productive, and
+                        entertained. Here's what we offer:
                     </p>
                     <ul class="list-disc pl-5 text-teal-700 space-y-2">
-                        <li><strong>Reliable Uptime:</strong> Enjoy 99.9% network uptime, ensuring you're always connected.</li>
-                        <li><strong>Unlimited Access:</strong> Access unlimited internet based on your chosen package validity.</li>
-                        <li><strong>24/7 Support:</strong> Our dedicated team is here to assist you around the clock.</li>
-                        <li><strong>Fast Speeds:</strong> Surf, stream, and download with our blazing-fast 20+ Mbps network.</li>
-                        <li><strong>Secure Network:</strong> State-of-the-art security measures for a safe browsing experience.</li>
+                        <li><strong>Reliable Uptime:</strong> Enjoy 99.9% network uptime, ensuring you're always
+                            connected.</li>
+                        <li><strong>Unlimited Access:</strong> Access unlimited internet based on your chosen package
+                            validity.</li>
+                        <li><strong>24/7 Support:</strong> Our dedicated team is here to assist you around the clock.
+                        </li>
+                        <li><strong>Fast Speeds:</strong> Surf, stream, and download with our blazing-fast 20+ Mbps
+                            network.</li>
+                        <li><strong>Secure Network:</strong> State-of-the-art security measures for a safe browsing
+                            experience.</li>
                     </ul>
                 </div>
-        
+
                 <!-- Suggestion Form Section -->
                 <div class="flex-1 bg-white rounded-lg shadow-lg p-6 border border-gray-200">
                     <h5 class="text-teal-800 text-2xl font-bold mb-4 text-center">We Value Your Feedback</h5>
                     <p class="text-gray-600 mb-4 leading-relaxed">
-                        Help us improve by sharing your suggestions or ideas. Your feedback ensures we continue to meet your expectations and enhance our services.
+                        Help us improve by sharing your suggestions or ideas. Your feedback ensures we continue to meet
+                        your expectations and enhance our services.
                     </p>
                     <form id="suggestionsForm" class="space-y-6">
                         <div>
-                            <label for="suggestionText" class="block text-teal-800 font-semibold mb-2">Your Suggestion:</label>
+                            <label for="suggestionText" class="block text-teal-800 font-semibold mb-2">Your
+                                Suggestion:</label>
                             <textarea id="suggestionText"
                                 class="w-full rounded-lg border border-gray-300 p-3 focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-400 transition"
                                 rows="4" placeholder="Write your suggestion here..."></textarea>
                         </div>
                         <div>
-                            <label for="suggestionCategory" class="block text-teal-800 font-semibold mb-2">Category:</label>
+                            <label for="suggestionCategory"
+                                class="block text-teal-800 font-semibold mb-2">Category:</label>
                             <select id="suggestionCategory"
                                 class="w-full rounded-lg border border-gray-300 p-3 focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-400 transition">
                                 <option value="" disabled selected>Select a category</option>
@@ -657,6 +676,36 @@
         function redirectToLocalIP() {
             window.location.href = "http://192.168.88.1";
         }
+        const reconnectButton = document.getElementById('reconnectButton');
+        const activateVoucherButton = document.getElementById('activateVoucherButton');
+        const disconnectDeviceButton = document.getElementById('disconnectDeviceButton');
+
+        const reconnectSection = document.getElementById('reconnectSection');
+        const activateVoucherSection = document.getElementById('activateVoucherSection');
+        const disconnectDeviceSection = document.getElementById('disconnectDeviceSection');
+
+        // Helper function to hide all sections
+        const hideAllSections = () => {
+            reconnectSection.classList.add('hidden');
+            activateVoucherSection.classList.add('hidden');
+            disconnectDeviceSection.classList.add('hidden');
+        };
+
+        // Add event listeners to buttons
+        reconnectButton.addEventListener('click', () => {
+            hideAllSections();
+            reconnectSection.classList.remove('hidden');
+        });
+
+        activateVoucherButton.addEventListener('click', () => {
+            hideAllSections();
+            activateVoucherSection.classList.remove('hidden');
+        });
+
+        disconnectDeviceButton.addEventListener('click', () => {
+            hideAllSections();
+            disconnectDeviceSection.classList.remove('hidden');
+        });
     </script>
     <script src="./pkg.js"></script>
 </body>

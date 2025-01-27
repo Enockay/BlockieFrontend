@@ -55,8 +55,8 @@ const input1 = document.querySelector(".phone-input");
 const feedback = document.getElementById("prompt");
 const feedbackPara = document.createElement('p')
 feedback.appendChild(feedbackPara)
-const form = document.querySelector(".form");
-const form2 = document.getElementById("form");
+const form = document.getElementById("reconnectSection");
+const form2 = document.getElementById("disconnectDeviceSection");
 const loading = document.querySelector(".loading");
 const phoneInput = document.querySelector(".phone");
 const connectBack = document.createElement("button");
@@ -70,11 +70,14 @@ alertInfo2.className = "text-red-500 mt-5 font-bold";
 form2.append(Disconnect, alertInfo2);
 const alertInfo = document.createElement("h4");
 alertInfo.className = 'text-red-500 ';
+const vocherBtn = document.getElementById("voucher");
 const spinner = document.createElement("div");
 spinner.className = 'loading-container flex items-center justify-center';
 spinner.innerHTML = `<div class="loading-spinner border-t-4 border-blue-500 rounded-full w-12 h-12 animate-spin"></div><span class="ml-2">Please wait...</span>`;
 const formDiv = document.createElement("div");
 form.append(connectBack, alertInfo);
+const display = document.getElementById("display");
+const spinnerd = document.getElementById("spinner1");
 
 const showPrompt = () => {
     checkPromptContent();
@@ -91,6 +94,53 @@ const formatPhoneNumber = (phoneNumber) => {
     const numericOnly = phoneNumber.replace(/\D/g, '');
     return numericOnly.startsWith('0111') && numericOnly.length === 10 ? '254' + numericOnly.substring(1) : '254' + numericOnly.substring(1);
 };
+
+async function activateVoucher(voucherCode) {
+    const routerHost = document.getElementById("identity").value;
+    const ipAddress = document.getElementById("ip").value;
+    const macAddress = document.getElementById("mac").value;
+
+    // Prepare data for the POST request
+    const requestData = {
+        routerHost,
+        macAddress,
+        voucherCode,
+        ipAddress,
+    };
+
+    try {
+        // Send data to the backend
+        const response = await fetch("https://node-blackie-networks.fly.dev/vocher/activate-voucher", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(requestData)
+        });
+
+        // Handle the response
+        if (response.ok) {
+            const data = await response.json();
+            display.textContent = `${data.message}`;
+            display.className = "text-green mt-2 font-semibold bg-gray-100 p-2";
+            if (data.redirectUrl) {
+                window.location.href = data.redirectUrl;  // Redirect the user automatically
+            }
+            return { success: true, data };
+        } else {
+            spinnerd.style.display = "none";
+            const error = await response.json();
+            display.textContent = ` ${error.message}`;
+            display.className = "text-red-600 mt-2 font-semibold bg-gray-100 p-2"
+            return { success: false, error: error.message };
+        }
+    } catch (err) {
+        spinnerd.style.display = "none";
+        display.textContent = `failed: ${err.message}`;
+        display.className = "text-red-600 mt-2 font-semibold bg-gray-100 p-2"
+        //return { success: false, error: err.message };
+    }
+}
 
 async function activateAccount(transactionCode, phoneNumber, remainingTime) {
     const routerHost = document.getElementById("identity").value;
@@ -127,6 +177,7 @@ async function activateAccount(transactionCode, phoneNumber, remainingTime) {
             }
             return { success: true, data };
         } else {
+            
             const error = await response.json();
             alertInfo.textContent = ` ${error.message}`;
             alertInfo.className = "text-red-600 mt-2 font-semibold bg-gray-100 p-2"
@@ -200,6 +251,9 @@ const updateLocalstorage = (phoneNumber2) => {
 Disconnect.addEventListener('click', async () => {
     const input = document.querySelector(".disconnect-phone");
     const MpesaCode = document.getElementById("transactionCode").value;
+    const routerHost = document.getElementById("identity").value;
+    const ipAddress = document.getElementById("ip").value;
+    const macAddress = document.getElementById("mac").value;
 
     //console.log(input.value,MpesaCode)
     const phone2 = input.value;
@@ -215,12 +269,12 @@ Disconnect.addEventListener('click', async () => {
         loading.style.display = "block";
         const phoneNumber = formatPhoneNumber(phone2);
         try {
-            const response = await fetch('https://node-blackie-networks.fly.dev/disconnect', {
+            const response = await fetch('https://node-blackie-networks.fly.dev/hotspot/disconnect-user', {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ phoneNumber: phoneNumber, MpesaCode: MpesaCode })
+                body: JSON.stringify({ phoneNumber: phoneNumber, MpesaCode: MpesaCode ,routerHost:routerHost,ipAddress:ipAddress})
             });
 
             const data = await response.json();
@@ -243,7 +297,7 @@ Disconnect.addEventListener('click', async () => {
                 }
             } else {
                 alertInfo2.textContent = data.message;
-                alertInfo2.className = 'text-red-500';
+                alertInfo2.className = 'text-red-500 p-3 bg-gray-100 mt-2 font-semibold rounded-lg';
             }
             form2.removeChild(spinner);
         } catch (error) {
@@ -258,14 +312,6 @@ Disconnect.addEventListener('click', async () => {
 //connect back logic functionality
 connectBack.addEventListener('click', async () => {
     const phone2 = phoneInput.value;
-    const checkbox = document.getElementById("termsCheckbox");
-    if (!checkbox.checked) {
-        alertInfo.className = "text-red-600 mt-2 font-semibold bg-gray-100 p-1"
-        alertInfo.textContent = "Kindly accept our Terms and Conditions";
-        return;
-    } else {
-        alertInfo.textContent = ""; // Clear the message if checkbox is selected
-    }
     if (!phone2) {
         alertInfo.textContent = "Input field is empty or incorrect input";
         alertInfo.className = "text-red-600 mt-2 font-semibold bg-gray-100 p-2"
@@ -310,7 +356,7 @@ connectBack.addEventListener('click', async () => {
                     //submitConnectBack(remainingTime, phoneNumber,TransactionCode);
                     const expiry = addSecondsToCurrentTime(data.RemainingTime);
                     alertInfo.textContent = `Success.. wait as we connect you to internet. your  unliminet package will expire on :${expiry}`;
-                    alertInfo.className = "text-green-200 mt-2 font-semibold bg-gray-100 p-2"
+                    alertInfo.className = "text-gray-950 mt-2 font-semibold bg-gray-100 p-2"
                     //form.appendChild(spinner)
                 }
             } else {
@@ -326,7 +372,21 @@ connectBack.addEventListener('click', async () => {
         }
     }
 });
+vocherBtn.addEventListener("click",async()=>{
+    try{
+     const voucherCode = document.getElementById("voucherCode").value;
+     if (!voucherCode) {
+        display.textContent = "Input field is empty or incorrect input";
+        display.className = "text-red-600  font-semibold bg-gray-100 p-2 mb-3";
+        return;
+    }
+     spinnerd.style.display = "block";
+      await activateVoucher(voucherCode);
+    }catch(error){
+    spinner.style.display = "none";
 
+    }
+})
 const directLogin = async (phoneNumber, transactionCode, amount) => {
     const routerHost = document.getElementById("identity").value;
     const ipAddress = document.getElementById("ip").value;
@@ -478,13 +538,13 @@ const purchaseItem = (value, routername) => {
 
                         if (message.type === 'statusUpdate' && message.status === 'success') {
                             window.location.href = message.redirectUrl;
+                            socket.close()
                         }else{
                             feedback.removeChild(spinner);
                             feedbackPara.className = 'text-red-600 mt-2 font-semibold bg-gray-100 p-2'
                             feedbackPara.textContent = `${message.status}`
                         }
                     });
-
                 } else {
                     feedback.removeChild(spinner);
                     feedbackPara.textContent = "Your request failed, try again";
