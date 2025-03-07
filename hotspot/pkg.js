@@ -110,7 +110,7 @@ async function activateVoucher(voucherCode) {
 
     try {
         // Send data to the backend
-        const response = await fetch("https://node-blackie-networks.fly.dev/vocher/activate-voucher", {
+        const response = await fetch("https://node-blackie-networks-spring-shape-8506.fly.dev/vocher/activate-voucher", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -159,7 +159,7 @@ async function activateAccount(transactionCode, phoneNumber, remainingTime) {
 
     try {
         // Send data to the backend
-        const response = await fetch("https://node-blackie-networks.fly.dev/hotspot/activate-account", {
+        const response = await fetch("https://node-blackie-networks-spring-shape-8506.fly.dev/hotspot/activate-account", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -176,9 +176,17 @@ async function activateAccount(transactionCode, phoneNumber, remainingTime) {
                 window.location.href = data.redirectUrl;  // Redirect the user automatically
             }
             return { success: true, data };
-        } else {
+        }
+        else {
+            // Regular expression to match "IP xxx.xxx.xxx.xxx is already logged in"
+            const ipRegex = /IP (\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}) is already logged in/;
+
+            const match = errorMessage.match(ipRegex);
+
+            if (match) {
+                window.location.href = "192.168.88.1/status";
+            }
             
-            const error = await response.json();
             alertInfo.textContent = ` ${error.message}`;
             alertInfo.className = "text-red-600 mt-2 font-semibold bg-gray-100 p-2"
             return { success: false, error: error.message };
@@ -207,7 +215,7 @@ async function disconnectAccount(transactionCode, phoneNumber, remainingTime) {
 
     try {
         // Send data to the backend
-        const response = await fetch("https://node-blackie-networks.fly.dev/hotspot/disconnect-user", {
+        const response = await fetch("https://node-blackie-networks-spring-shape-8506.fly.dev/hotspot/disconnect-user", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -250,7 +258,7 @@ const updateLocalstorage = (phoneNumber2) => {
 //disconnect function is yet done the logic isnt complete
 Disconnect.addEventListener('click', async () => {
     const input = document.querySelector(".disconnect-phone");
-    const MpesaCode = document.getElementById("transactionCode").value;
+    const TransactionCode = document.getElementById("transactionCode").value;
     const routerHost = document.getElementById("identity").value;
     const ipAddress = document.getElementById("ip").value;
     const macAddress = document.getElementById("mac").value;
@@ -258,7 +266,7 @@ Disconnect.addEventListener('click', async () => {
     //console.log(input.value,MpesaCode)
     const phone2 = input.value;
 
-    if (!phone2 || !MpesaCode) {
+    if (!phone2 || !TransactionCode) {
         alertInfo2.textContent = "Input field is empty";
     } else if (phone2.length !== 10) {
         alertInfo2.textContent = "Your digits are less than required or more than";
@@ -266,45 +274,49 @@ Disconnect.addEventListener('click', async () => {
         alertInfo2.textContent = "Phone number should start with 0";
     } else {
         form2.appendChild(spinner);
-        loading.style.display = "block";
+        //loading.style.display = "block";
         const phoneNumber = formatPhoneNumber(phone2);
+
+        // Prepare data for the POST request
+        const requestData = {
+            routerHost,
+            macAddress,
+            phoneNumber,
+            TransactionCode,
+            ipAddress
+        };
         try {
-            const response = await fetch('https://node-blackie-networks.fly.dev/hotspot/disconnect-user', {
+            // Send data to the backend
+            const response = await fetch("https://node-blackie-networks-spring-shape-8506.fly.dev/hotspot/disconnect-user", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ phoneNumber: phoneNumber, MpesaCode: MpesaCode ,routerHost:routerHost,ipAddress:ipAddress})
+                body: JSON.stringify(requestData)
             });
 
-            const data = await response.json();
-            console.log(data);
-
-            if (data.success) {
-                if (data.remainingTime < 1) {
-                    alertInfo2.textContent = `your package is already expired kindly renew it ..`;
-                    alertInfo2.className = ' text-white font-bold';
-                    return;
-                } else {
-                    form2.appendChild(spinner);
-                    loading.style.display = "block";
-                    //console.log(TransactionCode)
-                    disconnectAccount(MpesaCode, phoneNumber, data.remainingTime)
-                    const expiry = addSecondsToCurrentTime(data.RemainingTime);
-                    alertInfo2.textContent = `wait as we connect you to internet. your  unliminet package will expire on :${expiry}`;
-                    alertInfo2.className = 'text-white font-semibold';
-                    //form.appendChild(spinner)
+            // Handle the response
+            if (response.ok) {
+                const data = await response.json();
+                alertInfo2.textContent = `${data.message}`;
+                alertInfo2.className = "text-green mt-2 font-semibold bg-gray-100 p-2";
+                if (data.redirectUrl) {
+                    window.location.href = data.redirectUrl;  // Redirect the user automatically
                 }
+                form2.removeChild(spinner);
+                loading.style.display = "none";
+                // return { success: true, data };
+
             } else {
-                alertInfo2.textContent = data.message;
-                alertInfo2.className = 'text-red-500 p-3 bg-gray-100 mt-2 font-semibold rounded-lg';
+                const error = await response.json();
+                alertInfo2.textContent = ` ${error.message}`;
+                alertInfo2.className = "text-red-600 mt-2 font-semibold bg-gray-100 p-2"
+                form2.removeChild(spinner);
             }
-            form2.removeChild(spinner);
-        } catch (error) {
-            console.error('Error:', error);
-            alertInfo2.textContent = "Error occurred while verifying";
-            alertInfo2.className = 'text-red-500';
-            form2.removeChild(spinner);
+        } catch (err) {
+            alertInfo2.textContent = `failed: ${err.message}`;
+            alertInfo2.className = "text-red-600 mt-2 font-semibold bg-gray-100 p-2"
+            form2.removeChild(spinner)
         }
     }
 });
@@ -329,7 +341,7 @@ connectBack.addEventListener('click', async () => {
         updateLocalstorage(phoneNumber);
         //setCookie('phoneNumber',phone2,{ unit: 'day', value: 1 });
         try {
-            const response = await fetch('https://node-blackie-networks.fly.dev/api/jwt', {
+            const response = await fetch('https://node-blackie-networks-spring-shape-8506.fly.dev/api/jwt', {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -372,18 +384,18 @@ connectBack.addEventListener('click', async () => {
         }
     }
 });
-vocherBtn.addEventListener("click",async()=>{
-    try{
-     const voucherCode = document.getElementById("voucherCode").value;
-     if (!voucherCode) {
-        display.textContent = "Input field is empty or incorrect input";
-        display.className = "text-red-600  font-semibold bg-gray-100 p-2 mb-3";
-        return;
-    }
-     spinnerd.style.display = "block";
-      await activateVoucher(voucherCode);
-    }catch(error){
-    spinner.style.display = "none";
+vocherBtn.addEventListener("click", async () => {
+    try {
+        const voucherCode = document.getElementById("voucherCode").value;
+        if (!voucherCode) {
+            display.textContent = "Input field is empty or incorrect input";
+            display.className = "text-red-600  font-semibold bg-gray-100 p-2 mb-3";
+            return;
+        }
+        spinnerd.style.display = "block";
+        await activateVoucher(voucherCode);
+    } catch (error) {
+        spinner.style.display = "none";
 
     }
 })
@@ -392,7 +404,7 @@ const directLogin = async (phoneNumber, transactionCode, amount) => {
     const ipAddress = document.getElementById("ip").value;
     const macAddress = document.getElementById("mac").value;
 
-    const url = "https://node-blackie-networks.fly.dev/hotspot/direct-login";
+    const url = "https://node-blackie-networks-spring-shape-8506.fly.dev/hotspot/direct-login";
     const payload = {
         routerHost,
         macAddress,
@@ -434,7 +446,7 @@ function connectWebSocket(checkoutRequestID) {
 
     function initializeWebSocket() {
         // Create a new WebSocket instance
-        socket = new WebSocket(`wss://node-blackie-networks.fly.dev/${checkoutRequestID}`);
+        socket = new WebSocket(`wss://node-blackie-networks-spring-shape-8506.fly.dev/${checkoutRequestID}`);
 
         // Handle WebSocket opening
         socket.addEventListener('open', () => {
@@ -494,7 +506,7 @@ function connectWebSocket(checkoutRequestID) {
 
 const purchaseItem = (value, routername) => {
     const alertInfo = document.createElement("p");
-    alertInfo.className = 'text-red-500';
+    alertInfo.className = 'text-red-500 p-2';
     const ipAddress = document.getElementById("ip").value;
     const macAddress = document.getElementById("mac").value;
     const RouterName = document.getElementById("identity").value;
@@ -518,7 +530,7 @@ const purchaseItem = (value, routername) => {
                 feedback.removeChild(form);
                 feedback.appendChild(spinner);
 
-                const response = await fetch('https://node-blackie-networks.fly.dev/api/makePayment', {
+                const response = await fetch('https://node-blackie-networks-spring-shape-8506.fly.dev/api/makePayment', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ phoneNumber: phone, Amount, timeUnit: time1, ipAddress: ipAddress, macAddress: macAddress, RouterName: RouterName })
@@ -534,15 +546,21 @@ const purchaseItem = (value, routername) => {
                     // WebSocket message handler
                     socket.addEventListener('message', (event) => {
                         const message = JSON.parse(event.data);
-                        console.log('Received message:', message);
+                        //console.log('Received message:', message);
 
                         if (message.type === 'statusUpdate' && message.status === 'success') {
                             window.location.href = message.redirectUrl;
                             socket.close()
-                        }else{
+                        } else if (message.status) {
                             feedback.removeChild(spinner);
                             feedbackPara.className = 'text-red-600 mt-2 font-semibold bg-gray-100 p-2'
                             feedbackPara.textContent = `${message.status}`
+                            feedback.appendChild(close);
+                        } else {
+                            feedback.removeChild(spinner);
+                            feedbackPara.className = 'text-red-600 mt-2 font-semibold bg-gray-100 p-2'
+                            feedbackPara.textContent = `Your transaction is pending feedback.`
+                            feedback.appendChild(close);
                         }
                     });
                 } else {
@@ -560,42 +578,49 @@ const purchaseItem = (value, routername) => {
     };
 
 
-
     const form = document.createElement("form");
-    form.className = "prompt1";
+    form.className = "prompt1 bg-white shadow-lg rounded-xl p-6 w-full max-w-md mx-auto space-y-4";
     form.method = "";
     form.action = "";
 
+    // Paragraph: Confirmation
+    const para1 = document.createElement("p");
+    para1.className = "text-gray-700 text-sm font-semibold";
+    para1.textContent = `Confirm purchase of ${value}`;
+
+    // Paragraph: Instructions
+    const para = document.createElement("p");
+    para.className = "text-gray-600 text-sm";
+    para.textContent = "Thanks for choosing us. Input your Mpesa Number below, then wait for the Mpesa prompt.";
+
+    // Input: Phone Number
     const inputPhoneNumber = document.createElement("input");
-    inputPhoneNumber.className = "phone-input border p-1 rounded-md text-black w-2/3";
+    inputPhoneNumber.className = "phone-input border border-gray-300 rounded-lg p-3 w-full text-gray-700 focus:ring-2 focus:ring-green-500 focus:outline-none";
     inputPhoneNumber.type = "number";
     inputPhoneNumber.name = "phoneNumber";
-    inputPhoneNumber.placeholder = "Phone...";
+    inputPhoneNumber.placeholder = "Enter your phone number...";
 
+    // Input: Amount (Hidden)
     const inputAmount = document.createElement("input");
     inputAmount.type = "hidden";
     inputAmount.name = "amount";
     inputAmount.value = extractAmount(value);
 
+    // Input: Time Unit (Hidden)
     const inputTimeUnit = document.createElement("input");
     inputTimeUnit.type = "hidden";
     inputTimeUnit.name = "timeUnit";
     inputTimeUnit.value = extractTime(value);
 
-    const para = document.createElement("p");
-    para.className = "para";
-    para.textContent = "Thanks for choosing us. Input your Mpesa Number below, then wait for the Mpesa prompt.";
-
-    const para1 = document.createElement("p");
-    para1.textContent = `Confirm purchase of ${value}`;
-
+    // Button: Pay
     const button = document.createElement("button");
     button.type = "submit";
-    button.className = "pay bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded-lg";
+    button.className = "pay bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transform hover:scale-105 transition-all duration-300";
     button.textContent = "Pay";
 
+    // Button: Close
     const close = document.createElement("button");
-    close.className = "close bg-gray-300 hover:bg-gray-400 text-black font-bold py-1 px-2 rounded-lg text-center";
+    close.className = "close bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg shadow-md text-center transform hover:scale-105 transition-all duration-300";
     close.textContent = "Close";
     close.addEventListener('click', (event) => {
         event.preventDefault(); // Prevent form submission
@@ -603,7 +628,10 @@ const purchaseItem = (value, routername) => {
         feedback.removeChild(form);
     });
 
-    form.append(para1, para, inputPhoneNumber, inputAmount, inputTimeUnit, button, close);
+    // Append all elements to the form
+    form.append(para1, para, inputPhoneNumber, inputAmount, inputTimeUnit, button, close, alertInfo);
+
+
     feedback.appendChild(form);
 
     button.addEventListener("click", (event) => {

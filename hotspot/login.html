@@ -129,15 +129,15 @@
 
             <div class="block items-center gap-5 animate-bounce-slow">
                 <!-- Existing Elements -->
-                <a href="offers.html">
-                    <div id="offerNotification hidden "
-                        class="bg-green-400 animate-pulse text-yellow-900 font-semibold p-3 rounded-t-lg shadow-lg mb-4 animate-slide-down flex items-center justify-between max-w-xs mx-auto w-full animate-pulse">
-                        <p onclick="window.location.href='/offers'">
-                            🎉 Daily Offers ! Click Here for More! 🎉
-                        </p>
-
-                    </div>
-                </a>
+                <div class="block items-center gap-5 animate-bounce-slow">
+                    <!-- Notification Element -->
+                    <a href="./service-notice.html">
+                        <div id="serviceNotification" class="text-sm bg-yellow-400 text-red-900 font-bold p-3 rounded-t-lg shadow-lg mb-4 flex items-center justify-between max-w-xs mx-auto w-full animate-pulse border border-red-500 cursor-pointer">
+                            <p>⚠️ Service Update: Internet speeds affected. Fix coming in 14 working days. Click for details! ⚠️</p>
+                        </div>
+                    </a>
+                </div>                
+                
                 <div
                     class="md:hidden hidden md:w-1/2 flex items-start p-3 bg-gradient-to-r from-yellow-200 to-yellow-100 rounded-lg shadow-lg transform transition duration-300 hover:scale-105">
                     <div class="bg-yellow-400 p-2 rounded-full shadow-md">
@@ -151,20 +151,18 @@
                 <!-- Action Buttons -->
                 <div class="max-w-xs mx-auto w-full mb-4 flex justify-between gap-2">
                     <button id="reconnectButton"
-                        class="bg-purple-900 text-white py-2 px-4 rounded-lg shadow-md hover:bg-teal-400 focus:ring-2 focus:ring-teal-300 transition duration-300">
+                        class="bg-gradient-to-r from-purple-700 to-purple-900 text-white py-2 px-3 rounded-xl shadow-lg hover:from-teal-500 hover:to-teal-700 focus:ring-4 focus:ring-teal-300 focus:outline-none transition-all duration-300 transform hover:scale-105">
                         Reconnect Internet
                     </button>
                     <button id="activateVoucherButton"
-                        class="bg-purple-900 text-white py-2 px-4 rounded-lg shadow-md hover:bg-teal-500 focus:ring-2 focus:ring-teal-400 transition duration-300">
+                        class="bg-gradient-to-r from-purple-700 to-purple-900 text-white py-2 px-3 rounded-xl shadow-lg hover:from-teal-500 hover:to-teal-700 focus:ring-4 focus:ring-teal-400 focus:outline-none transition-all duration-300 transform hover:scale-105">
                         Activate Voucher
                     </button>
                     <button id="disconnectDeviceButton"
-                        class="bg-purple-900 text-white py-2 px-4 rounded-lg shadow-md hover:bg-teal-600 focus:ring-2 focus:ring-teal-500 transition duration-300">
+                        class="bg-gradient-to-r from-purple-700 to-purple-900 text-white py-2 px-3 rounded-xl shadow-lg hover:from-teal-600 hover:to-teal-800 focus:ring-4 focus:ring-teal-500 focus:outline-none transition-all duration-300 transform hover:scale-105">
                         Disconnect Device
                     </button>
                 </div>
-
-
                 <!-- Reconnect Section -->
                 <div id="reconnectSection" class="form bg-blue-200 p-4 rounded-lg shadow-lg max-w-xs mx-auto w-full">
                     <label class="block text-teal-400 font-semibold mb-3">
@@ -209,8 +207,6 @@
                         class="transaction-code w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-teal-600 text-black mb-3"
                         id="transactionCode" required />
                 </div>
-
-
 
                 <div class="text-red-500 font-bold ">
                     <input id="identity" class="p-1 text-center rounded-lg" type="hidden" name="routerMac"
@@ -543,10 +539,17 @@
         </section>
 
 
-        <div class="modal-content animate__animated animate__fadeInDown p-2 w-auto text-gray-100 bg-blue-800 hidden"
-            id="prompt">
-            <h4 class="text-white font-bold mb-4">BlackieNetwork purchase Modal</h4>
-        </div>
+        <div
+    class="modal-content animate__animated animate__fadeInDown p-2 max-w-xs mx-auto rounded-xl shadow-2xl text-gray-100 bg-white transform scale-95 hidden"
+    id="prompt">
+    <div class="flex justify-center items-center mb-2">
+        <h4 class="text-gray-800 text-sm text-center font-bold">BlackieNetwork Purchase Modal</h4>
+    </div>
+    <div id="modal-body">
+        <!-- The form will be dynamically appended here -->
+    </div>
+</div>
+
         <div class="loading hidden">please wait..</div>
         <div class="loading flex justify-center items-center h-20 w-full mb-3" id="loadingSpinner"
             style="display:none;">
