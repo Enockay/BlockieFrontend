@@ -166,36 +166,40 @@ async function activateAccount(transactionCode, phoneNumber, remainingTime) {
             },
             body: JSON.stringify(requestData)
         });
-
+    
         // Handle the response
         if (response.ok) {
             const data = await response.json();
-            alertInfo.textContent = `${data.message}`;
+            alertInfo.textContent = data.message;
             alertInfo.className = "text-green mt-2 font-semibold bg-gray-100 p-2";
             if (data.redirectUrl) {
                 window.location.href = data.redirectUrl;  // Redirect the user automatically
             }
             return { success: true, data };
-        }
-        else {
+        } else {
+            // Extract error message from the response
+            const errorData = await response.json();
+            const errorMessage = errorData.message || "An error occurred";
+    
             // Regular expression to match "IP xxx.xxx.xxx.xxx is already logged in"
             const ipRegex = /IP (\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}) is already logged in/;
-
             const match = errorMessage.match(ipRegex);
-
+    
             if (match) {
-                window.location.href = "192.168.88.1/status";
+                window.location.href = "http://192.168.88.1/status";
+                return;  // Ensure no further code is executed after redirection
             }
             
-            alertInfo.textContent = ` ${error.message}`;
-            alertInfo.className = "text-red-600 mt-2 font-semibold bg-gray-100 p-2"
-            return { success: false, error: error.message };
+            alertInfo.textContent = errorMessage;
+            alertInfo.className = "text-red-600 mt-2 font-semibold bg-gray-100 p-2";
+            return { success: false, error: errorMessage };
         }
     } catch (err) {
-        alertInfo.textContent = `failed: ${err.message}`;
-        alertInfo.className = "text-red-600 mt-2 font-semibold bg-gray-100 p-2"
+        alertInfo.textContent = `Failed: ${err.message}`;
+        alertInfo.className = "text-red-600 mt-2 font-semibold bg-gray-100 p-2";
         return { success: false, error: err.message };
     }
+    
 }
 
 async function disconnectAccount(transactionCode, phoneNumber, remainingTime) {
