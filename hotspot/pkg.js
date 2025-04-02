@@ -240,9 +240,11 @@ async function disconnectAccount(transactionCode, phoneNumber, remainingTime) {
             const error = await response.json();
             alertInfo2.textContent = ` ${error.message}`;
             alertInfo2.className = "text-red-600 mt-2 font-semibold bg-gray-100 p-2"
+            form2.removeChild(spinner);
             return { success: false, error: error.message };
         }
     } catch (err) {
+        form2.appendChild(spinner);
         alertInfo2.textContent = `failed: ${err.message}`;
         alertInfo2.className = "text-red-600 mt-2 font-semibold bg-gray-100 p-2"
         return { success: false, error: err.message };
@@ -280,48 +282,7 @@ Disconnect.addEventListener('click', async () => {
         form2.appendChild(spinner);
         //loading.style.display = "block";
         const phoneNumber = formatPhoneNumber(phone2);
-
-        // Prepare data for the POST request
-        const requestData = {
-            routerHost,
-            macAddress,
-            phoneNumber,
-            TransactionCode,
-            ipAddress
-        };
-        try {
-            // Send data to the backend
-            const response = await fetch("https://node-blackie-networks-spring-shape-8506.fly.dev/hotspot/disconnect-user", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(requestData)
-            });
-
-            // Handle the response
-            if (response.ok) {
-                const data = await response.json();
-                alertInfo2.textContent = `${data.message}`;
-                alertInfo2.className = "text-green mt-2 font-semibold bg-gray-100 p-2";
-                if (data.redirectUrl) {
-                    window.location.href = data.redirectUrl;  // Redirect the user automatically
-                }
-                form2.removeChild(spinner);
-                loading.style.display = "none";
-                // return { success: true, data };
-
-            } else {
-                const error = await response.json();
-                alertInfo2.textContent = ` ${error.message}`;
-                alertInfo2.className = "text-red-600 mt-2 font-semibold bg-gray-100 p-2"
-                form2.removeChild(spinner);
-            }
-        } catch (err) {
-            alertInfo2.textContent = `failed: ${err.message}`;
-            alertInfo2.className = "text-red-600 mt-2 font-semibold bg-gray-100 p-2"
-            form2.removeChild(spinner)
-        }
+        disconnectAccount(TransactionCode, phoneNumber)
     }
 });
 

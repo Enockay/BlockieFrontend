@@ -110,7 +110,7 @@
             <a href="#gen-z-packages" class="nav-link bg-blue-400 p-2 rounded-lg shadow-lg">Gen-Z Packages</a>
             <a href="#niokolee-packages"
                 class="nav-link nav-link text-gray-800 bg-blue-400 p-2 rounded-lg shadow-lg text-black ">NiokoleePackages</a>
-            <a href="offers.html" class="nav-link bg-purple-600 p-2 rounded-lg shadow-lg">Adverts & Offers</a>
+            <a href="#" class="nav-link bg-purple-600 p-2 rounded-lg shadow-lg">Adverts & Offers</a>
         </nav>
         <div class="text-right bg-teal-600 p-2 rounded-lg shadow-md inline-block">
             <p class="text-white font-semibold mb-2">Contact Us:</p>
@@ -131,13 +131,20 @@
                 <!-- Existing Elements -->
                 <div class="block items-center gap-5 animate-bounce-slow">
                     <!-- Notification Element -->
-                    <a href="./service-notice.html">
-                        <div id="serviceNotification" class="text-sm bg-yellow-400 text-red-900 font-bold p-3 rounded-t-lg shadow-lg mb-4 flex items-center justify-between max-w-xs mx-auto w-full animate-pulse border border-red-500 cursor-pointer">
-                            <p>⚠️ Service Update: Internet speeds affected. Fix coming in 14 working days. Click for details! ⚠️</p>
+
+                    <div id="serviceNotification"
+                        class="text-sm p-0 font-bold shadow-lg mb-4 flex items-center justify-between max-w-xs mx-auto w-full animate-pulse border border-red-500 cursor-pointer">
+                        <div id="thankYouMessage"
+                            class="relative text-sm bg-yellow-500 text-white md:w-font-bold p-4 rounded-lg shadow-xl flex items-center justify-center mx-auto border border-white cursor-pointer">
+                            <p class="text-center">
+                                🎉 Thank you for trusting <span class="text-red-900">Blackie Networks</span>! Happy
+                                semester
+                                ending! 🎉
+                            </p>
                         </div>
-                    </a>
-                </div>                
-                
+                    </div>
+                </div>
+
                 <div
                     class="md:hidden hidden md:w-1/2 flex items-start p-3 bg-gradient-to-r from-yellow-200 to-yellow-100 rounded-lg shadow-lg transform transition duration-300 hover:scale-105">
                     <div class="bg-yellow-400 p-2 rounded-full shadow-md">
@@ -539,16 +546,15 @@
         </section>
 
 
-        <div
-    class="modal-content animate__animated animate__fadeInDown p-2 max-w-xs mx-auto rounded-xl shadow-2xl text-gray-100 bg-white transform scale-95 hidden"
-    id="prompt">
-    <div class="flex justify-center items-center mb-2">
-        <h4 class="text-gray-800 text-sm text-center font-bold">BlackieNetwork Purchase Modal</h4>
-    </div>
-    <div id="modal-body">
-        <!-- The form will be dynamically appended here -->
-    </div>
-</div>
+        <div class="modal-content animate__animated animate__fadeInDown p-2 max-w-xs mx-auto rounded-xl shadow-2xl text-gray-100 bg-white transform scale-95 hidden"
+            id="prompt">
+            <div class="flex justify-center items-center mb-2">
+                <h4 class="text-gray-800 text-sm text-center font-bold">BlackieNetwork Purchase Modal</h4>
+            </div>
+            <div id="modal-body">
+                <!-- The form will be dynamically appended here -->
+            </div>
+        </div>
 
         <div class="loading hidden">please wait..</div>
         <div class="loading flex justify-center items-center h-20 w-full mb-3" id="loadingSpinner"
